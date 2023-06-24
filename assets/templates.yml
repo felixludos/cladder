@@ -24,8 +24,8 @@ transitions: # transition from one option to another
 
 
 conditional-structure:
-  prefix: '{head}, {tail}.'
-  suffix: '{tail} {head}.'
+  prefix: '{cond}, {sentence}.'
+  suffix: '{sentence} {cond}.'
 
 
 conditional-heads:

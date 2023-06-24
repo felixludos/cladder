@@ -9,37 +9,9 @@ class Template:
 
 
 class Atom(AbstractTool):
-
 	'''selects between static options'''
 	def possibilities(self):
 		raise NotImplementedError
-
-	pass
-
-
-class TemplateSelector(Template):
-	'''selects between (tools)'''
-	pass
-
-
-class StaticTemplater(Atom):
-	def __init__(self, key: str, template: str):
-		self.key = key
-		self.template = template
-
-
-	def gizmos(self) -> Iterator[str]:
-		yield self.key
-
-
-	def _extract_keys(self, template):
-		for match in re.finditer(r'\{([^\}]+)\}', template):
-			yield match.group(1)
-
-
-	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
-		reqs = {key: ctx.grab_from(ctx, key) for key in self._extract_keys(self.template)}
-		return self.template.format(**reqs)
 
 
 
@@ -57,13 +29,133 @@ class Decision(Atom):
 		return gen.choice(list(self.options))
 
 
-class Verbalizer(Context, LoopyKit, MutableKit):
+
+class TemplateSelector(Template):
+	'''selects between (tools)'''
+	pass
+
+
+class SimpleTemplater:
+	def __init__(self, terms: Iterator[str] = None, delimiter=' '):
+		if terms is None:
+			terms = []
+		elif isinstance(terms, str):
+			terms = self._extract_template_keys(terms)
+		elif isinstance(terms, Iterator):
+			terms = (key for term in terms for key in self._extract_template_keys(term))
+
+		reqs = {}
+		keys = set()
+		pieces = []
+		for i, (is_key, val) in enumerate(terms):
+			if is_key:
+				reqs[i] = val
+				keys.add(val)
+			pieces.append(val)
+		self.reqs = reqs
+		self.keys = keys
+		self.terms = pieces
+		self.delimiter = delimiter
+
+
+	@staticmethod
+	def _extract_template_keys(template: str):
+		for match in re.finditer(r'\{([^\}]+)\}', template):
+			if match.start() > 0:
+				yield False, template[:match.start()]
+			yield True, match.group(1)
+			template = template[match.end():]
+		if len(template):
+			yield False, template
+
+
+	def fill_in(self, reqs: Dict[str, str]):
+		return self.delimiter.join(reqs[self.reqs[i]] if i in self.reqs else term
+								   for i, term in enumerate(self.terms)
+								   if (i not in self.reqs and term is not None)
+								   or (i in self.reqs and self.reqs[i] in reqs))
+
+
+
+class StaticTemplater(Atom, SimpleTemplater):
+	def __init__(self, key: str, template: Union[str, Sequence[str]]):
+		self.key = key
+		self.template = template
+
+
+	def gizmos(self) -> Iterator[str]:
+		yield self.key
+
+
+	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
+		reqs = {key: ctx.grab_from(ctx, key) for key in self.keys}
+		out = self.fill_in(reqs)
+		return out
+
+
+
+class CapitalizedTemplater(Atom):
+	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
+		out = super().grab_from(ctx, gizmo)
+		return out[0].upper() + out[1:]
+
+
+
+class Verbalizer(Cached, Context, LoopyKit, MutableKit, Decision):
 	def __init__(self, *args, identity=None, seed=None, **kwargs):
 		super().__init__(*args, **kwargs)
 		if identity is None:
 			identity = {}
 		self.identity = identity
+		# self._sentences = []
 		self.gen = np.random.RandomState(seed)
+		self._variable = None
+		self._base = None
+
+
+	@property
+	def variable(self):
+		return self._variable
+	@variable.setter
+	def variable(self, var: 'Variable'):
+		self._variable = var
+
+
+	@property
+	def base(self):
+		return self._base
+	@base.setter
+	def base(self, base: 'Verbalizer'):
+		self._base = base
+
+
+	def condition(self, parent: 'Variable') -> 'Verbalizer':
+		new = self.copy()
+		new.variable = parent
+		new.base = self
+		return new
+
+
+	def _vendors(self, gizmo: Optional[str] = None) -> Iterator[AbstractTool]:
+		if self.variable is not None:
+			yield from self.variable.vendors(gizmo)
+		yield from super()._vendors(gizmo)
+
+
+	# @property
+	# def num_options(self):
+	# 	return len(self._sentences)
+	#
+	#
+	# @property
+	# def options(self):
+	# 	yield from self._sentences
+	#
+	#
+	# def random_choice(self, gen: np.random.RandomState = None):
+	# 	if gen is None:
+	# 		gen = self.gen
+	# 	return super().random_choice(gen)
 
 
 	def identify(self, decision: Decision):
@@ -73,12 +165,14 @@ class Verbalizer(Context, LoopyKit, MutableKit):
 		return self.identity[name]
 
 
-	# _default_templater = StaticTemplater
-	# def package(self, val: Any, gizmo: str = None):
-	# 	if isinstance(val, str): # recursively fill in templates
-	# 		return self._default_templater(gizmo, val).grab_from(self, gizmo)
-	# 	# raise NotImplementedError
-	# 	return val
+	# def include(self, *tools: AbstractTool) -> 'MutableKit':
+	# 	super().include(*tools)
+	# 	for t in tools:
+	# 		if isinstance(t, SentenceBuilder):
+	# 			self._sentences.append(t)
+	# 	return self
+
+	pass
 
 
 
@@ -117,9 +211,14 @@ class StaticChoice(Decision):
 
 	def grab_from(self, ctx: Verbalizer, gizmo: str) -> Any:
 		ID = ctx.identify(self)
-		if gizmo not in self.data[ID]:
-			return self._default_value(ctx, ID, gizmo)
-		return self.data[ID][gizmo] # TODO: should probably be done by the verbalizer automatically
+		info = self.data[ID]
+		if gizmo not in info:
+			out = self._default_value(ctx, ID, gizmo)
+		else:
+			out = info[gizmo] # TODO: should probably be done by the verbalizer automatically
+		if 'implication' not in info and 'implication' not in ctx:
+			ctx['implication'] = info['implication']
+		return out
 
 
 
@@ -134,6 +233,79 @@ class TemplateChoice(StaticChoice):
 		if gizmo == self.name:
 			return self.templates[ctx.identify(self)].grab_from(ctx, gizmo)
 		return super().grab_from(ctx, gizmo)
+
+
+
+class ConditionBuilder(TemplateChoice):
+	def __init__(self, data=None):
+		super().__init__('cond', data)
+
+
+	def _attempt_grab(self, ctx, gizmo: str):
+		try:
+			return self.grab_from(ctx, gizmo)
+		except MissingGizmoError:
+			return None
+
+
+	def grab_from(self, ctx: Verbalizer, gizmo: str) -> Any:
+		assert len(ctx.variable.given), f'no conditioning found: {ctx.variable}'
+
+		keys = ['head', 'cond-subject', 'phrase', 'subject', 'verb']
+		parent_ctxs = [ctx.condition(parent) for parent in ctx.variable.given]
+		terms = [tuple(self._attempt_grab(pctx, key) for key in keys) for pctx in parent_ctxs]
+
+		if len(terms):
+			pass
+
+		pass
+
+
+
+class SentenceChoice(Decision):
+	def __init__(self, sentences: Optional[Iterator[Atom]] = None):
+		super().__init__()
+		self.sentences = {}
+		if sentences is not None:
+			for s in sentences:
+				self.register_sentence(s)
+
+
+	def gizmos(self) -> Iterator[str]:
+		yield 'sentence'
+
+
+	@property
+	def name(self):
+		return 'sentence'
+
+
+	@property
+	def num_options(self):
+		return len(self.sentences)
+
+
+	@property
+	def options(self):
+		yield from self.sentences.keys()
+
+
+	def register_sentence(self, template: str, name: Optional[str] = None):
+		if name is None:
+			assert isinstance(template, Decision), f'must provide name if template is not a Decision: {template}'
+			name = template.name
+		if not isinstance(template, Atom):
+			assert isinstance(template, str), f'template must be a string or Atom: {template}'
+			template = StaticTemplater(name, template)
+		if name in self.sentences:
+			raise ValueError(f'already have a sentence type named {name}')
+		self.sentences[name] = template
+		return template
+
+
+	def grab_from(self, ctx: Verbalizer, gizmo: str) -> Any:
+		ID = ctx.identify(self)
+		return self.sentences[ID].grab_from(ctx, ID)
 
 
 
@@ -199,7 +371,8 @@ class Variable(Sourced, AbstractTool):
 
 
 	def gizmos(self) -> Iterator[str]:
-		yield from filter_duplicates(self.content.keys(), (key for key in self.data.keys() if key != 'values'))
+		yield from filter_duplicates(self.content.keys(),
+									 (key for key in self.data.keys() if key != 'values'))
 
 
 	def parse_variable_value(self, value):
@@ -220,15 +393,44 @@ class Variable(Sourced, AbstractTool):
 			return self.content[gizmo]
 		if gizmo in self.data:
 			return self.data[gizmo]
-		raise NotImplementedError
+		raise ToolFailedError(gizmo)
 
 
 
 class StatisticalTerm(Variable):
+	marginal_style = None
+	conditional_style = None
+
 	def __init__(self, data, *, conditions=None, **kwargs):
 		super().__init__(data, **kwargs)
 		self.given = conditions or {}
 
+
+	def gizmos(self) -> Iterator[str]:
+		yield 'sentence'
+		yield from super().gizmos()
+
+
+	def grab_from(self, ctx: Verbalizer, gizmo: str) -> Any:
+		if gizmo == 'sentence':
+			custom = self.conditional_style if len(self.given) else self.marginal_style
+			if custom is not None:
+				return custom.grab_from(ctx, gizmo)
+		return super().grab_from(ctx, gizmo)
+
+
+class MarginalStyle(CapitalizedTemplater, StaticTemplater):
+	def __init__(self, name = 'sentence', template = '{sentence}.'):
+		super().__init__(name, template)
+class ConditionalStyle(CapitalizedTemplater, TemplateChoice):
+	def grab_from(self, ctx: Verbalizer, gizmo: str) -> Any:
+		if gizmo == self.name:
+			cond = ctx['cond'] # always check the conditional clause first
+			if cond is None:
+				sentence = ctx["sentence"]
+				sentence = sentence[0].upper() + sentence[1:]
+				return sentence + '.'
+		return super().grab_from(ctx, gizmo)
 
 
 def default_vocabulary(seed=None):
@@ -236,18 +438,26 @@ def default_vocabulary(seed=None):
 
 	full = _get_template_data()
 
+	StatisticalTerm.marginal_style = MarginalStyle()
+	StatisticalTerm.conditional_style = ConditionalStyle()
+
 	term_defaults = full['default-structure']
-	terms = [StaticTemplater(key, val) for key, val in term_defaults.items()]
+	terms = [StaticTemplater(key, val) for key, val_options in term_defaults.items() for val in val_options]
 	verb.include(*terms)
 
-	freq = TemplateChoice('freq_text', full['frequency']['options'])
-	verb.include(freq)
+	freq_text = TemplateChoice('freq_text', full['frequency']['options'])
+	verb.include(freq_text)
 
 	event = TemplateChoice('event_text', full['event-structure'])
 	verb.include(event)
 
-	return verb
+	sentences = SentenceChoice()
+	verb.include(sentences)
 
+	freq = TemplateChoice('freq', {str(i): code for i, code in enumerate(full['frequency']['structure'])})
+	sentences.register_sentence(freq)
+
+	return verb
 
 
 def _get_template_data():
@@ -280,9 +490,11 @@ def test_story():
 	verb = story.term(term)
 	ctx.include(verb)
 
-	out = ctx['freq_text']
+	# out = ctx['freq_text']
 
-	phase = ctx['phase']
+	text = ctx['sentence']
+
+	_verb_str = str(ctx)
 
 
 	print(out)

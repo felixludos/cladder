@@ -25,14 +25,14 @@ transitions: # transition from one option to another
 
 
 conditional-structure:
-  prefix: '{head}, {tail}.'
-  suffix: '{tail} {head}.'
+  prefix: '{cond}, {content}.'
+  suffix: '{content} {cond}.'
 
 
 conditional-heads:
   when: 'when {phrase}'
   if: 'if {phrase}'
-  for: 'for {population}'
+  for: 'for {ratio}'
 
 
 default-probability: [probability, likelihood, chance]
@@ -64,15 +64,15 @@ frequency:
     - '{status} {freq_text}' # eg. "it is flu season often"
 
   options:
-    often: {text: often, implication: [0.7, 1.0]}
-    sometimes: {text: sometimes, implication: [0.3, 0.7]}
-    rarely: {text: rarely, implication: [0.1, 0.3]}
-    usually: {text: usually, implication: [0.7, 1.0]}
-    generally: {text: generally, implication: [0.4, 1.0]}
+    often: {freq_text: often, implication: [0.7, 1.0]}
+    sometimes: {freq_text: sometimes, implication: [0.3, 0.7]}
+    rarely: {freq_text: rarely, implication: [0.1, 0.3]}
+    usually: {freq_text: usually, implication: [0.7, 1.0]}
+    generally: {freq_text: generally, implication: [0.4, 1.0]}
 
-    occasionally: {text: occasionally, implication: [0.3, 0.7]}
-    frequently: {text: frequently, implication: [0.7, 1.0]}
-    regularly: {text: regularly, implication: [0.6, 1.0]}
+    occasionally: {freq_text: occasionally, implication: [0.3, 0.7]}
+    frequently: {freq_text: frequently, implication: [0.7, 1.0]}
+    regularly: {freq_text: regularly, implication: [0.6, 1.0]}
 
 
 population:
@@ -101,7 +101,7 @@ status:
 
 quantity:
   structure:
-    - 'the {prob_text} that {phrase} is {quantity_text}'
+    - 'the {prob_text} that {phrase} is {quantity_text}' # eg. "if you wear a face mask, the probability that you get the flu is low"
   prob_keys: [probability, likelihood, chance]
 
   options:
@@ -135,7 +135,7 @@ quantity:
 
 measure:
   structure:
-    - 'with {quantity_text} {prob_text}, {phrase}'
+    - 'with {quantity_text} {prob_text}, {phrase}' # eg. "with a high probability, it is flu season"
 #    - 'the {prob_text} of {phrase_ongoing} is {quantity_text}'
 
   options:
@@ -148,7 +148,7 @@ measure:
 
 likelihood:
   structure:
-    - 'it is {likelihood_text} that {phrase}'
+    - 'it is {likelihood_text} that {phrase}' # eg. "it is likely that people get the flu"
 #    - '{phrase_ongoing} is {likelihood_text}'
 
   options:
@@ -169,9 +169,9 @@ likelihood:
 
 estimation: # ambiguous value
   structure:
-    - '{quantifier} {mean} of {ratio}'
-    - 'there is {quantifier} a {mean} {prob_text} that {phrase}'
-    - 'the {prob_text} that {phrase} is {quantifier} {mean}'
+    - '{quantifier} {mean} of {ratio}' # eg. "most of the time it is flu season"
+    - 'there is {quantifier} a {mean} {prob_text} that {phrase}' # eg. "there is roughly a 20% chance that it is flu season"
+    - 'the {prob_text} that {phrase} is {quantifier} {mean}' # eg. "the probability that it is flu season is around 20%"
 
   options:
     about: {text: about, delta: [-0.05, 0.05]}

@@ -1,4 +1,3 @@
-# import opt_einsum.paths
 
 from .imports import *
 from .. import util

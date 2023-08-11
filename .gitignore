@@ -5,6 +5,8 @@ __pycache__/
 extra/
 data/backup/
 
+.DS_Store
+
 #notebooks/
 sketches/
 outputs/

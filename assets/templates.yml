@@ -12,6 +12,7 @@ prefix-flourishes:
   it_is_worth_noting: 'it is worth noting that'
   it_is_worth_remembering: 'it is worth remembering that'
 
+
 transitions: # transition from one option to another
   however: 'however'
   but: 'but'
@@ -24,14 +25,14 @@ transitions: # transition from one option to another
 
 
 conditional-structure:
-  prefix: '{head}, {tail}.'
-  suffix: '{tail} {head}.'
+  prefix: '{cond}, {content}.'
+  suffix: '{content} {cond}.'
 
 
 conditional-heads:
   when: 'when {phrase}'
   if: 'if {phrase}'
-  for: 'for {population}'
+  for: 'for {ratio}'
 
 
 default-probability: [probability, likelihood, chance]
@@ -100,7 +101,7 @@ status:
 
 quantity:
   structure:
-    - 'the {prob_text} that {phrase} is {quantity_text}'
+    - 'the {prob_text} that {phrase} is {quantity_text}' # eg. "if you wear a face mask, the probability that you get the flu is low"
   prob_keys: [probability, likelihood, chance]
 
   options:
@@ -134,7 +135,7 @@ quantity:
 
 measure:
   structure:
-    - 'with {quantity_text} {prob_text}, {phrase}'
+    - 'with {quantity_text} {prob_text}, {phrase}' # eg. "with a high probability, it is flu season"
 #    - 'the {prob_text} of {phrase_ongoing} is {quantity_text}'
 
   options:
@@ -147,7 +148,7 @@ measure:
 
 likelihood:
   structure:
-    - 'it is {likelihood_text} that {phrase}'
+    - 'it is {likelihood_text} that {phrase}' # eg. "it is likely that people get the flu"
 #    - '{phrase_ongoing} is {likelihood_text}'
 
   options:
@@ -168,9 +169,9 @@ likelihood:
 
 estimation: # ambiguous value
   structure:
-    - '{quantifier} {mean} of {ratio}'
-    - 'there is {quantifier} a {mean} {prob_text} that {phrase}'
-    - 'the {prob_text} that {phrase} is {quantifier} {mean}'
+    - '{quantifier} {mean} of {ratio}' # eg. "most of the time it is flu season"
+    - 'there is {quantifier} a {mean} {prob_text} that {phrase}' # eg. "there is roughly a 20% chance that it is flu season"
+    - 'the {prob_text} that {phrase} is {quantifier} {mean}' # eg. "the probability that it is flu season is around 20%"
 
   options:
     about: {text: about, delta: [-0.05, 0.05]}

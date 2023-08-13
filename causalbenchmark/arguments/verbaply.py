@@ -8,29 +8,34 @@ class Template:
 	pass
 
 
-class Atom(AbstractTool):
-	'''selects between static options'''
-	def possibilities(self):
-		raise NotImplementedError
+class Decision(AbstractDecision):
+	def __init__(self, gizmo: str, choices: Iterable[Any] = ()):
+		if not isinstance(choices, (list, tuple)):
+			choices = list(choices)
+		super().__init__()
+		self._choices = choices
+		self._gizmo = gizmo
+		self._gizmo_key = f'{gizmo}_key'
 
+	@property
+	def key(self):
+		return self._gizmo_key
 
+	def gizmos(self) -> Iterator[str]:
+		yield self._gizmo
+		yield self._gizmo_key
 
-class Decision(Atom):
-	@property
-	def name(self):
-		raise NotImplementedError
-	@property
-	def num_options(self):
-		raise NotImplementedError
-	@property
-	def options(self):
-		raise NotImplementedError
-	def decisions(self): # iterate through sub-decisions
-		yield from ()
-	# def random_choice(self, options: Sequence[str] = None, gen: np.random.RandomState = None):
-	# 	if options is None:
-	# 		options = self.options
-	# 	return gen.choice(list(options))
+	def __len__(self):
+		return len(self._choices)
+
+	def choices(self, gizmo: str = None):
+		yield from self._choices
+
+	def choose(self, ctx: AbstractCrawler, gizmo: str):
+		return ctx.select(self, gizmo)
+
+	def grab_from(self, ctx: AbstractCrawler, gizmo: str) -> Any:
+		return self.choose(ctx, gizmo)
 
 
 
@@ -82,7 +87,7 @@ class SimpleTemplater:
 
 
 
-class StaticTemplater(Atom, SimpleTemplater):
+class StaticTemplater(AbstractTool, SimpleTemplater):
 	def __init__(self, key: str, template: Union[str, Sequence[str]], **kwargs):
 		super().__init__(template, **kwargs)
 		self.key = key
@@ -100,132 +105,29 @@ class StaticTemplater(Atom, SimpleTemplater):
 
 
 
-class CapitalizedTemplater(Atom):
+class CapitalizedTemplater(AbstractTool):
 	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
 		out = super().grab_from(ctx, gizmo)
 		return out[0].upper() + out[1:]
 
 
+class Verbalization(SimpleFrame):
+	def identity(self):
+		keys = {decision.key for decision in self._owner.decisions()}
+		return {key: self[key] for key in self.cached() if key in keys}
 
-class Verbalizer(Cached, Context, LoopyKit, MutableKit, Decision):
-	def __init__(self, *args, identity=None, seed=None, **kwargs):
+
+class Verbalizer(SimpleCrawler):
+	_SubCrawler = Verbalization
+
+	def __init__(self, *args, seed=None, **kwargs):
 		super().__init__(*args, **kwargs)
-		if identity is None:
-			identity = {}
-		self.identity = identity
-		# self._sentences = []
-		self.gen = np.random.RandomState(seed)
-		self._variable = None
-		self._base = None
+		# self.rng = np.random.RandomState(seed)
 
-
-	@property
-	def variable(self):
-		return self._variable
-	@variable.setter
-	def variable(self, var: 'Variable'):
-		self._variable = var
-
-
-	@property
-	def base(self):
-		return self._base
-	@base.setter
-	def base(self, base: 'Verbalizer'):
-		self._base = base
-
-
-	def condition(self, parent: 'Variable') -> 'Verbalizer':
-		new = self.copy()
-		new.variable = parent
-		new.base = self
-		return new
-
-
-	def _vendors(self, gizmo: Optional[str] = None) -> Iterator[AbstractTool]:
-		if self.variable is not None:
-			yield from self.variable.vendors(gizmo)
-		yield from super()._vendors(gizmo)
-
-
-	# @property
-	# def num_options(self):
-	# 	return len(self._sentences)
-	#
-	#
-	# @property
-	# def options(self):
-	# 	yield from self._sentences
-	#
-	#
-	# def random_choice(self, gen: np.random.RandomState = None):
-	# 	if gen is None:
-	# 		gen = self.gen
-	# 	return super().random_choice(gen)
-	class _IdentifySelector:
-		def __init__(self, gen: np.random.RandomState, options: Sequence[str], values: Dict[str, str], key: str):
-			self.options = list(options)
-			self.gen = gen
-			self.values = values
-			self.key = key
-			self.pick = None
-
-		@staticmethod
-		def random_choice(gen: np.random.RandomState, options: Sequence[str]):
-			return gen.choice(list(options))
-
-		def __enter__(self):
-			if self.pick is None:
-				self.pick = self.random_choice(self.gen, self.options)
-				self.options.remove(self.pick)
-			return self.pick
-
-		def __exit__(self, exc_type, exc_val, exc_tb):
-			if exc_type is None:
-				self.values[self.key] = self.pick
-			else:
-				self.pick = None
-
-
-	def identify(self, decision: Decision):
-		name = decision.name
-		if name not in self.identity:
-			raise NotImplementedError(name)
-			self.identity[name] = decision.random_choice(gen=self.gen)
-		return self.identity[name]
-
-
-	def decisions(self):
-		for vendor in self._vendors():
+	def decisions(self, gizmo: str = None) -> Iterator[Decision]:
+		for vendor in self._vendors(gizmo):
 			if isinstance(vendor, Decision):
 				yield vendor
-				yield from vendor.decisions()
-
-
-	def spawn_identities(self):
-		decisions = list(self.decisions())
-		keys = [decision.name for decision in decisions]
-		for picks in product(*(decision.options for decision in decisions)):
-			yield dict(zip(keys, picks))
-
-
-	def spawn(self, key: str):
-		for identity in self.spawn_identities():
-			self.clear_cache()
-			self.identity.clear()
-			self.identity.update(identity)
-			sol = self.grab_from(self, key)
-			yield sol
-
-
-	# def include(self, *tools: AbstractTool) -> 'MutableKit':
-	# 	super().include(*tools)
-	# 	for t in tools:
-	# 		if isinstance(t, SentenceBuilder):
-	# 			self._sentences.append(t)
-	# 	return self
-
-	pass
 
 
 

@@ -9,34 +9,35 @@ class Template:
 
 
 class Decision(AbstractDecision):
-	def __init__(self, gizmo: str, choices: Iterable[Any] = ()):
-		if not isinstance(choices, (list, tuple)):
-			choices = list(choices)
-		super().__init__()
+	def __init__(self, gizmo: str, choices: Dict[str, Dict[str, Any]] = (),
+	             default_value_key: str = 'value', **kwargs):
+		if isinstance(choices, (list, tuple)):
+			choices = {str(i): {default_value_key: val} for i, val in enumerate(choices)}
+		super().__init__(**kwargs)
+		self._products = {key for info in choices.values() for key in info.keys()}
+		assert gizmo not in self._products, f'gizmo {gizmo} already in {self._products}'
 		self._choices = choices
 		self._gizmo = gizmo
-		self._gizmo_key = f'{gizmo}_key'
-
-	@property
-	def key(self):
-		return self._gizmo_key
 
 	def gizmos(self) -> Iterator[str]:
 		yield self._gizmo
-		yield self._gizmo_key
+		yield from self._products
 
 	def __len__(self):
 		return len(self._choices)
 
 	def choices(self, gizmo: str = None):
-		yield from self._choices
+		if gizmo == self._gizmo:
+			yield from self._choices.keys()
 
 	def choose(self, ctx: AbstractCrawler, gizmo: str):
 		return ctx.select(self, gizmo)
 
 	def grab_from(self, ctx: AbstractCrawler, gizmo: str) -> Any:
-		return self.choose(ctx, gizmo)
-
+		if gizmo == self._gizmo:
+			return self.choose(ctx, gizmo)
+		assert gizmo in self._products, f'gizmo {gizmo} not in {self._products}'
+		return self._choices[ctx[self._gizmo]].get(gizmo)
 
 
 class TemplateSelector(Template):
@@ -111,10 +112,12 @@ class CapitalizedTemplater(AbstractTool):
 		return out[0].upper() + out[1:]
 
 
+
 class Verbalization(SimpleFrame):
 	def identity(self):
 		keys = {decision.key for decision in self._owner.decisions()}
 		return {key: self[key] for key in self.cached() if key in keys}
+
 
 
 class Verbalizer(SimpleCrawler):

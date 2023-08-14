@@ -87,6 +87,8 @@ population:
 
     some: {text: some, implication: [0.3, 0.7]}
     most: {text: most, implication: [0.8, 1.0]}
+    almost_all: {text: almost all, implication: [0.9, 1.0]}
+    almost_none: {text: almost none, implication: [0.0, 0.1]}
 
 
 status:
@@ -102,6 +104,7 @@ status:
 quantity:
   structure:
     - 'the {prob_text} that {phrase} is {quantity_text}' # eg. "if you wear a face mask, the probability that you get the flu is low"
+
   prob_keys: [probability, likelihood, chance]
 
   options:

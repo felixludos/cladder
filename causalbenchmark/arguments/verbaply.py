@@ -9,33 +9,35 @@ class Template:
 
 
 class Decision(AbstractDecision):
-	def __init__(self, gizmo: str, choices: Iterable[Any] = ()):
-		if not isinstance(choices, (list, tuple)):
-			choices = list(choices)
-		super().__init__()
+	def __init__(self, gizmo: str, choices: Dict[str, Dict[str, Any]] = (),
+	             default_value_key: str = 'value', **kwargs):
+		if isinstance(choices, (list, tuple)):
+			choices = {str(i): {default_value_key: val} for i, val in enumerate(choices)}
+		super().__init__(**kwargs)
+		self._products = {key for info in choices.values() for key in info.keys()}
+		assert gizmo not in self._products, f'gizmo {gizmo} already in {self._products}'
 		self._choices = choices
 		self._gizmo = gizmo
-		self._gizmo_key = f'{gizmo}_key'
-
-	@property
-	def key(self):
-		return self._gizmo_key
 
 	def gizmos(self) -> Iterator[str]:
 		yield self._gizmo
-		yield self._gizmo_key
+		yield from self._products
 
 	def __len__(self):
 		return len(self._choices)
 
 	def choices(self, gizmo: str = None):
-		yield from self._choices
+		if gizmo == self._gizmo:
+			yield from self._choices.keys()
 
 	def choose(self, ctx: AbstractCrawler, gizmo: str):
 		return ctx.select(self, gizmo)
 
 	def grab_from(self, ctx: AbstractCrawler, gizmo: str) -> Any:
-		return self.choose(ctx, gizmo)
+		if gizmo == self._gizmo:
+			return self.choose(ctx, gizmo)
+		assert gizmo in self._products, f'gizmo {gizmo} not in {self._products}'
+		return self._choices[ctx[self._gizmo]].get(gizmo)
 
 
 
@@ -111,10 +113,12 @@ class CapitalizedTemplater(AbstractTool):
 		return out[0].upper() + out[1:]
 
 
+
 class Verbalization(SimpleFrame):
 	def identity(self):
 		keys = {decision.key for decision in self._owner.decisions()}
 		return {key: self[key] for key in self.cached() if key in keys}
+
 
 
 class Verbalizer(SimpleCrawler):
@@ -129,6 +133,64 @@ class Verbalizer(SimpleCrawler):
 			if isinstance(vendor, Decision):
 				yield vendor
 
+
+
+def default_vocabulary(seed=None):
+	verb = Verbalizer(seed=seed)
+
+	full = _get_template_data()
+
+	default = Decision('default', full['default-structure'])
+
+	claim = Decision('claim', full['frequency']['structure'])
+	verb.include(claim)
+
+	decision = Decision('freq_text', full['frequency']['options'])
+	verb.include(claim)
+
+
+
+	# StatisticalTerm.marginal_style = MarginalStyle()
+	# StatisticalTerm.conditional_style = ConditionalStyle()
+
+	verb.include(SentenceTemplate('sentence', '{claim}.'))
+	verb.include(SentenceChoice('sentence', full['conditional-structure']))
+
+	term_defaults = full['default-structure']
+	terms = [StaticTemplater(key, val) for key, val_options in term_defaults.items() for val in val_options]
+	verb.include(*terms)
+
+	freq_text = TemplateChoice('freq_text', full['frequency']['options'])
+	verb.include(freq_text)
+
+	event = TemplateChoice('event_text', full['event-structure'])
+	verb.include(event)
+
+	builders = ClaimChoice()
+	verb.include(builders)
+
+	freq = TemplateChoice('freq', {str(i): {'freq': code} for i, code in enumerate(full['frequency']['structure'])})
+	builders.register_claim(freq)
+
+	return verb
+
+
+def test_templater():
+	seed = 0
+	ctx = default_vocabulary(seed=seed)
+
+	known = list(ctx.gizmos())
+
+	out = ctx['freq_text']
+	impl = ctx['implication']
+	id_info = ctx.identity
+
+	print(out)
+
+
+
+
+################# old
 
 
 class StaticChoice(Decision):
@@ -245,7 +307,7 @@ class ConditionBuilder(TemplateChoice):
 
 
 class ClaimChoice(Decision):
-	def __init__(self, claim: Optional[Iterator[Atom]] = None):
+	def __init__(self, claim: Optional[Iterator['Atom']] = None):
 		super().__init__()
 		self.claims = {}
 		if claim is not None:
@@ -276,11 +338,11 @@ class ClaimChoice(Decision):
 		yield from self.claims.keys()
 
 
-	def register_claim(self, template: Union[str, Atom], name: Optional[str] = None):
+	def register_claim(self, template: Union[str, 'Atom'], name: Optional[str] = None):
 		if name is None:
 			assert isinstance(template, Decision), f'must provide name if template is not a Decision: {template}'
 			name = template.name
-		if not isinstance(template, Atom):
+		if not isinstance(template, 'Atom'):
 			assert isinstance(template, str), f'template must be a string or Atom: {template}'
 			template = StaticTemplater(name, template)
 		if name in self.claims:

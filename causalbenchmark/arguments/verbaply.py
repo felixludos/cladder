@@ -40,6 +40,7 @@ class Decision(AbstractDecision):
 		return self._choices[ctx[self._gizmo]].get(gizmo)
 
 
+
 class TemplateSelector(Template):
 	'''selects between (tools)'''
 	pass
@@ -132,6 +133,64 @@ class Verbalizer(SimpleCrawler):
 			if isinstance(vendor, Decision):
 				yield vendor
 
+
+
+def default_vocabulary(seed=None):
+	verb = Verbalizer(seed=seed)
+
+	full = _get_template_data()
+
+	default = Decision('default', full['default-structure'])
+
+	claim = Decision('claim', full['frequency']['structure'])
+	verb.include(claim)
+
+	decision = Decision('freq_text', full['frequency']['options'])
+	verb.include(claim)
+
+
+
+	# StatisticalTerm.marginal_style = MarginalStyle()
+	# StatisticalTerm.conditional_style = ConditionalStyle()
+
+	verb.include(SentenceTemplate('sentence', '{claim}.'))
+	verb.include(SentenceChoice('sentence', full['conditional-structure']))
+
+	term_defaults = full['default-structure']
+	terms = [StaticTemplater(key, val) for key, val_options in term_defaults.items() for val in val_options]
+	verb.include(*terms)
+
+	freq_text = TemplateChoice('freq_text', full['frequency']['options'])
+	verb.include(freq_text)
+
+	event = TemplateChoice('event_text', full['event-structure'])
+	verb.include(event)
+
+	builders = ClaimChoice()
+	verb.include(builders)
+
+	freq = TemplateChoice('freq', {str(i): {'freq': code} for i, code in enumerate(full['frequency']['structure'])})
+	builders.register_claim(freq)
+
+	return verb
+
+
+def test_templater():
+	seed = 0
+	ctx = default_vocabulary(seed=seed)
+
+	known = list(ctx.gizmos())
+
+	out = ctx['freq_text']
+	impl = ctx['implication']
+	id_info = ctx.identity
+
+	print(out)
+
+
+
+
+################# old
 
 
 class StaticChoice(Decision):
@@ -248,7 +307,7 @@ class ConditionBuilder(TemplateChoice):
 
 
 class ClaimChoice(Decision):
-	def __init__(self, claim: Optional[Iterator[Atom]] = None):
+	def __init__(self, claim: Optional[Iterator['Atom']] = None):
 		super().__init__()
 		self.claims = {}
 		if claim is not None:
@@ -279,11 +338,11 @@ class ClaimChoice(Decision):
 		yield from self.claims.keys()
 
 
-	def register_claim(self, template: Union[str, Atom], name: Optional[str] = None):
+	def register_claim(self, template: Union[str, 'Atom'], name: Optional[str] = None):
 		if name is None:
 			assert isinstance(template, Decision), f'must provide name if template is not a Decision: {template}'
 			name = template.name
-		if not isinstance(template, Atom):
+		if not isinstance(template, 'Atom'):
 			assert isinstance(template, str), f'template must be a string or Atom: {template}'
 			template = StaticTemplater(name, template)
 		if name in self.claims:

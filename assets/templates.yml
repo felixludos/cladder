@@ -25,8 +25,8 @@ transitions: # transition from one option to another
 
 
 conditional-structure:
-  prefix: '{cond}, {content}.'
-  suffix: '{content} {cond}.'
+  prefix: '{cond}, {claim}.'
+  suffix: '{claim} {cond}.'
 
 
 conditional-heads:
@@ -39,8 +39,9 @@ default-probability: [probability, likelihood, chance]
 
 default-structure:
   phrase: ['{subject} {verb}', '{status}']
-  ratio: ['{subject} {verb}', 'the time {status}']
-  status: ['{being} {event}'] # "an ongoing event"
+  ratio: ['the time {subject} {verb}', 'the time {status}']
+  status: ['it is {event}'] # "an ongoing event"
+#  status: ['{being} {event}'] # "an ongoing event"
   being: ['{pronoun} is']
 #  population: 'of the time {status}'
 
@@ -60,8 +61,10 @@ event-structure:
 frequency:
   structure:
     - '{subject} {freq_text} {verb}' # eg. "people often get the flu"
-    - '{being} {freq_text} {event}' # eg. "it is often flu season"
+    - 'it is {freq_text} {event}' # eg. "it is often flu season"
+#    - '{being} {freq_text} {event}' # eg. "it is often flu season"
     - '{status} {freq_text}' # eg. "it is flu season often"
+    - '{freq_text} {status}' # eg. "often it is flu season"
 
   options:
     often: {freq_text: often, implication: [0.7, 1.0]}
@@ -74,31 +77,24 @@ frequency:
     frequently: {freq_text: frequently, implication: [0.7, 1.0]}
     regularly: {freq_text: regularly, implication: [0.6, 1.0]}
 
+    almost_always: {freq_text: almost always, implication: [0.8, 1.0]}
+    almost_never: {freq_text: almost never, implication: [0.0, 0.2]}
+
 
 population:
   structure:
     - '{population_text} {population}' # eg. "few people get the flu"
 
   options:
-    very_few: {text: very few, implication: [0.0, 0.2]}
-    few: {text: few, implication: [0.1, 0.3]}
-    many: {text: many, implication: [0.7, 0.9]}
-    very_many: {text: very many, implication: [0.8, 1.0]}
+    very_few: {population_text: very few, implication: [0.0, 0.2]}
+    few: {population_text: few, implication: [0.1, 0.3]}
+    many: {population_text: many, implication: [0.7, 0.9]}
+    very_many: {population_text: very many, implication: [0.8, 1.0]}
 
-    some: {text: some, implication: [0.3, 0.7]}
-    most: {text: most, implication: [0.8, 1.0]}
-    almost_all: {text: almost all, implication: [0.9, 1.0]}
-    almost_none: {text: almost none, implication: [0.0, 0.1]}
-
-
-status:
-  structure:
-    - '{status_text} {status}' # eg. "most of the time it is flu season"
-
-  options:
-    sometimes: {text: sometimes, implication: [0.3, 0.7]}
-    some: { text: some of the time, implication: [ 0.3, 0.7 ] }
-    most: { text: most of the time, implication: [ 0.8, 1.0 ] }
+    some: {population_text: some, implication: [0.3, 0.7]}
+    most: {population_text: most, implication: [0.8, 1.0]}
+    almost_all: {population_text: almost all, implication: [0.9, 1.0]}
+    almost_none: {population_text: almost none, implication: [0.0, 0.1]}
 
 
 quantity:
@@ -108,45 +104,45 @@ quantity:
   prob_keys: [probability, likelihood, chance]
 
   options:
-    very_low: {text: very low, implication: [0.0, 0.2]}
-    low: {text: low, implication: [0.2, 0.4]}
-    moderate: {text: moderate, implication: [0.4, 0.6]}
-    high: {text: high, implication: [0.6, 0.8]}
-    very_high: {text: very high, implication: [0.8, 1.0]}
+    very_low: {quantity_text: very low, implication: [0.0, 0.2]}
+    low: {quantity_text: low, implication: [0.2, 0.4]}
+    moderate: {quantity_text: moderate, implication: [0.4, 0.6]}
+    high: {quantity_text: high, implication: [0.6, 0.8]}
+    very_high: {quantity_text: very high, implication: [0.8, 1.0]}
 
-    extremely_small: {text: extremely small, implication: [0.0, 0.1]}
-    very_small: {text: very small, implication: [0.0, 0.2]}
-    small: {text: small, implication: [0.1, 0.3]}
-    large: {text: large, implication: [0.7, 0.9]}
-    very_large: {text: very large, implication: [0.8, 1.0]}
-    extremely_large: {text: extremely large, implication: [0.9, 1.0]}
+    extremely_small: {quantity_text: extremely small, implication: [0.0, 0.1]}
+    very_small: {quantity_text: very small, implication: [0.0, 0.2]}
+    small: {quantity_text: small, implication: [0.1, 0.3]}
+    large: {quantity_text: large, implication: [0.7, 0.9]}
+    very_large: {quantity_text: very large, implication: [0.8, 1.0]}
+    extremely_large: {quantity_text: extremely large, implication: [0.9, 1.0]}
 
-    significant: {text: significant, implication: [0.3, 0.9]}
-#    insignificant: {text: insignificant, implication: [0.0, 0.2]}
-    negligible: {text: negligible, implication: [0.0, 0.2]}
-    substantial: {text: substantial, implication: [0.6, 1.0]}
-    considerable: {text: considerable, implication: [0.6, 1.0]}
+    significant: {quantity_text: significant, implication: [0.3, 0.9]}
+#    insignificant: {quantity_text: insignificant, implication: [0.0, 0.2]}
+    negligible: {quantity_text: negligible, implication: [0.0, 0.2]}
+    substantial: {quantity_text: substantial, implication: [0.6, 1.0]}
+    considerable: {quantity_text: considerable, implication: [0.6, 1.0]}
 
-    all_but_impossible: {text: all but impossible, implication: [0.0, 0.1]}
-    almost_impossible: {text: almost impossible, implication: [0.0, 0.1]}
-    improbable: {text: improbable, implication: [0.1, 0.3]}
-#    possible: {text: possible, implication: [0.2, 0.8]}
-    probable: {text: probable, implication: [0.7, 0.9]}
-    almost_certain: {text: almost certain, implication: [0.9, 1.0]}
-    all_but_certain: {text: all but certain, implication: [0.9, 1.0]}
+    all_but_impossible: {quantity_text: all but impossible, implication: [0.0, 0.1]}
+    almost_impossible: {quantity_text: almost impossible, implication: [0.0, 0.1]}
+    improbable: {quantity_text: improbable, implication: [0.1, 0.3]}
+#    possible: {quantity_text: possible, implication: [0.2, 0.8]}
+    probable: {quantity_text: probable, implication: [0.7, 0.9]}
+    almost_certain: {quantity_text: almost certain, implication: [0.9, 1.0]}
+    all_but_certain: {quantity_text: all but certain, implication: [0.9, 1.0]}
 
 
 measure:
   structure:
-    - 'with {quantity_text} {prob_text}, {phrase}' # eg. "with a high probability, it is flu season"
+    - 'with {measure_text} {prob_text}, {phrase}' # eg. "with a high probability, it is flu season"
 #    - 'the {prob_text} of {phrase_ongoing} is {quantity_text}'
 
   options:
-    very_low: {text: very low, implication: [0.0, 0.2]}
-    low: {text: low, implication: [0.2, 0.4]}
-    moderate: {text: moderate, implication: [0.4, 0.6]}
-    high: {text: high, implication: [0.6, 0.8]}
-    very_high: {text: very high, implication: [0.8, 1.0]}
+    very_low: {measure_text: very low, implication: [0.0, 0.2]}
+    low: {measure_text: low, implication: [0.2, 0.4]}
+    moderate: {measure_text: moderate, implication: [0.4, 0.6]}
+    high: {measure_text: high, implication: [0.6, 0.8]}
+    very_high: {measure_text: very high, implication: [0.8, 1.0]}
 
 
 likelihood:
@@ -155,19 +151,19 @@ likelihood:
 #    - '{phrase_ongoing} is {likelihood_text}'
 
   options:
-    very_unlikely: {text: very unlikely, implication: [0.0, 0.2]}
-    unlikely: {text: unlikely, implication: [0.1, 0.3]}
-    somewhat_likely: {text: somewhat likely, implication: [0.4, 0.7]}
-    likely: {text: likely, implication: [0.7, 0.9]}
-    very_likely: {text: very likely, implication: [0.8, 1.0]}
+    very_unlikely: {likelihood_text: very unlikely, implication: [0.0, 0.2]}
+    unlikely: {likelihood_text: unlikely, implication: [0.1, 0.3]}
+    somewhat_likely: {likelihood_text: somewhat likely, implication: [0.4, 0.7]}
+    likely: {likelihood_text: likely, implication: [0.7, 0.9]}
+    very_likely: {likelihood_text: very likely, implication: [0.8, 1.0]}
 
-    all_but_impossible: { text: is all but impossible, implication: [ 0.0, 0.1 ] }
-    almost_impossible: { text: almost impossible, implication: [ 0.0, 0.1 ] }
-    improbable: { text: improbable, implication: [ 0.1, 0.3 ] }
-    #    possible: {text: possible, implication: [0.2, 0.8]}
-    probable: { text: probable, implication: [ 0.7, 0.9 ] }
-    almost_certain: { text: almost certain, implication: [ 0.9, 1.0 ] }
-    all_but_certain: { text: is all but certain, implication: [ 0.9, 1.0 ] }
+    all_but_impossible: { likelihood_text: is all but impossible, implication: [ 0.0, 0.1 ] }
+    almost_impossible: { likelihood_text: almost impossible, implication: [ 0.0, 0.1 ] }
+    improbable: { likelihood_text: improbable, implication: [ 0.1, 0.3 ] }
+    #    possible: {likelihood_text: possible, implication: [0.2, 0.8]}
+    probable: { likelihood_text: probable, implication: [ 0.7, 0.9 ] }
+    almost_certain: { likelihood_text: almost certain, implication: [ 0.9, 1.0 ] }
+    all_but_certain: { likelihood_text: is all but certain, implication: [ 0.9, 1.0 ] }
 
 
 estimation: # ambiguous value
@@ -177,37 +173,50 @@ estimation: # ambiguous value
     - 'the {prob_text} that {phrase} is {quantifier} {mean}' # eg. "the probability that it is flu season is around 20%"
 
   options:
-    about: {text: about, delta: [-0.05, 0.05]}
-    around: {text: around, delta: [-0.1, 0.1]}
-    approximately: {text: approximately, delta: [-0.1, 0.1]}
-    roughly: {text: roughly, delta: [-0.1, 0.1]}
-    give_or_take: {text: give or take, delta: [-0.1, 0.1]}
-    more_or_less: {text: more or less, delta: [-0.1, 0.1]}
-    close_to: {text: close to, delta: [-0.05, 0.05]}
-    just_about: {text: just about, delta: [-0.03, 0.03]}
+    about: {quantifier: about, delta: [-0.05, 0.05]}
+    around: {quantifier: around, delta: [-0.1, 0.1]}
+    approximately: {quantifier: approximately, delta: [-0.1, 0.1]}
+    roughly: {quantifier: roughly, delta: [-0.1, 0.1]}
+    give_or_take: {quantifier: give or take, delta: [-0.1, 0.1]}
+    more_or_less: {quantifier: more or less, delta: [-0.1, 0.1]}
+    close_to: {quantifier: close to, delta: [-0.05, 0.05]}
+    just_about: {quantifier: just about, delta: [-0.03, 0.03]}
 
-    almost: {text: almost, delta: [-0.05, 0.0]}
-    nearly: {text: nearly, delta: [-0.05, 0.0]}
-    just_under: { text: just under, delta: [ -0.05, 0.0 ] }
-    just_below: { text: just below, delta: [ -0.05, 0.0 ] }
-    just_less_than: { text: just less than, delta: [ -0.05, 0.0 ] }
-    just_short_of: { text: just short of, delta: [ -0.05, 0.0 ] }
-    just_shy_of: { text: just shy of, delta: [ -0.05, 0.0 ] }
+    almost: {quantifier: almost, delta: [-0.05, 0.0]}
+    nearly: {quantifier: nearly, delta: [-0.05, 0.0]}
+    just_under: { quantifier: just under, delta: [ -0.05, 0.0 ] }
+    just_below: { quantifier: just below, delta: [ -0.05, 0.0 ] }
+    just_less_than: { quantifier: just less than, delta: [ -0.05, 0.0 ] }
+    just_short_of: { quantifier: just short of, delta: [ -0.05, 0.0 ] }
+    just_shy_of: { quantifier: just shy of, delta: [ -0.05, 0.0 ] }
 
-    just_over: {text: just over, delta: [0.0, 0.05]}
-    just_above: {text: just above, delta: [0.0, 0.05]}
-    just_more_than: {text: just more than, delta: [0.0, 0.05]}
+    just_over: {quantifier: just over, delta: [0.0, 0.05]}
+    just_above: {quantifier: just above, delta: [0.0, 0.05]}
+    just_more_than: {quantifier: just more than, delta: [0.0, 0.05]}
+
+
+status:
+  structure:
+    - '{status_freq} of {ratio}' # eg. "most of the time it is flu season"
+
+  options:
+    almost_all: {status_freq: almost all, implication: [0.9, 1.0]}
+    almost_none: {status_freq: almost none, implication: [0.0, 0.1]}
+    some: { status_freq: some, implication: [ 0.3, 0.7 ] }
+    most: { status_freq: most, implication: [ 0.8, 1.0 ] }
+
 
 
 limits:
   structure:
-    - 'there is {quantifier} {bound} a {prob_text} that {phrase}'
+    - 'there is {quantifier} a {bound} {prob_text} that {phrase}'
     - '{quantifier} {bound} of {ratio}'
     - '{phrase} is {quantifier} {bound}'
+    - 'the {prob_text} that {phrase} is {quantifier} {bound}'
 
     - '{quantifier} a {prob_text} of {range}, {phrase}'
     - 'there is a {range} {prob_text} that {phrase}'
-    - '{range} of {ratio}'
+    - '{range} of {population}'
     - 'between {lower_bound} and {upper_bound} of {ratio}'
 
   range_options:
@@ -219,14 +228,14 @@ limits:
     lower: 0.99
 
   options:
-    at_most: {text: at most, bound: upper_bound}
-    up_to: {text: up to, bound: upper_bound}
-    no_more_than: {text: no more than, bound: upper_bound}
+    at_most: {limit_text: at most, bound: upper_bound}
+    up_to: {limit_text: up to, bound: upper_bound}
+    no_more_than: {limit_text: no more than, bound: upper_bound}
 
-    at_least: {text: at least, bound: lower_bound}
-    no_less_than: {text: no less than, bound: lower_bound}
+    at_least: {limit_text: at least, bound: lower_bound}
+    no_less_than: {limit_text: no less than, bound: lower_bound}
 
-    between: {text: between}
+    between: {limit_text: between}
 
 
 precise:
@@ -241,6 +250,7 @@ precise:
   options:
     assume_that: {text: assume that}
     suppose_that: {text: suppose that}
+    given_that: {text: given that}
 #    imagine_that: {text: imagine that}
 #    let_us_suppose_that: {text: let us suppose that}
     it_is_known_that: {text: it is known that}

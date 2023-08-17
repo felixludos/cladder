@@ -4,88 +4,112 @@ from omniply.novo.test_novo import *
 
 
 
-class Template:
-	pass
+# class Template:
+# 	pass
 
 
 class Decision(AbstractDecision):
-	def __init__(self, gizmo: str, choices: Dict[str, Dict[str, Any]] = (),
-	             default_value_key: str = 'value', **kwargs):
+	def __init__(self, target: str, choices: Dict[str, Dict[str, Any]] = (), key_gizmo: str = None, **kwargs):
+		if key_gizmo is None:
+			key_gizmo = f'{target}_id'
 		if isinstance(choices, (list, tuple)):
-			choices = {str(i): {default_value_key: val} for i, val in enumerate(choices)}
+			choices = {str(i): {target: val} for i, val in enumerate(choices)}
 		super().__init__(**kwargs)
 		self._products = {key for info in choices.values() for key in info.keys()}
-		assert gizmo not in self._products, f'gizmo {gizmo} already in {self._products}'
+		assert key_gizmo not in self._products, f'key {key_gizmo} already in {self._products}'
+		assert target in self._products, f'target {target} not in {self._products}'
 		self._choices = choices
-		self._gizmo = gizmo
+		self.key = key_gizmo
+		self._target = target
 
 	def gizmos(self) -> Iterator[str]:
-		yield self._gizmo
+		yield self.key
 		yield from self._products
 
 	def __len__(self):
 		return len(self._choices)
 
 	def choices(self, gizmo: str = None):
-		if gizmo == self._gizmo:
+		if gizmo == self.key:
 			yield from self._choices.keys()
 
 	def choose(self, ctx: AbstractCrawler, gizmo: str):
 		return ctx.select(self, gizmo)
 
 	def grab_from(self, ctx: AbstractCrawler, gizmo: str) -> Any:
-		if gizmo == self._gizmo:
+		if gizmo == self.key:
 			return self.choose(ctx, gizmo)
 		assert gizmo in self._products, f'gizmo {gizmo} not in {self._products}'
-		return self._choices[ctx[self._gizmo]].get(gizmo)
+		choice = ctx[self.key]
+		return self._choices[choice].get(gizmo)
 
 
 
-class TemplateSelector(Template):
-	'''selects between (tools)'''
-	pass
+# class TemplateSelector(Template):
+# 	'''selects between (tools)'''
+# 	pass
 
 
 class SimpleTemplater:
-	def __init__(self, terms: Union[str, Iterable[str]] = None, delimiter=''):
-		if terms is None:
-			terms = []
-		elif isinstance(terms, str):
-			terms = terms.split(' ')
-			# terms = self._extract_template_keys(terms)
-		if isinstance(terms, Iterable):
-			terms = (key for term in terms for key in self._extract_template_keys(term))
-
-		reqs = {}
-		keys = set()
-		pieces = []
-		for i, (is_key, val) in enumerate(terms):
-			if is_key:
-				reqs[i] = val
-				keys.add(val)
-			pieces.append(val)
-		self.reqs = reqs
+	def __init__(self, template: str, **kwargs):
+		super().__init__(**kwargs)
+		keys = set(self._extract_template_keys(template))
 		self.keys = keys
-		self.terms = pieces
-		self.delimiter = delimiter
+		self.template = template
+
+	# def __init__(self, terms: Union[str, Iterable[str]] = None, delimiter=''):
+	# 	if terms is None:
+	# 		terms = []
+	# 	elif isinstance(terms, str):
+	# 		terms = terms.split(' ')
+	# 		# terms = self._extract_template_keys(terms)
+	# 	if isinstance(terms, Iterable):
+	# 		terms = (key for term in terms for key in self._extract_template_keys(term))
+	#
+	# 	reqs = {}
+	# 	keys = set()
+	# 	pieces = []
+	# 	for i, (is_key, val) in enumerate(terms):
+	# 		if is_key:
+	# 			reqs[i] = val
+	# 			keys.add(val)
+	# 		pieces.append(val)
+	# 	self.reqs = reqs
+	# 	self.keys = keys
+	# 	self.terms = pieces
+	# 	self.delimiter = delimiter
 
 
 	@staticmethod
 	def _extract_template_keys(template: str):
 		for match in re.finditer(r'\{([^\}]+)\}', template):
-			if match.start() > 0:
-				yield False, template[:match.start()]
-			yield True, match.group(1)
-			template = template[match.end():]
-		if len(template):
-			yield False, template
+			yield match.group(1)
 
 
 	def fill_in(self, reqs: Dict[str, str]):
-		return self.delimiter.join(reqs[self.reqs[i]] if i in self.reqs else term
-								   for i, term in enumerate(self.terms)
-								   if (i not in self.reqs and term is not None)
-								   or (i in self.reqs and self.reqs[i] in reqs))
+		return self.template.format(**reqs)
+		# return self.delimiter.join(reqs[self.reqs[i]] if i in self.reqs else term
+		# 						   for i, term in enumerate(self.terms)
+		# 						   if (i not in self.reqs and term is not None)
+		# 						   or (i in self.reqs and self.reqs[i] in reqs))
+
+
+class TemplateDecision(Decision):
+	_Templater = SimpleTemplater
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		for key, info in self._choices.items():
+			raw = info.get(self._target)
+			if isinstance(raw, str):
+				info[self._target] = self._Templater(raw)
+
+	def grab_from(self, ctx: AbstractCrawler, gizmo: str) -> Any:
+		out = super().grab_from(ctx, gizmo)
+		if isinstance(out, self._Templater):
+			reqs = {key: ctx.grab_from(ctx, key) for key in out.keys}
+			result = out.fill_in(reqs)
+			return result
+		return out
 
 
 
@@ -107,32 +131,78 @@ class StaticTemplater(AbstractTool, SimpleTemplater):
 
 
 
-class CapitalizedTemplater(AbstractTool):
-	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
-		out = super().grab_from(ctx, gizmo)
-		return out[0].upper() + out[1:]
+class AsSentence(AbstractTool):
+	def __init__(self, target: str, capitalize=True, period=True, source: str = None, **kwargs):
+		if source is None:
+			source = target # loopy
+		super().__init__(**kwargs)
+		self.source = source
+		self.target = target
+		self.capitalize = capitalize
+		self.period = period
 
+	def gizmos(self) -> Iterator[str]:
+		yield self.target
+
+	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
+		out = ctx[self.source]
+		if self.capitalize:
+			out = out[0].upper() + out[1:]
+		if self.period:
+			out += '.'
+		return out
 
 
 class Verbalization(SimpleFrame):
 	def identity(self):
-		keys = {decision.key for decision in self._owner.decisions()}
-		return {key: self[key] for key in self.cached() if key in keys}
+		# keys = {decision.key for decision in self._owner.decisions()}
+		# return {key: self[key] for key in self.cached() if key in keys}
+		return self._frame.copy()
 
 
-
-class Verbalizer(SimpleCrawler):
+class Verbalizer(SimpleCrawler, LoopyKit, MutableKit):
 	_SubCrawler = Verbalization
 
 	def __init__(self, *args, seed=None, **kwargs):
 		super().__init__(*args, **kwargs)
-		# self.rng = np.random.RandomState(seed)
+		self.rng = np.random.RandomState(seed)
+
+	def identity(self):
+		return self.current.identity()
 
 	def decisions(self, gizmo: str = None) -> Iterator[Decision]:
 		for vendor in self._vendors(gizmo):
 			if isinstance(vendor, Decision):
 				yield vendor
 
+	def spawn(self, gizmo: Optional[str] = None, *, empty_value=None) -> Iterator[Any]:
+		ctx = self.current
+		for ctx in chain([ctx], self):
+			if gizmo is not None:
+				try:
+					ctx.grab(gizmo)
+				except ToolFailedError as e:
+					ctx['error'] = e
+					ctx[gizmo] = empty_value
+				ctx['identity'] = ctx.identity()
+			yield ctx
+
+	def spawn_gizmo(self, gizmo: str, *, empty_value=None) -> Iterator[str]:
+		for ctx in self.spawn(gizmo, empty_value=empty_value):
+			if ctx[gizmo] is not empty_value:
+				yield ctx[gizmo]
+
+
+@tool('mean')
+def format_number(value):
+	return f'{value:.0%}'
+
+@tool('lower_bound')
+def format_lower_bound(lower_bound_value):
+	return f'{lower_bound_value:.0%}'
+@tool('upper_bound')
+def format_upper_bound(upper_bound_value):
+	return f'{upper_bound_value:.0%}'
 
 
 def default_vocabulary(seed=None):
@@ -140,52 +210,96 @@ def default_vocabulary(seed=None):
 
 	full = _get_template_data()
 
-	default = Decision('default', full['default-structure'])
+	defaults = [StaticTemplater(key, val) for key, vals in full['default-structure'].items() for val in vals]
+	verb.include(*defaults, format_number, format_lower_bound, format_upper_bound)
+	verb.include(Decision('prob_text', full['quantity']['prob_keys']))
 
-	claim = Decision('claim', full['frequency']['structure'])
-	verb.include(claim)
+	verb.include(TemplateDecision('claim', []
+	                              + full['frequency']['structure']
+	                              + full['quantity']['structure']
+	                              + full['measure']['structure']
+	                              + full['likelihood']['structure']
+	                              + full['estimation']['structure']
+	                              + full['status']['structure']
+	                              + full['population']['structure']
+	                              # + full['limits']['structure']
+	                              ))
 
-	decision = Decision('freq_text', full['frequency']['options'])
-	verb.include(claim)
+	verb.include(Decision('freq_text', full['frequency']['options']))
+
+	verb.include(Decision('quantity_text', full['quantity']['options']))
+
+	verb.include(Decision('measure_text', full['measure']['options']))
+
+	verb.include(Decision('likelihood_text', full['likelihood']['options']))
+
+	verb.include(Decision('quantifier', full['estimation']['options']))
+
+	verb.include(Decision('status_freq', full['status']['options']))
+
+	verb.include(Decision('population_text', full['population']['options']))
+
+	verb.include(Decision('limit_text', full['limits']['options']))
 
 
-
-	# StatisticalTerm.marginal_style = MarginalStyle()
-	# StatisticalTerm.conditional_style = ConditionalStyle()
-
-	verb.include(SentenceTemplate('sentence', '{claim}.'))
-	verb.include(SentenceChoice('sentence', full['conditional-structure']))
-
-	term_defaults = full['default-structure']
-	terms = [StaticTemplater(key, val) for key, val_options in term_defaults.items() for val in val_options]
-	verb.include(*terms)
-
-	freq_text = TemplateChoice('freq_text', full['frequency']['options'])
-	verb.include(freq_text)
-
-	event = TemplateChoice('event_text', full['event-structure'])
-	verb.include(event)
-
-	builders = ClaimChoice()
-	verb.include(builders)
-
-	freq = TemplateChoice('freq', {str(i): {'freq': code} for i, code in enumerate(full['frequency']['structure'])})
-	builders.register_claim(freq)
-
+	verb.include(AsSentence('claim', capitalize=True, period=True))
 	return verb
+
 
 
 def test_templater():
 	seed = 0
-	ctx = default_vocabulary(seed=seed)
+	gen = default_vocabulary(seed=seed)
+	ctx = gen.current
+
+	ctx['subject'] = 'Bob'
+	ctx['verb'] = 'eats'
 
 	known = list(ctx.gizmos())
+	assert 'freq_text' in known
 
-	out = ctx['freq_text']
-	impl = ctx['implication']
-	id_info = ctx.identity
+	# out = ctx['freq_text']
+	# impl = ctx['implication']
 
-	print(out)
+	claim = ctx['claim']
+	assert 'Bob' in claim and 'eats' in claim
+
+	id_info = ctx.identity()
+	assert 'freq_text_id' in id_info and 'claim_id' in id_info
+
+
+
+class InfoTool(AbstractTool):
+	def __init__(self, info, **kwargs):
+		super().__init__(**kwargs)
+		self.info = info
+
+	def gizmos(self) -> Iterator[str]:
+		yield from self.info.keys()
+
+	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
+		return self.info[gizmo]
+
+
+
+def test_spawn_templates():
+	seed = 0
+	gen = default_vocabulary(seed=seed)
+
+	gen.include(InfoTool({
+		'subject': 'Bob',
+		'verb': 'eats dinner',
+		# 'pronoun': 'he',
+		'event': 'dinner',
+		'value': 0.4,
+		'population': 'people eat dinner',
+	}))
+
+	entries = list(gen.spawn('claim'))
+
+	results = [entry['claim'] for entry in entries]
+
+	print(entries)
 
 
 
@@ -457,60 +571,60 @@ class StatisticalTerm(Variable):
 
 
 
-class SentenceTemplate(CapitalizedTemplater, StaticTemplater):
-	pass
-class SentenceChoice(CapitalizedTemplater, TemplateChoice):
-	pass
+# class SentenceTemplate(CapitalizedTemplater, StaticTemplater):
+# 	pass
+# class SentenceChoice(CapitalizedTemplater, TemplateChoice):
+# 	pass
 
 
 
-def default_vocabulary(seed=None):
-	verb = Verbalizer(seed=seed)
-
-	full = _get_template_data()
-
-	# StatisticalTerm.marginal_style = MarginalStyle()
-	# StatisticalTerm.conditional_style = ConditionalStyle()
-
-	verb.include(SentenceTemplate('sentence', '{claim}.'))
-	verb.include(SentenceChoice('sentence', full['conditional-structure']))
-
-	term_defaults = full['default-structure']
-	terms = [StaticTemplater(key, val) for key, val_options in term_defaults.items() for val in val_options]
-	verb.include(*terms)
-
-	freq_text = TemplateChoice('freq_text', full['frequency']['options'])
-	verb.include(freq_text)
-
-	event = TemplateChoice('event_text', full['event-structure'])
-	verb.include(event)
-
-	builders = ClaimChoice()
-	verb.include(builders)
-
-	freq = TemplateChoice('freq', {str(i): {'freq': code} for i, code in enumerate(full['frequency']['structure'])})
-	builders.register_claim(freq)
-
-	return verb
-
-
+# def default_vocabulary(seed=None):
+# 	verb = Verbalizer(seed=seed)
+#
+# 	full = _get_template_data()
+#
+# 	# StatisticalTerm.marginal_style = MarginalStyle()
+# 	# StatisticalTerm.conditional_style = ConditionalStyle()
+#
+# 	verb.include(SentenceTemplate('sentence', '{claim}.'))
+# 	verb.include(SentenceChoice('sentence', full['conditional-structure']))
+#
+# 	term_defaults = full['default-structure']
+# 	terms = [StaticTemplater(key, val) for key, val_options in term_defaults.items() for val in val_options]
+# 	verb.include(*terms)
+#
+# 	freq_text = TemplateChoice('freq_text', full['frequency']['options'])
+# 	verb.include(freq_text)
+#
+# 	event = TemplateChoice('event_text', full['event-structure'])
+# 	verb.include(event)
+#
+# 	builders = ClaimChoice()
+# 	verb.include(builders)
+#
+# 	freq = TemplateChoice('freq', {str(i): {'freq': code} for i, code in enumerate(full['frequency']['structure'])})
+# 	builders.register_claim(freq)
+#
+# 	return verb
+#
+#
 def _get_template_data():
 	path = util.assets_root() / 'templates.yml'
 	assert path.exists(), f'path {path!r} does not exist'
 	return load_yaml(path)
-
-
-def test_templater():
-	seed = 0
-	ctx = default_vocabulary(seed=seed)
-
-	known = list(ctx.gizmos())
-
-	out = ctx['freq_text']
-	impl = ctx['implication']
-	id_info = ctx.identity
-
-	print(out)
+#
+#
+# def test_templater():
+# 	seed = 0
+# 	ctx = default_vocabulary(seed=seed)
+#
+# 	known = list(ctx.gizmos())
+#
+# 	out = ctx['freq_text']
+# 	impl = ctx['implication']
+# 	id_info = ctx.identity
+#
+# 	print(out)
 
 
 def test_story():

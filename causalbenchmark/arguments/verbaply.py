@@ -204,6 +204,11 @@ def format_lower_bound(lower_bound_value):
 def format_upper_bound(upper_bound_value):
 	return f'{upper_bound_value:.0%}'
 
+class BoundsFinder(AbstractTool):
+	def gizmos(self) -> Iterator[str]:
+		yield 'lower_bound'
+		yield 'bound'
+
 
 def default_vocabulary(seed=None):
 	verb = Verbalizer(seed=seed)
@@ -215,14 +220,15 @@ def default_vocabulary(seed=None):
 	verb.include(Decision('prob_text', full['quantity']['prob_keys']))
 
 	verb.include(TemplateDecision('claim', []
-	                              + full['frequency']['structure']
-	                              + full['quantity']['structure']
-	                              + full['measure']['structure']
-	                              + full['likelihood']['structure']
-	                              + full['estimation']['structure']
-	                              + full['status']['structure']
-	                              + full['population']['structure']
+	                              # + full['frequency']['structure']
+	                              # + full['quantity']['structure']
+	                              # + full['measure']['structure']
+	                              # + full['likelihood']['structure']
+	                              # + full['estimation']['structure']
+	                              # + full['status']['structure']
+	                              # + full['population']['structure']
 	                              # + full['limits']['structure']
+	                              + full['precise']['structure']
 	                              ))
 
 	verb.include(Decision('freq_text', full['frequency']['options']))
@@ -240,6 +246,8 @@ def default_vocabulary(seed=None):
 	verb.include(Decision('population_text', full['population']['options']))
 
 	verb.include(Decision('limit_text', full['limits']['options']))
+
+	verb.include(Decision('precise_text', full['precise']['options']))
 
 
 	verb.include(AsSentence('claim', capitalize=True, period=True))
@@ -288,11 +296,11 @@ def test_spawn_templates():
 
 	gen.include(InfoTool({
 		'subject': 'Bob',
-		'verb': 'eats dinner',
+		'verb': 'eats dinner', # verb + object
 		# 'pronoun': 'he',
-		'event': 'dinner',
+		'event': 'dinner', # it is _
 		'value': 0.4,
-		'population': 'people eat dinner',
+		'population': 'people eat dinner', # 20% of _
 	}))
 
 	entries = list(gen.spawn('claim'))

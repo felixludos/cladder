@@ -228,12 +228,12 @@ limits:
     lower: 0.99
 
   options:
-    at_most: {limit_text: at most, bound: upper_bound}
-    up_to: {limit_text: up to, bound: upper_bound}
-    no_more_than: {limit_text: no more than, bound: upper_bound}
+    at_most: {limit_text: at most, bound_side: upper_bound}
+    up_to: {limit_text: up to, bound_side: upper_bound}
+    no_more_than: {limit_text: no more than, bound_side: upper_bound}
 
-    at_least: {limit_text: at least, bound: lower_bound}
-    no_less_than: {limit_text: no less than, bound: lower_bound}
+    at_least: {limit_text: at least, bound_side: lower_bound}
+    no_less_than: {limit_text: no less than, bound_side: lower_bound}
 
     between: {limit_text: between}
 
@@ -241,19 +241,19 @@ limits:
 precise:
   structure:
     - '{mean} of {ratio}'
-    - '{quantifier} {mean} of {ratio}'
+    - '{precise_text} {mean} of {ratio}'
 
     - 'there is a {mean} {prob_text} that {phrase}'
     - 'the {prob_text} that {phrase} is {mean}'
-    - '{quantifier} {phrase} with a {prob_text} of {mean}'
+    - '{precise_text} {phrase} with a {prob_text} of {mean}'
 
   options:
-    assume_that: {text: assume that}
-    suppose_that: {text: suppose that}
-    given_that: {text: given that}
-#    imagine_that: {text: imagine that}
-#    let_us_suppose_that: {text: let us suppose that}
-    it_is_known_that: {text: it is known that}
+    assume_that: {precise_text: assume that}
+    suppose_that: {precise_text: suppose that}
+    given_that: {precise_text: given that}
+#    imagine_that: {precise_text: imagine that}
+#    let_us_suppose_that: {precise_text: let us suppose that}
+    it_is_known_that: {precise_text: it is known that}
 
 
 

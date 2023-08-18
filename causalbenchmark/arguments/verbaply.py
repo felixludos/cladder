@@ -193,21 +193,49 @@ class Verbalizer(SimpleCrawler, LoopyKit, MutableKit):
 				yield ctx[gizmo]
 
 
-@tool('mean')
-def format_number(value):
-	return f'{value:.0%}'
+class NumberFormatter(CraftyKit):
+	def __init__(self, lower_condition=0.01, upper_condition=0.99, **kwargs):
+		super().__init__(**kwargs)
+		self._process_crafts()
+		self.upper_condition = upper_condition
+		self.lower_condition = lower_condition
 
-@tool('lower_bound')
-def format_lower_bound(lower_bound_value):
-	return f'{lower_bound_value:.0%}'
-@tool('upper_bound')
-def format_upper_bound(upper_bound_value):
-	return f'{upper_bound_value:.0%}'
-
-class BoundsFinder(AbstractTool):
 	def gizmos(self) -> Iterator[str]:
-		yield 'lower_bound'
-		yield 'bound'
+		yield from super().gizmos()
+
+	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
+		return super().grab_from(ctx, gizmo)
+
+	@tool.from_context('bound')
+	def compute_bound(self, ctx):
+		side = ctx['bound_side']
+		other_side = 'upper_bound' if side == 'lower_bound' else 'lower_bound'
+		val = ctx[f'{other_side}_value']
+		if ((side == 'upper_bound' and val <= self.lower_condition)
+				or (side == 'lower_bound' and val >= self.upper_condition)):
+			return ctx[side]
+		raise MissingGizmoError('bound')
+
+	@tool('mean')
+	def format_number(self, value):
+		return f'{value:.0%}'
+
+	@tool('lower_bound')
+	def format_lower_bound(self, lower_bound_value):
+		return f'{lower_bound_value:.0%}'
+
+	@tool('lower_bound_100')
+	def format_lower_bound_100(self, lower_bound_value):
+		return f'{lower_bound_value*100:.0f}'
+
+	@tool('upper_bound')
+	def format_upper_bound(self, upper_bound_value):
+		return f'{upper_bound_value:.0%}'
+
+	@tool('implication')
+	def infer_implication(self, lower_bound_value, upper_bound_value):
+		return [lower_bound_value, upper_bound_value]
+
 
 
 def default_vocabulary(seed=None):
@@ -216,18 +244,20 @@ def default_vocabulary(seed=None):
 	full = _get_template_data()
 
 	defaults = [StaticTemplater(key, val) for key, vals in full['default-structure'].items() for val in vals]
-	verb.include(*defaults, format_number, format_lower_bound, format_upper_bound)
+	verb.include(*defaults, NumberFormatter())
 	verb.include(Decision('prob_text', full['quantity']['prob_keys']))
+	verb.include(TemplateDecision('ratio', full['proportion-structure']))
+	verb.include(TemplateDecision('unit_text', full['unit-structure']))
 
 	verb.include(TemplateDecision('claim', []
-	                              # + full['frequency']['structure']
-	                              # + full['quantity']['structure']
-	                              # + full['measure']['structure']
-	                              # + full['likelihood']['structure']
-	                              # + full['estimation']['structure']
-	                              # + full['status']['structure']
-	                              # + full['population']['structure']
-	                              # + full['limits']['structure']
+	                              + full['frequency']['structure']
+	                              + full['quantity']['structure']
+	                              + full['measure']['structure']
+	                              + full['likelihood']['structure']
+	                              + full['estimation']['structure']
+	                              + full['status']['structure']
+	                              + full['population']['structure']
+	                              + full['limits']['structure']
 	                              + full['precise']['structure']
 	                              ))
 
@@ -246,9 +276,9 @@ def default_vocabulary(seed=None):
 	verb.include(Decision('population_text', full['population']['options']))
 
 	verb.include(Decision('limit_text', full['limits']['options']))
+	verb.include(TemplateDecision('range_text', full['limits']['range_options']))
 
 	verb.include(Decision('precise_text', full['precise']['options']))
-
 
 	verb.include(AsSentence('claim', capitalize=True, period=True))
 	return verb
@@ -297,15 +327,25 @@ def test_spawn_templates():
 	gen.include(InfoTool({
 		'subject': 'Bob',
 		'verb': 'eats dinner', # verb + object
+		# 'unit': 'days',
+
 		# 'pronoun': 'he',
-		'event': 'dinner', # it is _
+		# 'event': 'dinner', # it is _
 		'value': 0.4,
-		'population': 'people eat dinner', # 20% of _
+		'lower_bound_value': 0.3,
+		'upper_bound_value': 0.999,
+
+		# 'group': 'people', # 20% of _
+		# 'verb': 'eat dinner',
 	}))
 
 	entries = list(gen.spawn('claim'))
+	ctx = gen.current
 
 	results = [entry['claim'] for entry in entries]
+
+	count = sum(r is not None for r in results)
+	fraction = count / len(results)
 
 	print(entries)
 

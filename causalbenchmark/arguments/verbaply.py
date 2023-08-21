@@ -193,6 +193,7 @@ class Verbalizer(SimpleCrawler, LoopyKit, MutableKit):
 				yield ctx[gizmo]
 
 
+
 class NumberFormatter(CraftyKit):
 	def __init__(self, lower_condition=0.01, upper_condition=0.99, **kwargs):
 		super().__init__(**kwargs)
@@ -237,6 +238,26 @@ class NumberFormatter(CraftyKit):
 		return [lower_bound_value, upper_bound_value]
 
 
+class ParentVerbalization(MutableKit, CraftyKit):
+	def __init__(self, structure=None, heads=None, **kwargs):
+		if structure is None:
+			structure = TemplateDecision('sentence', {
+				'prefix': {'sentence': '{cond}, {claim}'},
+				'suffix': {'sentence': '{claim} {cond}'},
+			})
+		super().__init__(**kwargs)
+		self.structure = structure
+		self.heads = heads
+		self.include(*structure, heads)
+
+	@tool('cond')
+	def join_parents(self, parents):
+		raise NotImplementedError
+
+
+
+	pass
+
 
 def default_vocabulary(seed=None):
 	verb = Verbalizer(seed=seed)
@@ -250,15 +271,15 @@ def default_vocabulary(seed=None):
 	verb.include(TemplateDecision('unit_text', full['unit-structure']))
 
 	verb.include(TemplateDecision('claim', []
-	                              + full['frequency']['structure']
-	                              + full['quantity']['structure']
-	                              + full['measure']['structure']
-	                              + full['likelihood']['structure']
-	                              + full['estimation']['structure']
-	                              + full['status']['structure']
-	                              + full['population']['structure']
+	                              # + full['frequency']['structure']
+	                              # + full['quantity']['structure']
+	                              # + full['measure']['structure']
+	                              # + full['likelihood']['structure']
+	                              # + full['estimation']['structure']
+	                              # + full['status']['structure']
+	                              # + full['population']['structure']
 	                              + full['limits']['structure']
-	                              + full['precise']['structure']
+	                              # + full['precise']['structure']
 	                              ))
 
 	verb.include(Decision('freq_text', full['frequency']['options']))
@@ -332,8 +353,10 @@ def test_spawn_templates():
 		# 'pronoun': 'he',
 		# 'event': 'dinner', # it is _
 		'value': 0.4,
-		'lower_bound_value': 0.3,
-		'upper_bound_value': 0.999,
+		# 'lower_bound_value': 0.3,
+		# 'upper_bound_value': 0.999,
+		'lower_bound_value': 0.001,
+		'upper_bound_value': 0.3,
 
 		# 'group': 'people', # 20% of _
 		# 'verb': 'eat dinner',

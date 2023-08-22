@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 extra/
 data/backup/
+notebooks/results/
 
 .DS_Store
 

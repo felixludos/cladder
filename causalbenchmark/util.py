@@ -7,7 +7,7 @@ from string import Formatter
 
 from argparse import Namespace
 
-from omniply import Parameterized as _Parameterized, hparam
+# from omniply import Parameterized as _Parameterized, hparam
 
 from itertools import product, chain, combinations
 
@@ -245,23 +245,23 @@ def verbalize_list(terms, *, conjunction='and'):
 
 
 
-class Parameterized(_Parameterized, fig.Configurable):
-	def _extract_hparams(self, kwargs):
-		params, remaining = super()._extract_hparams(kwargs)
-		if self.my_config is not None:
-			params.update({name: self.my_config.pull(name.replace('_', '-'), getattr(self, name, unspecified_argument))
-			              for name, param in self.named_hyperparameters(hidden=True)
-			              if name not in params and (param.default is not unspecified_argument or param.required)})
-		return params, remaining
-
-
-
-class Seeded(Parameterized):
-	seed = hparam(None, inherit=True)
-
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		self._rng = np.random.default_rng(self.seed)
+# class Parameterized(_Parameterized, fig.Configurable):
+# 	def _extract_hparams(self, kwargs):
+# 		params, remaining = super()._extract_hparams(kwargs)
+# 		if self.my_config is not None:
+# 			params.update({name: self.my_config.pull(name.replace('_', '-'), getattr(self, name, unspecified_argument))
+# 			              for name, param in self.named_hyperparameters(hidden=True)
+# 			              if name not in params and (param.default is not unspecified_argument or param.required)})
+# 		return params, remaining
+#
+#
+#
+# class Seeded(Parameterized):
+# 	seed = hparam(None, inherit=True)
+#
+# 	def __init__(self, *args, **kwargs):
+# 		super().__init__(*args, **kwargs)
+# 		self._rng = np.random.default_rng(self.seed)
 
 
 

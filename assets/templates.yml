@@ -33,6 +33,7 @@ conditional-heads:
   when: 'when {phrase}'
   if: 'if {phrase}'
   for: 'for {population}'
+#  during: 'during {event}'
 
 
 default-probability: [probability, likelihood, chance]

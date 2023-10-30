@@ -94,6 +94,21 @@ class SimpleTemplater:
 		# 						   or (i in self.reqs and self.reqs[i] in reqs))
 
 
+class FixedTemplate(AbstractTool, SimpleTemplater):
+	def __init__(self, gizmo: str, template: str, **kwargs):
+		super().__init__(template, **kwargs)
+		self.gizmo = gizmo
+
+	def gizmos(self) -> Iterator[str]:
+		yield self.gizmo
+
+	def grab_from(self, ctx: Optional['AbstractContext'], gizmo: str) -> Any:
+		assert gizmo == self.gizmo
+		reqs = {key: ctx.grab_from(ctx, key) for key in self.keys}
+		out = self.fill_in(reqs)
+		return out
+
+
 class TemplateDecision(Decision):
 	_Templater = SimpleTemplater
 	def __init__(self, *args, **kwargs):
@@ -193,6 +208,7 @@ class Verbalizer(SimpleCrawler, LoopyKit, MutableKit):
 				yield ctx[gizmo]
 
 
+
 class NumberFormatter(CraftyKit):
 	def __init__(self, lower_condition=0.01, upper_condition=0.99, **kwargs):
 		super().__init__(**kwargs)
@@ -237,6 +253,26 @@ class NumberFormatter(CraftyKit):
 		return [lower_bound_value, upper_bound_value]
 
 
+class ParentVerbalization(MutableKit, CraftyKit):
+	def __init__(self, structure=None, heads=None, **kwargs):
+		if structure is None:
+			structure = TemplateDecision('sentence', {
+				'prefix': {'sentence': '{cond}, {claim}'},
+				'suffix': {'sentence': '{claim} {cond}'},
+			})
+		super().__init__(**kwargs)
+		self.structure = structure
+		self.heads = heads
+		self.include(*structure, heads)
+
+	@tool('cond')
+	def join_parents(self, parents):
+		raise NotImplementedError
+
+
+
+	pass
+
 
 def default_vocabulary(seed=None):
 	verb = Verbalizer(seed=seed)
@@ -250,15 +286,15 @@ def default_vocabulary(seed=None):
 	verb.include(TemplateDecision('unit_text', full['unit-structure']))
 
 	verb.include(TemplateDecision('claim', []
-	                              + full['frequency']['structure']
-	                              + full['quantity']['structure']
-	                              + full['measure']['structure']
-	                              + full['likelihood']['structure']
-	                              + full['estimation']['structure']
-	                              + full['status']['structure']
-	                              + full['population']['structure']
+	                              # + full['frequency']['structure']
+	                              # + full['quantity']['structure']
+	                              # + full['measure']['structure']
+	                              # + full['likelihood']['structure']
+	                              # + full['estimation']['structure']
+	                              # + full['status']['structure']
+	                              # + full['population']['structure']
 	                              + full['limits']['structure']
-	                              + full['precise']['structure']
+	                              # + full['precise']['structure']
 	                              ))
 
 	verb.include(Decision('freq_text', full['frequency']['options']))
@@ -280,7 +316,8 @@ def default_vocabulary(seed=None):
 
 	verb.include(Decision('precise_text', full['precise']['options']))
 
-	verb.include(AsSentence('claim', capitalize=True, period=True))
+	verb.include(FixedTemplate('sentence', '{claim}'))
+	verb.include(AsSentence('sentence', capitalize=True, period=True))
 	return verb
 
 
@@ -332,17 +369,19 @@ def test_spawn_templates():
 		# 'pronoun': 'he',
 		# 'event': 'dinner', # it is _
 		'value': 0.4,
-		'lower_bound_value': 0.3,
-		'upper_bound_value': 0.999,
+		# 'lower_bound_value': 0.3,
+		# 'upper_bound_value': 0.999,
+		'lower_bound_value': 0.001,
+		'upper_bound_value': 0.3,
 
 		# 'group': 'people', # 20% of _
 		# 'verb': 'eat dinner',
 	}))
 
-	entries = list(gen.spawn('claim'))
+	entries = list(gen.spawn('sentence'))
 	ctx = gen.current
 
-	results = [entry['claim'] for entry in entries]
+	results = [entry['sentence'] for entry in entries]
 
 	count = sum(r is not None for r in results)
 	fraction = count / len(results)

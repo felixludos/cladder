@@ -386,6 +386,8 @@ def test_spawn_templates():
 	count = sum(r is not None for r in results)
 	fraction = count / len(results)
 
+	print('\n'.join(r for r in results if r is not None))
+
 	print(entries)
 
 

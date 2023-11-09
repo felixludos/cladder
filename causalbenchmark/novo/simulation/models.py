@@ -180,7 +180,7 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 	def marginals(self, **conds):
 		pass
 
-	
+
 	# def interventions(self, **conds):
 	# 	pass
 

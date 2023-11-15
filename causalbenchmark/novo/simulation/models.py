@@ -4,6 +4,7 @@ import omnifig as fig
 
 import numpy as np
 import torch
+from torch import nn
 from pomegranate.distributions import Categorical as _CategoricalBase
 from pomegranate.distributions import ConditionalCategorical as _ConditionalCategoricalBase
 from pomegranate.bayesian_network import BayesianNetwork as _BayesianNetworkBase
@@ -80,18 +81,6 @@ class Variable(fig.Configurable):
 
 
 class BernoulliVariable(Variable):
-	def __repr__(self):
-		name = getattr(self, 'name')
-		if name is None:
-			name = self.__class__.__name__
-
-		suffix = ''
-		if len(self.parents):
-			suffix = f' | {", ".join(p.name for p in self.parents)}'
-
-		return f'p({name}{suffix})'
-
-
 	@property
 	def param(self):
 		return self.probs[0][...,1]
@@ -104,6 +93,39 @@ class BernoulliVariable(Variable):
 
 	def as_hard_intervention(self, value: int):
 		return self.as_intervention(value=value)
+
+
+	def __repr__(self):
+		name = getattr(self, 'name')
+		if name is None:
+			# name = self.__class__.__name__
+			name = ''
+
+		# suffix = ''
+		if len(self.parents):
+			parent_details = ", ".join(p.name for p in self.parents) if all(p.name is not None for p in self.parents) \
+				else f'{len(self.parents)} parent{"s" if len(self.parents) > 1 else ""}'
+			suffix = f'{"" if len(name) else " ·"} | {parent_details}'
+		else:
+			suffix = f'{"=" if len(name) else ""}{self.p:.2f}'.rstrip('0').rstrip('.')
+		return f'p({name}{suffix})'
+
+
+	def set_params(self, params: torch.FloatTensor):
+		# ref = self.probs[0].data
+		# p = params.clone().float() if isinstance(params, torch.Tensor) else torch.tensor(params).float()
+		p = params
+		self.probs[0].data.view(-1).copy_(torch.stack([1 - p, p], dim=-1).view(-1))
+
+
+	def get_params(self) -> torch.FloatTensor:
+		# ref = self.probs[0] if isinstance(self.probs, nn.ParameterList) else self.probs
+		# return ref.data[...,1].view(-1)
+		return self.probs[0].data.view(-1)
+
+
+	def num_params(self):
+		return 2 ** len(self.parents)
 
 
 
@@ -133,19 +155,6 @@ class Bernoulli(Prior, BernoulliVariable):
 	@property
 	def p(self) -> float:
 		return self.probs[0][1]
-
-
-	def __repr__(self):
-		name = getattr(self, 'name')
-		if name is None:
-			name = self.__class__.__name__
-
-		# suffix = ''
-		if len(self.parents):
-			suffix = f' | {", ".join(p.name for p in self.parents)}'
-		else:
-			suffix = f'={self.p:.2f}'.rstrip('0').rstrip('.')
-		return f'p({name}{suffix})'
 
 
 
@@ -246,7 +255,21 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 	def ate(self, treatment: str, *, treated_val=1, not_treated_val=0):
 		treated = self.intervene(**{treatment: treated_val}).marginals()
 		not_treated = self.intervene(**{treatment: not_treated_val}).marginals()
-		return {name: treated[name] - not_treated[name] for name in self.vars}
+		return {var.name: treated[var.name] - not_treated[var.name] for var in self.vars}
+
+
+	def covariance(self, var1: str, var2: str, **conditions: int) -> float:
+		return (self.marginals(**{var2: 1}, **conditions)[var1] - self.marginals(**{var2: 0}, **conditions)[var1]) \
+			* self.variances(**conditions)[var2]
+
+
+	def variances(self, **conditions: int) -> dict[str, float]:
+		return {var: p*(1-p) for var, p in self.marginals(**conditions).items()}
+
+
+	def correlation(self, var1: str, var2: str, **conditions: int) -> float:
+		sigmas = self.variances(**conditions)
+		return self.covariance(var1, var2, **conditions) / np.sqrt(sigmas[var1] * sigmas[var2])
 
 
 
@@ -256,7 +279,7 @@ class BernoulliNetwork(Network):
 
 	def __init__(self, variables: list[BernoulliVariable] | dict[str, BernoulliVariable], **kwargs):
 		super().__init__(variables, **kwargs)
-		assert all(isinstance(v, BernoulliVariable) for v in self._variables.values())
+		assert all(isinstance(v, BernoulliVariable) for v in self.vars)
 
 
 	def __repr__(self):
@@ -272,6 +295,21 @@ class BernoulliNetwork(Network):
 		newvars = [var.as_intervention(interventions[var.name]) if var.name in interventions else var
 				   for var in self.vars]
 		return self.__class__(variables=newvars, rng=self._rng)
+
+
+	def set_params(self, params: torch.FloatTensor):
+		params = params.view(-1)
+		for var in self.vars:
+			var.set_params(params[:var.num_params()])
+			params = params[var.num_params():]
+
+
+	def get_params(self):
+		return torch.cat([v.get_params().view(-1) for v in self.vars], dim=-1)
+
+
+	def num_params(self):
+		return sum(v.num_params() for v in self.vars)
 
 
 

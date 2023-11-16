@@ -11,13 +11,6 @@ from pomegranate.bayesian_network import BayesianNetwork as _BayesianNetworkBase
 
 
 
-@fig.autocomponent('rng')
-def get_rng(seed, reset_master=True):
-	if reset_master:
-		torch.manual_seed(seed)
-	return torch.Generator().manual_seed(seed)
-
-
 
 class Variable(fig.Configurable):
 	def __init__(self, *, rng=None, name=None, **kwargs):

@@ -18,7 +18,6 @@ class AbstractMogul(AbstractGig):
 
 
 
-
 class AbstractCrawler(AbstractMogul):
 	def select(self, decision: 'AbstractDecision', gizmo: str) -> Any:
 		raise NotImplementedError

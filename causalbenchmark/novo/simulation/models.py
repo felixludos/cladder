@@ -1,14 +1,16 @@
-
 from omnibelt import toposort
 import omnifig as fig
 
 import numpy as np
+import pandas as pd
+import networkx as nx
+from networkx.drawing.nx_pydot import to_pydot
 import torch
+from dowhy import CausalModel
 from torch import nn
 from pomegranate.distributions import Categorical as _CategoricalBase
 from pomegranate.distributions import ConditionalCategorical as _ConditionalCategoricalBase
 from pomegranate.bayesian_network import BayesianNetwork as _BayesianNetworkBase
-
 
 
 
@@ -90,11 +92,7 @@ class BernoulliVariable(Variable):
 
 	def __repr__(self):
 		name = getattr(self, 'name')
-		if name is None:
-			# name = self.__class__.__name__
-			name = ''
-
-		# suffix = ''
+		if name is None: name = ''
 		if len(self.parents):
 			parent_details = ", ".join(p.name for p in self.parents) if all(p.name is not None for p in self.parents) \
 				else f'{len(self.parents)} parent{"s" if len(self.parents) > 1 else ""}'
@@ -105,15 +103,10 @@ class BernoulliVariable(Variable):
 
 
 	def set_params(self, params: torch.FloatTensor):
-		# ref = self.probs[0].data
-		# p = params.clone().float() if isinstance(params, torch.Tensor) else torch.tensor(params).float()
-		p = params
-		self.probs[0].data.view(-1).copy_(torch.stack([1 - p, p], dim=-1).view(-1))
+		self.probs[0].data.view(-1).copy_(torch.stack([1 - params, params], dim=-1).view(-1))
 
 
 	def get_params(self) -> torch.FloatTensor:
-		# ref = self.probs[0] if isinstance(self.probs, nn.ParameterList) else self.probs
-		# return ref.data[...,1].view(-1)
 		return self.probs[0].data.view(-1)
 
 
@@ -200,8 +193,8 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		self.vars = [self._variables[name] for name in order]
 
 
-	def __repr__(self):
-		return f'{self.__class__.__name__}({", ".join(v.name for v in self.vars)})'
+	# def __repr__(self):
+	# 	return f'{self.__class__.__name__}({", ".join(v.name for v in self.vars)})'
 
 
 	def __getitem__(self, item):
@@ -252,17 +245,49 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 
 
 	def covariance(self, var1: str, var2: str, **conditions: int) -> float:
-		return (self.marginals(**{var2: 1}, **conditions)[var1] - self.marginals(**{var2: 0}, **conditions)[var1]) \
-			* self.variances(**conditions)[var2]
+		'''cov(A, B) = E[AB] - E[A]*E[B] = (E[A|B] - E[A])*E[B]'''
+		marginals = self.marginals(**conditions)
+		p1, p2 = marginals[var1], marginals[var2]
+		p1g2 = self.marginals(**{var2: 1}, **conditions)[var1]
+		return (p1g2 - p1) * p2
 
 
 	def variances(self, **conditions: int) -> dict[str, float]:
-		return {var: p*(1-p) for var, p in self.marginals(**conditions).items()}
+		return {vname: p*(1-p) for vname, p in self.marginals(**conditions).items()}
 
 
 	def correlation(self, var1: str, var2: str, **conditions: int) -> float:
 		sigmas = self.variances(**conditions)
 		return self.covariance(var1, var2, **conditions) / np.sqrt(sigmas[var1] * sigmas[var2])
+
+
+	def to_networkx(self):
+		G = nx.DiGraph()
+		for var in self.vars:
+			G.add_node(var.name)
+			for parent in var.parents:
+				G.add_edge(parent.name, var.name)
+		return G
+
+
+	def to_dowhy(self):
+		G = self.to_networkx()
+		pydot_graph = to_pydot(G)
+
+		dummy_data = pd.DataFrame({
+			'EG': [0],  # Economic Growth
+			'IP': [0],  # Industrial Production
+			'UR': [0],  # Unemployment Rate
+			'GEP': [0],  # Government Economic Policies
+			'CC': [0],  # Consumer Confidence
+			'MP': [0]  # Market Performance
+		})
+
+		dot_graph_str = pydot_graph.to_string()
+		return
+
+
+		raise NotImplementedError
 
 
 

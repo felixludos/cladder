@@ -5,6 +5,7 @@ from .formatting import NumberFormatter
 from .. import misc
 
 
+
 def _get_template_data():
 	path = misc.assets_root() / 'templates.yml'
 	assert path.exists(), f'path {path!r} does not exist'

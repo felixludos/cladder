@@ -8,11 +8,11 @@ def repo_root():
 
 
 def data_root():
-	return repo_root() / 'data' / 'novo'
+	return repo_root() / 'novo-data'
 
 
 def assets_root():
-	return repo_root() / 'assets' / 'novo'
+	return repo_root() / 'assets'
 
 
 

@@ -270,24 +270,45 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		return G
 
 
-	def to_dowhy(self):
+	def to_dowhy(self, treatment: str, outcome: str):
 		G = self.to_networkx()
 		pydot_graph = to_pydot(G)
-
-		dummy_data = pd.DataFrame({
-			'EG': [0],  # Economic Growth
-			'IP': [0],  # Industrial Production
-			'UR': [0],  # Unemployment Rate
-			'GEP': [0],  # Government Economic Policies
-			'CC': [0],  # Consumer Confidence
-			'MP': [0]  # Market Performance
-		})
-
 		dot_graph_str = pydot_graph.to_string()
+		dummy_data = pd.DataFrame({var.name: [0] for var in self.vars})
+		return CausalModel(dummy_data, treatment=treatment, outcome=outcome, graph=dot_graph_str)
+
+
+	def _parse_backdoor_estimand(self, estimand, treatment: str, outcome: str):
+		do = estimand.args[1][0].args[0][0].name
+		exp = estimand.args[0].args[0].name
+		if '|' in exp:
+			out, cond = exp.split('|')
+			cond = cond.split(',')
+		else:
+			out = exp
+			cond = []
+
+		assert treatment == do, f'Expected treatment to be {do}, got {treatment}'
+		assert outcome == out, f'Expected outcome to be {out}, got {outcome}'
+
+		terms = []
+
+
+		if len(cond):
+
+			pass
+
+
 		return
 
+		pass
 
-		raise NotImplementedError
+	def backdoor_estimand(self, treatment: str, outcome: str):
+		model = self.to_dowhy(treatment, outcome)
+
+		estimand_info = model.identify_effect()
+		estimand = estimand_info.estimands[estimand_info.default_backdoor_id]['estimand']
+		return self._parse_backdoor_estimand(estimand, treatment, outcome)
 
 
 

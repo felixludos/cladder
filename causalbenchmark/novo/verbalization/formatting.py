@@ -17,7 +17,7 @@ class NumberFormatter(ToolKit):
 		if ((side == 'upper_bound' and val <= self.lower_condition)
 				or (side == 'lower_bound' and val >= self.upper_condition)):
 			return ctx[side]
-		raise MissingGizmo('bound')
+		raise MissingGadget('bound')
 
 
 	@tool('mean')

@@ -3,7 +3,7 @@ from itertools import product
 
 from omnibelt import load_json, save_json
 import omnifig as fig
-from omniply import tool, ToolKit, Context, Scope, Selection, MissingGizmo
+from omniply import tool, ToolKit, Context, Scope, Selection, MissingGadget
 
 import torch
 

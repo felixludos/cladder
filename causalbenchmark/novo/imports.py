@@ -16,4 +16,4 @@ import torch
 import omnifig as fig
 from omniply import AbstractGadget, AbstractGaggle, AbstractGig
 from omniply import tool, ToolKit, Context, Scope, Selection
-from omniply.core.errors import MissingGadget, AbstractGadgetError, GadgetFailure
+from omniply.core.errors import GadgetFailure, MissingGadget

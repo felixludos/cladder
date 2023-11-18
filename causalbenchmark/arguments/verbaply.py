@@ -230,7 +230,7 @@ class NumberFormatter(CraftyKit):
 		if ((side == 'upper_bound' and val <= self.lower_condition)
 				or (side == 'lower_bound' and val >= self.upper_condition)):
 			return ctx[side]
-		raise MissingGizmoError('bound')
+		raise MissingGadget('bound')
 
 	@tool('mean')
 	def format_number(self, value):
@@ -466,7 +466,7 @@ class ConditionBuilder(TemplateChoice):
 	def _attempt_grab(self, ctx, gizmo: str):
 		try:
 			return self.grab_from(ctx, gizmo)
-		except MissingGizmoError:
+		except MissingGadget:
 			return None
 
 

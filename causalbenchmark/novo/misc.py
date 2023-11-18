@@ -19,7 +19,7 @@ def assets_root():
 @fig.autocomponent('rng')
 def get_rng(seed=None, reset_master=True):
 	if seed is None:
-		seed = np.random.randint(0, 2**32-1)
+		seed = np.random.randint(0, 2**16-1) # TODO what is the limit
 	if reset_master:
 		torch.manual_seed(seed)
 	return torch.Generator().manual_seed(seed)

@@ -11,6 +11,7 @@ from omnibelt import save_json, load_json, load_yaml, filter_duplicates
 
 import numpy as np
 from scipy import stats, optimize as opt
+import torch
 
 import omnifig as fig
 from omniply import AbstractGadget, AbstractGaggle, AbstractGig

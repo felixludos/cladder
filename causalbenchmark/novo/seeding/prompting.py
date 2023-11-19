@@ -85,6 +85,7 @@ class Story(Context, fig.Configurable):
 		# 	'probs': self.grab('probs', None),
 		# }
 		save_json(info, path)
+		self.story_id = story_id
 		return path
 
 

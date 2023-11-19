@@ -291,17 +291,21 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		assert treatment == do, f'Expected treatment to be {do}, got {treatment}'
 		assert outcome == out, f'Expected outcome to be {out}, got {outcome}'
 
+		return do, out, cond
+
+
+	def _backdoor_terms(self, do: str, out: str, cond: list[str] = None):
+		if cond is None:
+			cond = []
+
 		terms = []
+		for c in cond:
+			terms.append({'prob': c})
+		parents = [do, *cond]
+		for cvals in product(*[[0, 1] for c in cond]):
+			terms.append({'prob': out, 'cond': {p: v for p, v in zip(parents, cvals)}})
+		return terms
 
-
-		if len(cond):
-
-			pass
-
-
-		return
-
-		pass
 
 	def backdoor_estimand(self, treatment: str, outcome: str):
 		model = self.to_dowhy(treatment, outcome)

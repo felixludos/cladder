@@ -1,0 +1,177 @@
+{
+  "seed": 5671455,
+  "article": {
+    "ID": 5671455,
+    "title": "This is what LVMH's new Milan offices will look like - MilanoToday.it",
+    "description": "The new offices are located in the Symbiosis area (near the Prada Foundation) and will be ready by the first months of 2022",
+    "content": null,
+    "language": "it"
+  },
+  "title": "This is what LVMH's new Milan offices will look like - MilanoToday.it",
+  "description": "The new offices are located in the Symbiosis area (near the Prada Foundation) and will be ready by the first months of 2022",
+  "language": "Italian",
+  "spark": "Title: This is what LVMH's new Milan offices will look like - MilanoToday.it\nDescription: The new offices are located in the Symbiosis area (near the Prada Foundation) and will be ready by the first months of 2022\nOriginal Language: Italian",
+  "setting": "We are interested in building a causal model based on the explicit and implicit assumptions contained in the specified article and then using causal inference to evaluate the reasoning. Answer the following questions to design an interesting, simple, and most importantly realistic causal model from a news article.\n\nTo help understand the instructions here are some tips:\n- all variables are always binary and (at least in principle) measurable, so when creating and selecting variables, make sure it is reasonable to treat them as binary\n- whenever you propose a variable, make sure to define the meaning of each value it can take, and mention whether it is observable or not\n- outcome variables are always observable\n- treatment variables are always observable and intervenable, that means it must be possible to (at least in principle) change their value if desired\n- confounder variables may or may not be observable, and should always have at least two causal children (for example, a treatment and outcome variable) and no causal parents\n- mediator variables may or may not be observable, and should always have at least one causal parents (for example, a treatment variable) and at least one causal child (for example, the outcome variable)\n- collider variables may or may not be observable, and should always have at least two causal parents (for example, a treatment and outcome variable) and no causal children\n\nAnswer concisely and precisely in the desired format. Carefully complete each of these tasks in order.\n\n1. Write a short description of what the article is about and what causal model make inform the reasoning behind an argument the might make.\n2. Propose 1 outcome variable that the news article is either implicitly or explicitly addressing that people are most likely to be interested in studying, especially if people tend to have misconceptions about it\n3. Propose 2 treatment variables that either directly or indirectly affect the selected outcome variable and are the most interesting to study\n4. Propose 3 confounder variables that affect some reasonable combination of the outcome and treatment variables\n5. Propose 3 mediator variables that affect and are affected by some reasonable combination of any other variables\n6. Propose 2 collider variables that are affected by some reasonable combination of any other variables\n\nHere is the beginning of the new article:\n```\nTitle: This is what LVMH's new Milan offices will look like - MilanoToday.it\nDescription: The new offices are located in the Symbiosis area (near the Prada Foundation) and will be ready by the first months of 2022\nOriginal Language: Italian\n```\n\nThe variables and causal graph should, where possible, use specific details such as names and locations mentioned in the article. Also, generally the variable value \"0\" should correspond to the negative or control while the value \"1\" should correspond to the positive or greater value.\n\nTake a deep breath and think step-by-step about how you will do this.",
+  "nodes": [
+    {
+      "name": "Real Estate Development in the Area",
+      "description": "Real estate development activities in the Milan Symbiosis area",
+      "type": "confounder",
+      "observed": true,
+      "values": [
+        "No development",
+        "Active development"
+      ],
+      "parents": []
+    },
+    {
+      "name": "LVMH Office Establishment",
+      "description": "Establishment of new LVMH offices in Milan's Symbiosis area",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "No establishment",
+        "Offices established"
+      ],
+      "parents": [
+        "Real Estate Development in the Area"
+      ]
+    },
+    {
+      "name": "Proximity to Cultural Institutions",
+      "description": "Proximity of the area to cultural institutions like the Prada Foundation",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "Far from institutions",
+        "Near institutions"
+      ],
+      "parents": [
+        "Real Estate Development in the Area"
+      ]
+    },
+    {
+      "name": "Increase in Property Values",
+      "description": "Increase in property values in the area due to various factors",
+      "type": "mediator",
+      "observed": true,
+      "values": [
+        "No increase",
+        "Increase in values"
+      ],
+      "parents": [
+        "LVMH Office Establishment"
+      ]
+    },
+    {
+      "name": "Local Economic Growth",
+      "description": "Economic growth in the area around LVMH's new offices",
+      "type": "outcome",
+      "observed": true,
+      "values": [
+        "No significant growth",
+        "Notable growth"
+      ],
+      "parents": [
+        "LVMH Office Establishment",
+        "Proximity to Cultural Institutions",
+        "Increase in Property Values"
+      ]
+    },
+    {
+      "name": "Media Coverage",
+      "description": "Extent of media coverage regarding the new LVMH offices and local development",
+      "type": "collider",
+      "observed": true,
+      "values": [
+        "Limited coverage",
+        "Extensive coverage"
+      ],
+      "parents": [
+        "LVMH Office Establishment",
+        "Local Economic Growth"
+      ]
+    }
+  ],
+  "descriptions": "\"Real Estate Development in the Area\" means \"Real estate development activities in the Milan Symbiosis area\"\n\"LVMH Office Establishment\" means \"Establishment of new LVMH offices in Milan's Symbiosis area\"\n\"Proximity to Cultural Institutions\" means \"Proximity of the area to cultural institutions like the Prada Foundation\"\n\"Increase in Property Values\" means \"Increase in property values in the area due to various factors\"\n\"Local Economic Growth\" means \"Economic growth in the area around LVMH's new offices\"\n\"Media Coverage\" means \"Extent of media coverage regarding the new LVMH offices and local development\"",
+  "questions": "1. what is the probability that \"Real Estate Development in the Area\" is \"Active development\" (rather than \"No development\")?\n2. when \"Real Estate Development in the Area\" is \"No development\": what is the probability that \"LVMH Office Establishment\" is \"Offices established\" (rather than \"No establishment\")?\n3. when \"Real Estate Development in the Area\" is \"Active development\": what is the probability that \"LVMH Office Establishment\" is \"Offices established\" (rather than \"No establishment\")?\n4. when \"Real Estate Development in the Area\" is \"No development\": what is the probability that \"Proximity to Cultural Institutions\" is \"Near institutions\" (rather than \"Far from institutions\")?\n5. when \"Real Estate Development in the Area\" is \"Active development\": what is the probability that \"Proximity to Cultural Institutions\" is \"Near institutions\" (rather than \"Far from institutions\")?\n6. when \"LVMH Office Establishment\" is \"No establishment\": what is the probability that \"Increase in Property Values\" is \"Increase in values\" (rather than \"No increase\")?\n7. when \"LVMH Office Establishment\" is \"Offices established\": what is the probability that \"Increase in Property Values\" is \"Increase in values\" (rather than \"No increase\")?\n8. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n9. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n10. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n11. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n12. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n13. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n14. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n15. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n16. when \"LVMH Office Establishment\" is \"No establishment\" and \"Local Economic Growth\" is \"No significant growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?\n17. when \"LVMH Office Establishment\" is \"No establishment\" and \"Local Economic Growth\" is \"Notable growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?\n18. when \"LVMH Office Establishment\" is \"Offices established\" and \"Local Economic Growth\" is \"No significant growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?\n19. when \"LVMH Office Establishment\" is \"Offices established\" and \"Local Economic Growth\" is \"Notable growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?",
+  "stats": "We have a causal bayes net based on the following article:\n\n```\nTitle: This is what LVMH's new Milan offices will look like - MilanoToday.it\nDescription: The new offices are located in the Symbiosis area (near the Prada Foundation) and will be ready by the first months of 2022\nOriginal Language: Italian\n```\n\nNow we would like to estimate the probabilities of certain events.\n\nUsing commonsense, estimate the probabilities of the following events:\n\n1. what is the probability that \"Real Estate Development in the Area\" is \"Active development\" (rather than \"No development\")?\n2. when \"Real Estate Development in the Area\" is \"No development\": what is the probability that \"LVMH Office Establishment\" is \"Offices established\" (rather than \"No establishment\")?\n3. when \"Real Estate Development in the Area\" is \"Active development\": what is the probability that \"LVMH Office Establishment\" is \"Offices established\" (rather than \"No establishment\")?\n4. when \"Real Estate Development in the Area\" is \"No development\": what is the probability that \"Proximity to Cultural Institutions\" is \"Near institutions\" (rather than \"Far from institutions\")?\n5. when \"Real Estate Development in the Area\" is \"Active development\": what is the probability that \"Proximity to Cultural Institutions\" is \"Near institutions\" (rather than \"Far from institutions\")?\n6. when \"LVMH Office Establishment\" is \"No establishment\": what is the probability that \"Increase in Property Values\" is \"Increase in values\" (rather than \"No increase\")?\n7. when \"LVMH Office Establishment\" is \"Offices established\": what is the probability that \"Increase in Property Values\" is \"Increase in values\" (rather than \"No increase\")?\n8. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n9. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n10. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n11. when \"LVMH Office Establishment\" is \"No establishment\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n12. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n13. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Far from institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n14. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"No increase\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n15. when \"LVMH Office Establishment\" is \"Offices established\" and \"Proximity to Cultural Institutions\" is \"Near institutions\" and \"Increase in Property Values\" is \"Increase in values\": what is the probability that \"Local Economic Growth\" is \"Notable growth\" (rather than \"No significant growth\")?\n16. when \"LVMH Office Establishment\" is \"No establishment\" and \"Local Economic Growth\" is \"No significant growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?\n17. when \"LVMH Office Establishment\" is \"No establishment\" and \"Local Economic Growth\" is \"Notable growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?\n18. when \"LVMH Office Establishment\" is \"Offices established\" and \"Local Economic Growth\" is \"No significant growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?\n19. when \"LVMH Office Establishment\" is \"Offices established\" and \"Local Economic Growth\" is \"Notable growth\": what is the probability that \"Media Coverage\" is \"Extensive coverage\" (rather than \"Limited coverage\")?\n\nWhere the variables are defined as:\n\"Real Estate Development in the Area\" means \"Real estate development activities in the Milan Symbiosis area\"\n\"LVMH Office Establishment\" means \"Establishment of new LVMH offices in Milan's Symbiosis area\"\n\"Proximity to Cultural Institutions\" means \"Proximity of the area to cultural institutions like the Prada Foundation\"\n\"Increase in Property Values\" means \"Increase in property values in the area due to various factors\"\n\"Local Economic Growth\" means \"Economic growth in the area around LVMH's new offices\"\n\"Media Coverage\" means \"Extent of media coverage regarding the new LVMH offices and local development\"\n\nFor each question above, answer with the lower and upper bound estimates of the probabilities as a python dictionary where the key corresponds to the question index in exactly the following format:\n\n```python\nprobabilities = {\n  1: [0.3, 0.4],\n  ...\n}\n```\n\nAnswer concisely and precisely in the desired format.",
+  "probs": {
+    "1": [
+      0.6,
+      0.8
+    ],
+    "2": [
+      0.1,
+      0.3
+    ],
+    "3": [
+      0.7,
+      0.9
+    ],
+    "4": [
+      0.3,
+      0.5
+    ],
+    "5": [
+      0.6,
+      0.8
+    ],
+    "6": [
+      0.1,
+      0.2
+    ],
+    "7": [
+      0.7,
+      0.9
+    ],
+    "8": [
+      0.1,
+      0.2
+    ],
+    "9": [
+      0.2,
+      0.4
+    ],
+    "10": [
+      0.3,
+      0.5
+    ],
+    "11": [
+      0.4,
+      0.6
+    ],
+    "12": [
+      0.4,
+      0.6
+    ],
+    "13": [
+      0.7,
+      0.9
+    ],
+    "14": [
+      0.5,
+      0.7
+    ],
+    "15": [
+      0.8,
+      0.9
+    ],
+    "16": [
+      0.1,
+      0.3
+    ],
+    "17": [
+      0.4,
+      0.6
+    ],
+    "18": [
+      0.5,
+      0.7
+    ],
+    "19": [
+      0.7,
+      0.9
+    ]
+  }
+}

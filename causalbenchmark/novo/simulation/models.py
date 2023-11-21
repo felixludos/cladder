@@ -238,9 +238,10 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		return self.__class__(variables=newvars, rng=self._rng)
 
 
-	def ate(self, treatment: str, *, treated_val=1, not_treated_val=0):
-		treated = self.intervene(**{treatment: treated_val}).marginals()
-		not_treated = self.intervene(**{treatment: not_treated_val}).marginals()
+	def ate(self, treatment: str, *, conditions: dict[str, int] = None, treated_val = 1, not_treated_val = 0):
+		if conditions is None: conditions = {}
+		treated = self.intervene(**{treatment: treated_val}).marginals(**conditions)
+		not_treated = self.intervene(**{treatment: not_treated_val}).marginals(**conditions)
 		return {var.name: treated[var.name] - not_treated[var.name] for var in self.vars}
 
 

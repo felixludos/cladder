@@ -61,7 +61,7 @@ class Story(Context, fig.Configurable):
 
 
 	def save(self, story_id: str = None, *, overwrite=False, additional_keys=(), allow_missing=False):
-		save_keys = ['seed', 'spark', 'nodes', 'stats', 'verbs', 'questions', *additional_keys]
+		save_keys = ['seed', 'spark', 'nodes', 'stats', 'verbs', 'queries', 'questions', *additional_keys]
 
 		if story_id is None and self.story_id is None:
 			raise ValueError('No story ID provided')

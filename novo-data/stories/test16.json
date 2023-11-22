@@ -894,5 +894,145 @@
         "wrong_explanation": "Extensive media coverage might have a stronger effect in shifting public sentiment from neutral/negative to positive compared to reinforcing already positive sentiment."
       }
     }
-  }
+  },
+  "queries": [
+    {
+      "treatment": "Royal Family Public Address",
+      "query": "ate",
+      "type": "ate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "query": "ate",
+      "type": "ate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Royal Family Public Address",
+      "treatment2": "Media Coverage Intensity",
+      "query": "ate",
+      "type": "ate-compare",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Royal Family Public Address",
+      "treatment2": "Media Coverage Intensity",
+      "query": "ate",
+      "type": "ate-compare-mag",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Media Coverage Intensity",
+      "treatment2": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Royal Family Public Address",
+      "treatment2": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Media Coverage Intensity",
+      "treatment2": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Media Coverage Intensity",
+      "treatment2": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": "<"
+    }
+  ]
 }

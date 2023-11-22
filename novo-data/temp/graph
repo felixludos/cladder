@@ -1,0 +1,20 @@
+// Causal Model
+digraph {
+	"Historical Public Sentiment" [label="Historical Public Sentiment" color=lightblue shape=diamond style=filled]
+	"Royal Family Public Address" [label="Royal Family Public Address" color=lightpink shape=ellipse style=filled]
+	"Media Coverage Intensity" [label="Media Coverage Intensity" color=lightpink shape=ellipse style=filled]
+	"Social Media Engagement" [label="Social Media Engagement" color=lightyellow shape=box style=filled]
+	"Public Empathy for Royalty" [label="Public Empathy for Royalty" color=lightyellow shape=box style=filled]
+	"Public Sentiment Towards Monarchy" [label="Public Sentiment Towards Monarchy" color=lightgreen shape=ellipse style=filled]
+	"Celebrity Endorsements" [label="Celebrity Endorsements" color=lightgray shape=box style=filled]
+	"Historical Public Sentiment" -> "Royal Family Public Address"
+	"Historical Public Sentiment" -> "Media Coverage Intensity"
+	"Royal Family Public Address" -> "Social Media Engagement"
+	"Media Coverage Intensity" -> "Social Media Engagement"
+	"Royal Family Public Address" -> "Public Sentiment Towards Monarchy"
+	"Media Coverage Intensity" -> "Public Sentiment Towards Monarchy"
+	"Social Media Engagement" -> "Public Sentiment Towards Monarchy"
+	"Public Empathy for Royalty" -> "Public Sentiment Towards Monarchy"
+	"Media Coverage Intensity" -> "Celebrity Endorsements"
+	"Public Sentiment Towards Monarchy" -> "Celebrity Endorsements"
+}

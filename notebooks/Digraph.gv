@@ -1,0 +1,16 @@
+// The Round Table
+digraph {
+	"Implementation of Curfew" [label="Implementation of Curfew" color=lightblue shape=ellipse style=filled]
+	"Regional Healthcare Capacity" [label="Regional Healthcare Capacity" color=lightpink shape=diamond style=filled]
+	"Economic Impact" [label="Economic Impact" color=lightyellow shape=box style=filled]
+	"Mental Health Impact" [label="Mental Health Impact" color=lightyellow shape=box style=filled]
+	"Public Compliance with Curfew" [label="Public Compliance with Curfew" color=lightblue shape=ellipse style=filled]
+	"Public Health Outcome" [label="Public Health Outcome" color=lightgreen shape=ellipse style=filled]
+	"Implementation of Curfew" -> "Economic Impact"
+	"Implementation of Curfew" -> "Mental Health Impact"
+	"Implementation of Curfew" -> "Public Compliance with Curfew"
+	"Mental Health Impact" -> "Public Compliance with Curfew"
+	"Public Compliance with Curfew" -> "Public Health Outcome"
+	"Economic Impact" -> "Public Health Outcome"
+	"Regional Healthcare Capacity" -> "Public Health Outcome"
+}

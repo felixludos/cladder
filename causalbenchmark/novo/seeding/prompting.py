@@ -1,5 +1,6 @@
 from pathlib import Path
 from itertools import product
+import networkx as nx
 
 from omnibelt import load_json, save_json
 import omnifig as fig
@@ -9,31 +10,20 @@ import torch
 
 from ..templating import FixedTemplate
 from .. import misc
-from .prompt_templates import setting_generation_prompt_template, graph_selection_prompt_template, stats_prompt_template
+from .prompt_templates import (default_story_prompt_template, default_graph_prompt_template,
+							   default_stats_prompt_template, default_verb_prompt_template,
+							   default_question_prompt_template)
 
 
-
-def build_prompter(*additional_kits):
-
-	ctx = Context()
-
-
-
-	ctx.include(*additional_kits)
-
-	return ctx
-
-
-
-def build_model(nodes, probs):
-	variables = {}
-	for node in nodes:
-		if len(node['parents']):
-			variables[node['name']] = ConditionalBernoulli([variables[parent] for parent in node['parents']])
-		else:
-			variables[node['name']] = Bernoulli(0.5)
-	net = BernoulliNetwork(variables)
-	return net
+# def build_model(nodes, probs):
+# 	variables = {}
+# 	for node in nodes:
+# 		if len(node['parents']):
+# 			variables[node['name']] = ConditionalBernoulli([variables[parent] for parent in node['parents']])
+# 		else:
+# 			variables[node['name']] = Bernoulli(0.5)
+# 	net = BernoulliNetwork(variables)
+# 	return net
 
 
 
@@ -49,11 +39,18 @@ class Story(Context, fig.Configurable):
 			self.load(story_id)
 
 
-	def populate_defaults(self):
-		story_template = FixedTemplate('setting', setting_generation_prompt_template)
-		graph_template = FixedTemplate('graph', graph_selection_prompt_template)
-		prob_template = StatisticsPrompting()
-		self.include(story_template, graph_template, prob_template)
+	def populate_defaults(self, story_prompt_tempalte=None, graph_prompt_template=None,
+						  stats_prompt_template=None, verb_prompt_template=None, questions_prompt_template=None):
+		if story_prompt_tempalte is None:
+			story_prompt_tempalte = default_story_prompt_template
+		if graph_prompt_template is None:
+			graph_prompt_template = default_graph_prompt_template
+		story_template = FixedTemplate('prompt_story', story_prompt_tempalte)
+		graph_template = FixedTemplate('prompt_graph', graph_prompt_template)
+		prob_template = StatisticsPrompting(stats_prompt_template)
+		verb_template = VerbalizationPrompting(verb_prompt_template, questions_prompt_template)
+		self.include(story_template, graph_template, prob_template, verb_template,
+					 GraphInfo())
 		return self
 
 
@@ -63,7 +60,9 @@ class Story(Context, fig.Configurable):
 		self.update({name: val for name, val in info.items() if val is not None})
 
 
-	def save(self, story_id: str = None, *, overwrite=False):
+	def save(self, story_id: str = None, *, overwrite=False, additional_keys=(), allow_missing=False):
+		save_keys = ['seed', 'spark', 'nodes', 'stats', 'verbs', 'questions', *additional_keys]
+
 		if story_id is None and self.story_id is None:
 			raise ValueError('No story ID provided')
 		if story_id is None:
@@ -73,20 +72,64 @@ class Story(Context, fig.Configurable):
 			raise FileExistsError(f'File {path} already exists (use overwrite=True to overwrite)')
 		self._root.mkdir(exist_ok=True, parents=True)
 
-		info = {name: val for name, val in self.items() if val is not None}
+		info = {key: self.grab(key, None) for key in save_keys}
+		if not allow_missing and any(val is None for val in info.values()):
+			raise ValueError(f'Not all keys are present in story: '
+							 f'{[key for key, val in info.items() if val is None]}')
 
-		# info = {
-		# 	'seed': self['seed'],
-		# 	'spark': self['spark'],
-		#
-		# 	'nodes': self['nodes'],
-		#
-		# 	'atoms': self.grab('atoms', None),
-		# 	'probs': self.grab('probs', None),
-		# }
 		save_json(info, path)
 		self.story_id = story_id
 		return path
+
+
+
+class GraphInfo(ToolKit):
+	@tool('node_dict')
+	def get_node_dict(self, nodes):
+		return {node['name']: node for node in nodes}
+
+
+	@tool('graph')
+	@staticmethod
+	def get_graph(nodes):
+		G = nx.DiGraph()
+		for node in nodes:
+			G.add_node(node['name'], type=node['type'], observed=node['observed'])
+			for parent in node['parents']:
+				G.add_edge(parent, node['name'])
+		return G
+
+	@tool('treatments')
+	@staticmethod
+	def get_treatments(nodes):
+		tr = [node for node in nodes if node['type'] == 'treatment']
+		assert len(tr) == 2
+		return tr
+
+	@tool('outcome')
+	@staticmethod
+	def get_outcome(nodes):
+		o = [node for node in nodes if node['type'] == 'outcome']
+		assert len(o) == 1
+		return o[0]
+
+	@tool('confounders')
+	@staticmethod
+	def get_confounders(nodes):
+		c = [node for node in nodes if node['type'] == 'confounder']
+		return c
+
+	@tool('mediators')
+	@staticmethod
+	def get_mediators(nodes):
+		m = [node for node in nodes if node['type'] == 'mediator']
+		return m
+
+	@tool('colliders')
+	@staticmethod
+	def get_colliders(nodes):
+		c = [node for node in nodes if node['type'] == 'collider']
+		return c
 
 
 
@@ -96,7 +139,7 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 				 question_template=None, val_template=None, cond_template=None, parent_template=None,
 				 desc_template=None, separator=None, **kwargs):
 		if prompt_template is None:
-			prompt_template = stats_prompt_template
+			prompt_template = default_stats_prompt_template
 		if question_template is None:
 			question_template = '{index}. {parents}what is the probability that {outcome}?'
 		if val_template is None:
@@ -110,7 +153,7 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 		if separator is None:
 			separator = ' and '
 		super().__init__(**kwargs)
-		self.include(FixedTemplate('stats', template=prompt_template))
+		self.include(FixedTemplate('prompt_stats', template=prompt_template))
 		self.question_template = question_template
 		self.val_template = val_template
 		self.parent_template = parent_template
@@ -139,7 +182,7 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 				index += 1
 
 
-	@tool('questions')
+	@tool('prob_questions')
 	def generate_questions(self, nodes):
 		return '\n'.join(self.generate_question_terms(nodes))
 
@@ -150,15 +193,101 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 
 
 
+@fig.component('verb-prompt')
+class VerbalizationPrompting(ToolKit, fig.Configurable):
+	def __init__(self, verbalization_prompt_template: str = None, question_prompt_template=None, *,
+				 rng=None, **kwargs):
+		if verbalization_prompt_template is None:
+			verbalization_prompt_template = default_verb_prompt_template
+		if question_prompt_template is None:
+			question_prompt_template = default_question_prompt_template
+		if rng is None:
+			rng = misc.get_rng(rng)
+		super().__init__(**kwargs)
+		self.rng = rng
+		self.include(FixedTemplate('prompt_verbs', template=verbalization_prompt_template),
+					 FixedTemplate('prompt_questions', template=question_prompt_template))
 
 
+	@tool('variable_description')
+	def get_verbalization_info(self, nodes):
+		template = 'Variable {name!r} (0={values[0]!r}, 1={values[1]!r}) means {description}'
+		# return tabulate([(node['name'], *node['values'], node['description']) for node in nodes], headers=['Variable Name', 'Value 0', 'Value 1', 'Description'])
+		return '\n'.join([template.format(**node) for node in nodes])
 
 
+	def _select(self, choices: list):
+		'''use self.rng (torch.Generator) to choose an element'''
+		return choices[torch.randint(0, len(choices), (1,), generator=self.rng).item()]
 
 
+	@tool('queries')
+	def generate_queries(self, treatments, confounders):
+		treatments = [t['name'] for t in treatments]
+		confounders = [c['name'] for c in confounders]
+
+		queries = []
+
+		for treatment in treatments:
+			queries.append({'treatment': treatment, 'query': 'ate', 'type': 'ate-sign',
+							'criterion': self._select(['>', '<'])})
+
+		t1, t2 = treatments if self._select([False, True]) else treatments[::-1]
+		queries.append({'treatment1': t1, 'treatment2': t2, 'query': 'ate', 'type': 'ate-compare',
+						'criterion': self._select(['>', '<'])})
+
+		t1, t2 = treatments if self._select([False, True]) else treatments[::-1]
+		queries.append({'treatment1': t1, 'treatment2': t2, 'query': 'ate', 'type': 'ate-compare-mag',
+						'criterion': self._select(['>', '<'])})
+
+		for confounder in confounders:
+			for confounder_value in [0, 1]:
+				for treatment in treatments:
+					queries.append({'treatment': treatment,
+									'confounder': confounder, 'confounder_value': confounder_value,
+									'query': 'cate', 'type': 'cate-sign', 'criterion': self._select(['>', '<'])})
+
+				t1, t2 = treatments if self._select([False, True]) else treatments[::-1]
+				queries.append({'treatment1': t1, 'treatment2': t2,
+								'confounder': confounder, 'confounder_value': confounder_value,
+								'query': 'cate', 'type': 'cate-compare-c', 'criterion': self._select(['>', '<'])})
+
+				t1, t2 = treatments if self._select([False, True]) else treatments[::-1]
+				queries.append({'treatment1': t1, 'treatment2': t2,
+								'confounder': confounder, 'confounder_value': confounder_value,
+								'query': 'cate', 'type': 'cate-compare-c-mag', 'criterion': self._select(['>', '<'])})
+
+			for treatment in treatments:
+				queries.append({'treatment': treatment, 'confounder': confounder,
+								'confounder_order': self._select([[0, 1], [1, 0]]),
+								'query': 'cate', 'type': 'cate-compare-t', 'criterion': self._select(['>', '<'])})
+
+				queries.append({'treatment': treatment, 'confounder': confounder,
+								'confounder_order': self._select([[0, 1], [1, 0]]),
+								'query': 'cate', 'type': 'cate-compare-t-mag', 'criterion': self._select(['>', '<'])})
+
+		return queries
 
 
+	_query_description_templates = {
+		'ate-sign': 'ATE({treatment!r}) {criterion} 0',
+		'ate-compare': 'ATE({treatment1!r}) {criterion} ATE({treatment2!r})',
+		'ate-compare-mag': '|ATE({treatment1!r})| {criterion} |ATE({treatment2!r})|',
 
-
+		'cate-sign': 'CATE({treatment!r} | {confounder!r} = {confounder_value}) {criterion} 0',
+		'cate-compare-c': 'CATE({treatment1!r} | {confounder!r} = {confounder_value}) {criterion} '
+						  'CATE({treatment2!r} | {confounder!r} = {confounder_value})',
+		'cate-compare-c-mag': '|CATE({treatment1!r} | {confounder!r} = {confounder_value})| {criterion} '
+							  '|CATE({treatment2!r} | {confounder!r} = {confounder_value})|',
+		'cate-compare-t': 'CATE({treatment!r} | {confounder!r} = {confounder_order[0]}) {criterion} '
+						  'CATE({treatment!r} | {confounder!r} = {confounder_order[1]})',
+		'cate-compare-t-mag': '|CATE({treatment!r} | {confounder!r} = {confounder_order[0]})| {criterion} '
+							  '|CATE({treatment!r} | {confounder!r} = {confounder_order[1]})|',
+	}
+	@tool('query_description')
+	def get_query_descriptions(self, queries):
+		lines = [self._query_description_templates[query['type']].format(**query) for query in queries]
+		desc = '\t' + '\n\t'.join(f'{i + 1}. {q}' for i, q in enumerate(lines))
+		return desc
 
 

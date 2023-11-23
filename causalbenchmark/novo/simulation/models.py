@@ -238,9 +238,10 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		return self.__class__(variables=newvars, rng=self._rng)
 
 
-	def ate(self, treatment: str, *, treated_val=1, not_treated_val=0):
-		treated = self.intervene(**{treatment: treated_val}).marginals()
-		not_treated = self.intervene(**{treatment: not_treated_val}).marginals()
+	def ate(self, treatment: str, *, conditions: dict[str, int] = None, treated_val = 1, not_treated_val = 0):
+		if conditions is None: conditions = {}
+		treated = self.intervene(**{treatment: treated_val}).marginals(**conditions)
+		not_treated = self.intervene(**{treatment: not_treated_val}).marginals(**conditions)
 		return {var.name: treated[var.name] - not_treated[var.name] for var in self.vars}
 
 
@@ -291,7 +292,21 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		assert treatment == do, f'Expected treatment to be {do}, got {treatment}'
 		assert outcome == out, f'Expected outcome to be {out}, got {outcome}'
 
-		raise NotImplementedError
+		return do, out, cond
+
+
+	def _backdoor_terms(self, do: str, out: str, cond: list[str] = None):
+		if cond is None:
+			cond = []
+
+		terms = []
+		for c in cond:
+			terms.append({'prob': c})
+		parents = [do, *cond]
+		for cvals in product(*[[0, 1] for c in cond]):
+			terms.append({'prob': out, 'cond': {p: v for p, v in zip(parents, cvals)}})
+		return terms
+
 
 	def backdoor_estimand(self, treatment: str, outcome: str):
 		model = self.to_dowhy(treatment, outcome)

@@ -1,0 +1,17 @@
+// Causal Model
+digraph {
+	"Presidential Engagement in Climate Discussions" [label="Presidential Engagement in Climate Discussions" color=lightpink shape=ellipse style=filled]
+	"Media Coverage of Climate Issues" [label="Media Coverage of Climate Issues" color=lightblue shape=diamond style=filled]
+	"Content of Climate Bill" [label="Content of Climate Bill" color=lightpink shape=ellipse style=filled]
+	"Perceived Credibility of the President" [label="Perceived Credibility of the President" color=lightyellow shape=box style=filled]
+	"Public Support for Climate Bill" [label="Public Support for Climate Bill" color=lightgreen shape=ellipse style=filled]
+	"Government's Overall Approval Rating" [label="Government's Overall Approval Rating" color=lightgray shape=box style=filled]
+	"Media Coverage of Climate Issues" -> "Content of Climate Bill"
+	"Presidential Engagement in Climate Discussions" -> "Perceived Credibility of the President"
+	"Content of Climate Bill" -> "Perceived Credibility of the President"
+	"Perceived Credibility of the President" -> "Public Support for Climate Bill"
+	"Content of Climate Bill" -> "Public Support for Climate Bill"
+	"Media Coverage of Climate Issues" -> "Public Support for Climate Bill"
+	"Presidential Engagement in Climate Discussions" -> "Government's Overall Approval Rating"
+	"Public Support for Climate Bill" -> "Government's Overall Approval Rating"
+}

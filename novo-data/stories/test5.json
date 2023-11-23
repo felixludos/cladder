@@ -1,1 +1,220 @@
-{"seed": 1423874, "article": {"ID": 1423874, "title": "China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail", "description": "China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.", "content": "China's economy has grown 4.9 per cent in the third quarter from last year proving the country is back to its pre-pandemic trajectory with consumer spending and industrial production going back to no\u2026 [+8305 chars]", "language": "en"}, "title": "China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail", "description": "China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.", "language": "English", "spark": "Title: China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail\nDescription: China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.\nOriginal Language: English", "setting": "We are interested in building a causal model based on the explicit and implicit assumptions contained in the specified article and then using causal inference to evaluate the reasoning. Answer the following questions to design an interesting, simple, and most importantly realistic causal model from a news article.\n\nTo help understand the instructions here are some tips:\n- all variables are always binary and (at least in principle) measurable, so when creating and selecting variables, make sure it is reasonable to treat them as binary\n- whenever you propose a variable, make sure to define the meaning of each value it can take, and mention whether it is observable or not\n- outcome variables are always observable\n- treatment variables are always observable and intervenable, that means it must be possible to (at least in principle) change their value if desired\n- confounder variables may or may not be observable, and should always have at least two causal children (for example, a treatment and outcome variable) and no causal parents\n- mediator variables may or may not be observable, and should always have at least one causal parents (for example, a treatment variable) and at least one causal child (for example, the outcome variable)\n- collider variables may or may not be observable, and should always have at least two causal parents (for example, a treatment and outcome variable) and no causal children\n\nAnswer concisely and precisely in the desired format. Carefully complete each of these tasks in order.\n\n1. Write a short description of what the article is about and what causal model make inform the reasoning behind an argument the might make.\n2. Propose 1 outcome variable that the news article is either implicitly or explicitly addressing that people are most likely to be interested in studying, especially if people tend to have misconceptions about it\n3. Propose 2 treatment variables that either directly or indirectly affect the selected outcome variable and are the most interesting to study\n4. Propose 3 confounder variables that affect some reasonable combination of the outcome and treatment variables\n5. Propose 3 mediator variables that affect and are affected by some reasonable combination of any other variables\n6. Propose 2 collider variables that are affected by some reasonable combination of any other variables\n\nHere is the beginning of the new article:\n```\nTitle: China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail\nDescription: China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.\nOriginal Language: English\n```\n\nThe variables and causal graph should, where possible, use specific details such as names and locations mentioned in the article. Also, generally the variable value \"0\" should correspond to the negative or control while the value \"1\" should correspond to the positive or greater value.\n\nTake a deep breath and think step-by-step about how you will do this.", "graph": "1. From all proposed confounder, mediator, and collider variables, select between 3-5 variables that are most interesting to study and together with the treatment and outcome variables result in a realistic interesting causal graph. Important: Make sure the causal graph is a DAG and that no node has more than 3 parents!\n2.  List all the edges in the causal graph, and make sure to mention which edges are observable and which are not.\n3. Provide a python list called `nodes` of all the nodes in the proposed graph. For each node, provide the following information in the form of a python dict:\n- `name`: the name of the variable\n- `description`: a short description of the variable\n- `type`: the type of the variable, which can be one of the following: `outcome`, `treatment`, `confounder`, `mediator`, `collider`\n- `observed`: a boolean value indicating whether the variable is observable or not\n- `values`: a python list of the descriptions of the values the variable can take (corresponding to the index)\n- `parents`: a python list of the names of the parents of the variable (make sure they match the corresponding `name` field of the parent nodes)\n\nTake a deep breath and think step-by-step about how you will do this.", "nodes": [{"name": "GEP", "description": "Government Economic Policies", "type": "confounder", "observed": true, "values": ["Restrictive", "Stimulative"], "parents": []}, {"name": "IP", "description": "Industrial Production", "type": "treatment", "observed": true, "values": ["Decrease", "Increase"], "parents": ["GEP"]}, {"name": "UR", "description": "Unemployment Rate", "type": "treatment", "observed": true, "values": ["Increase", "Decrease"], "parents": ["GEP"]}, {"name": "CC", "description": "Consumer Confidence", "type": "mediator", "observed": true, "values": ["Low", "High"], "parents": ["IP", "UR"]}, {"name": "EG", "description": "Economic Growth", "type": "outcome", "observed": true, "values": ["No Growth", "Positive Growth"], "parents": ["GEP", "IP", "UR", "CC"]}, {"name": "MP", "description": "Market Performance", "type": "collider", "observed": true, "values": ["Poor", "Good"], "parents": ["IP", "EG"]}], "questions": "1. what is the probability that \"GEP\" is \"Stimulative\" (rather than \"Restrictive\")?\n2. when \"GEP\" is \"Restrictive\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n3. when \"GEP\" is \"Stimulative\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n4. when \"GEP\" is \"Restrictive\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n5. when \"GEP\" is \"Stimulative\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n6. when \"IP\" is \"Decrease\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n7. when \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n8. when \"IP\" is \"Increase\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n9. when \"IP\" is \"Increase\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n10. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n11. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n12. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n13. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n14. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n15. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n16. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n17. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n18. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n19. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n20. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n21. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n22. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n23. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n24. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n25. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n26. when \"IP\" is \"Decrease\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n27. when \"IP\" is \"Decrease\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n28. when \"IP\" is \"Increase\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n29. when \"IP\" is \"Increase\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?", "descriptions": "\"GEP\" means \"Government Economic Policies\"\n\"IP\" means \"Industrial Production\"\n\"UR\" means \"Unemployment Rate\"\n\"CC\" means \"Consumer Confidence\"\n\"EG\" means \"Economic Growth\"\n\"MP\" means \"Market Performance\"", "stats": "We have a causal bayes net based on the following article:\n\n```\nTitle: China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail\nDescription: China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.\nOriginal Language: English\n```\n\nNow we would like to estimate the probabilities of certain events.\n\nUsing commonsense, estimate the probabilities of the following events:\n\n1. what is the probability that \"GEP\" is \"Stimulative\" (rather than \"Restrictive\")?\n2. when \"GEP\" is \"Restrictive\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n3. when \"GEP\" is \"Stimulative\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n4. when \"GEP\" is \"Restrictive\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n5. when \"GEP\" is \"Stimulative\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n6. when \"IP\" is \"Decrease\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n7. when \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n8. when \"IP\" is \"Increase\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n9. when \"IP\" is \"Increase\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n10. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n11. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n12. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n13. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n14. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n15. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n16. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n17. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n18. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n19. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n20. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n21. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n22. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n23. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n24. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n25. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n26. when \"IP\" is \"Decrease\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n27. when \"IP\" is \"Decrease\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n28. when \"IP\" is \"Increase\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n29. when \"IP\" is \"Increase\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n\nWhere the variables are defined as:\n\"GEP\" means \"Government Economic Policies\"\n\"IP\" means \"Industrial Production\"\n\"UR\" means \"Unemployment Rate\"\n\"CC\" means \"Consumer Confidence\"\n\"EG\" means \"Economic Growth\"\n\"MP\" means \"Market Performance\"\n\nFor each question above, answer with the lower and upper bound estimates of the probabilities as a python dictionary where the key corresponds to the question index in exactly the following format:\n\n```python\nprobabilities = {\n  1: [0.3, 0.4],\n  ...\n}\n```\n\nAnswer concisely and precisely in the desired format.", "probs": {"1": [0.7, 0.8], "2": [0.1, 0.2], "3": [0.7, 0.8], "4": [0.2, 0.3], "5": [0.7, 0.8], "6": [0.1, 0.2], "7": [0.4, 0.5], "8": [0.2, 0.3], "9": [0.6, 0.7], "10": [0.1, 0.2], "11": [0.2, 0.3], "12": [0.3, 0.4], "13": [0.4, 0.5], "14": [0.3, 0.4], "15": [0.5, 0.6], "16": [0.4, 0.5], "17": [0.6, 0.7], "18": [0.2, 0.3], "19": [0.3, 0.4], "20": [0.4, 0.5], "21": [0.5, 0.6], "22": [0.6, 0.7], "23": [0.8, 0.9], "24": [0.7, 0.8], "25": [0.9, 1.0], "26": [0.3, 0.4], "27": [0.5, 0.6], "28": [0.4, 0.5], "29": [0.7, 0.8]}}
+{
+  "seed": 1423874,
+  "article": {
+    "ID": 1423874,
+    "title": "China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail",
+    "description": "China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.",
+    "content": "China's economy has grown 4.9 per cent in the third quarter from last year proving the country is back to its pre-pandemic trajectory with consumer spending and industrial production going back to no\u2026 [+8305 chars]",
+    "language": "en"
+  },
+  "title": "China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail",
+  "description": "China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.",
+  "language": "English",
+  "spark": "Title: China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail\nDescription: China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.\nOriginal Language: English",
+  "setting": "We are interested in building a causal model based on the explicit and implicit assumptions contained in the specified article and then using causal inference to evaluate the reasoning. Answer the following questions to design an interesting, simple, and most importantly realistic causal model from a news article.\n\nTo help understand the instructions here are some tips:\n- all variables are always binary and (at least in principle) measurable, so when creating and selecting variables, make sure it is reasonable to treat them as binary\n- whenever you propose a variable, make sure to define the meaning of each value it can take, and mention whether it is observable or not\n- outcome variables are always observable\n- treatment variables are always observable and intervenable, that means it must be possible to (at least in principle) change their value if desired\n- confounder variables may or may not be observable, and should always have at least two causal children (for example, a treatment and outcome variable) and no causal parents\n- mediator variables may or may not be observable, and should always have at least one causal parents (for example, a treatment variable) and at least one causal child (for example, the outcome variable)\n- collider variables may or may not be observable, and should always have at least two causal parents (for example, a treatment and outcome variable) and no causal children\n\nAnswer concisely and precisely in the desired format. Carefully complete each of these tasks in order.\n\n1. Write a short description of what the article is about and what causal model make inform the reasoning behind an argument the might make.\n2. Propose 1 outcome variable that the news article is either implicitly or explicitly addressing that people are most likely to be interested in studying, especially if people tend to have misconceptions about it\n3. Propose 2 treatment variables that either directly or indirectly affect the selected outcome variable and are the most interesting to study\n4. Propose 3 confounder variables that affect some reasonable combination of the outcome and treatment variables\n5. Propose 3 mediator variables that affect and are affected by some reasonable combination of any other variables\n6. Propose 2 collider variables that are affected by some reasonable combination of any other variables\n\nHere is the beginning of the new article:\n```\nTitle: China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail\nDescription: China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.\nOriginal Language: English\n```\n\nThe variables and causal graph should, where possible, use specific details such as names and locations mentioned in the article. Also, generally the variable value \"0\" should correspond to the negative or control while the value \"1\" should correspond to the positive or greater value.\n\nTake a deep breath and think step-by-step about how you will do this.",
+  "graph": "1. From all proposed confounder, mediator, and collider variables, select between 3-5 variables that are most interesting to study and together with the treatment and outcome variables result in a realistic interesting causal graph. Important: Make sure the causal graph is a DAG and that no node has more than 3 parents!\n2.  List all the edges in the causal graph, and make sure to mention which edges are observable and which are not.\n3. Provide a python list called `nodes` of all the nodes in the proposed graph. For each node, provide the following information in the form of a python dict:\n- `name`: the name of the variable\n- `description`: a short description of the variable\n- `type`: the type of the variable, which can be one of the following: `outcome`, `treatment`, `confounder`, `mediator`, `collider`\n- `observed`: a boolean value indicating whether the variable is observable or not\n- `values`: a python list of the descriptions of the values the variable can take (corresponding to the index)\n- `parents`: a python list of the names of the parents of the variable (make sure they match the corresponding `name` field of the parent nodes)\n\nTake a deep breath and think step-by-step about how you will do this.",
+  "nodes": [
+    {
+      "name": "GEP",
+      "description": "Government Economic Policies",
+      "type": "confounder",
+      "observed": true,
+      "values": [
+        "Restrictive",
+        "Stimulative"
+      ],
+      "parents": []
+    },
+    {
+      "name": "IP",
+      "description": "Industrial Production",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "Decrease",
+        "Increase"
+      ],
+      "parents": [
+        "GEP"
+      ]
+    },
+    {
+      "name": "UR",
+      "description": "Unemployment Rate",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "Increase",
+        "Decrease"
+      ],
+      "parents": [
+        "GEP"
+      ]
+    },
+    {
+      "name": "CC",
+      "description": "Consumer Confidence",
+      "type": "mediator",
+      "observed": true,
+      "values": [
+        "Low",
+        "High"
+      ],
+      "parents": [
+        "IP",
+        "UR"
+      ]
+    },
+    {
+      "name": "EG",
+      "description": "Economic Growth",
+      "type": "outcome",
+      "observed": true,
+      "values": [
+        "No Growth",
+        "Positive Growth"
+      ],
+      "parents": [
+        "GEP",
+        "IP",
+        "UR",
+        "CC"
+      ]
+    },
+    {
+      "name": "MP",
+      "description": "Market Performance",
+      "type": "collider",
+      "observed": true,
+      "values": [
+        "Poor",
+        "Good"
+      ],
+      "parents": [
+        "IP",
+        "EG"
+      ]
+    }
+  ],
+  "questions": "1. what is the probability that \"GEP\" is \"Stimulative\" (rather than \"Restrictive\")?\n2. when \"GEP\" is \"Restrictive\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n3. when \"GEP\" is \"Stimulative\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n4. when \"GEP\" is \"Restrictive\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n5. when \"GEP\" is \"Stimulative\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n6. when \"IP\" is \"Decrease\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n7. when \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n8. when \"IP\" is \"Increase\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n9. when \"IP\" is \"Increase\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n10. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n11. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n12. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n13. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n14. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n15. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n16. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n17. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n18. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n19. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n20. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n21. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n22. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n23. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n24. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n25. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n26. when \"IP\" is \"Decrease\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n27. when \"IP\" is \"Decrease\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n28. when \"IP\" is \"Increase\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n29. when \"IP\" is \"Increase\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?",
+  "descriptions": "\"GEP\" means \"Government Economic Policies\"\n\"IP\" means \"Industrial Production\"\n\"UR\" means \"Unemployment Rate\"\n\"CC\" means \"Consumer Confidence\"\n\"EG\" means \"Economic Growth\"\n\"MP\" means \"Market Performance\"",
+  "stats": "We have a causal bayes net based on the following article:\n\n```\nTitle: China's economy grows 4.9% while the rest of the world is crippled by coronavirus - Daily Mail\nDescription: China's economy has grown 4.9 percent in the third quarter from last year proving the country is back to its pre-pandemic trajectory as industrial production is up and unemployment is down.\nOriginal Language: English\n```\n\nNow we would like to estimate the probabilities of certain events.\n\nUsing commonsense, estimate the probabilities of the following events:\n\n1. what is the probability that \"GEP\" is \"Stimulative\" (rather than \"Restrictive\")?\n2. when \"GEP\" is \"Restrictive\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n3. when \"GEP\" is \"Stimulative\": what is the probability that \"IP\" is \"Increase\" (rather than \"Decrease\")?\n4. when \"GEP\" is \"Restrictive\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n5. when \"GEP\" is \"Stimulative\": what is the probability that \"UR\" is \"Decrease\" (rather than \"Increase\")?\n6. when \"IP\" is \"Decrease\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n7. when \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n8. when \"IP\" is \"Increase\" and \"UR\" is \"Increase\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n9. when \"IP\" is \"Increase\" and \"UR\" is \"Decrease\": what is the probability that \"CC\" is \"High\" (rather than \"Low\")?\n10. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n11. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n12. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n13. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n14. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n15. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n16. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n17. when \"GEP\" is \"Restrictive\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n18. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n19. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n20. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n21. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Decrease\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n22. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n23. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Increase\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n24. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"Low\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n25. when \"GEP\" is \"Stimulative\" and \"IP\" is \"Increase\" and \"UR\" is \"Decrease\" and \"CC\" is \"High\": what is the probability that \"EG\" is \"Positive Growth\" (rather than \"No Growth\")?\n26. when \"IP\" is \"Decrease\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n27. when \"IP\" is \"Decrease\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n28. when \"IP\" is \"Increase\" and \"EG\" is \"No Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n29. when \"IP\" is \"Increase\" and \"EG\" is \"Positive Growth\": what is the probability that \"MP\" is \"Good\" (rather than \"Poor\")?\n\nWhere the variables are defined as:\n\"GEP\" means \"Government Economic Policies\"\n\"IP\" means \"Industrial Production\"\n\"UR\" means \"Unemployment Rate\"\n\"CC\" means \"Consumer Confidence\"\n\"EG\" means \"Economic Growth\"\n\"MP\" means \"Market Performance\"\n\nFor each question above, answer with the lower and upper bound estimates of the probabilities as a python dictionary where the key corresponds to the question index in exactly the following format:\n\n```python\nprobabilities = {\n  1: [0.3, 0.4],\n  ...\n}\n```\n\nAnswer concisely and precisely in the desired format.",
+  "probs": {
+    "1": [
+      0.7,
+      0.8
+    ],
+    "2": [
+      0.1,
+      0.2
+    ],
+    "3": [
+      0.7,
+      0.8
+    ],
+    "4": [
+      0.2,
+      0.3
+    ],
+    "5": [
+      0.7,
+      0.8
+    ],
+    "6": [
+      0.1,
+      0.2
+    ],
+    "7": [
+      0.4,
+      0.5
+    ],
+    "8": [
+      0.2,
+      0.3
+    ],
+    "9": [
+      0.6,
+      0.7
+    ],
+    "10": [
+      0.1,
+      0.2
+    ],
+    "11": [
+      0.2,
+      0.3
+    ],
+    "12": [
+      0.3,
+      0.4
+    ],
+    "13": [
+      0.4,
+      0.5
+    ],
+    "14": [
+      0.3,
+      0.4
+    ],
+    "15": [
+      0.5,
+      0.6
+    ],
+    "16": [
+      0.4,
+      0.5
+    ],
+    "17": [
+      0.6,
+      0.7
+    ],
+    "18": [
+      0.2,
+      0.3
+    ],
+    "19": [
+      0.3,
+      0.4
+    ],
+    "20": [
+      0.4,
+      0.5
+    ],
+    "21": [
+      0.5,
+      0.6
+    ],
+    "22": [
+      0.6,
+      0.7
+    ],
+    "23": [
+      0.8,
+      0.9
+    ],
+    "24": [
+      0.7,
+      0.8
+    ],
+    "25": [
+      0.9,
+      1.0
+    ],
+    "26": [
+      0.3,
+      0.4
+    ],
+    "27": [
+      0.5,
+      0.6
+    ],
+    "28": [
+      0.4,
+      0.5
+    ],
+    "29": [
+      0.7,
+      0.8
+    ]
+  }
+}

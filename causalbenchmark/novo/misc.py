@@ -15,6 +15,10 @@ def assets_root():
 	return repo_root() / 'assets'
 
 
+def temp_root():
+	return data_root() / 'temp'
+
+
 
 @fig.autocomponent('rng')
 def get_rng(seed=None, reset_master=True):

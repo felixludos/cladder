@@ -1,0 +1,1038 @@
+{
+  "seed": 4117142,
+  "spark": "Title: Prince Charles addresses the nation after the death of father Philip - RTL News\nDescription: 72-year-old Prince Charles has responded publicly for the first time to the death of his father, Prince Philip. In the presence of the press, he said he missed his 'daddy' enormously and thanked him for all the messages of support from all over the world.\nOriginal Language: Dutch",
+  "nodes": [
+    {
+      "name": "Historical Public Sentiment",
+      "description": "Public sentiment towards the monarchy in the past.",
+      "type": "confounder",
+      "observed": false,
+      "values": [
+        "Historically Neutral/Negative",
+        "Historically Positive"
+      ],
+      "parents": []
+    },
+    {
+      "name": "Royal Family Public Address",
+      "description": "Whether a royal family member makes a significant public address.",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "No/Neutral Address",
+        "Emotional/Significant Address"
+      ],
+      "parents": [
+        "Historical Public Sentiment"
+      ]
+    },
+    {
+      "name": "Media Coverage Intensity",
+      "description": "The extent and nature of media coverage regarding royal events.",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "Limited/Neutral Coverage",
+        "Extensive/Sensational Coverage"
+      ],
+      "parents": [
+        "Historical Public Sentiment"
+      ]
+    },
+    {
+      "name": "Social Media Engagement",
+      "description": "The level of engagement on social media regarding royal events.",
+      "type": "mediator",
+      "observed": false,
+      "values": [
+        "Low Engagement",
+        "High Engagement"
+      ],
+      "parents": [
+        "Royal Family Public Address",
+        "Media Coverage Intensity"
+      ]
+    },
+    {
+      "name": "Public Empathy for Royalty",
+      "description": "The public\u2019s empathy towards the royal family.",
+      "type": "mediator",
+      "observed": false,
+      "values": [
+        "Low Empathy",
+        "High Empathy"
+      ],
+      "parents": []
+    },
+    {
+      "name": "Public Sentiment Towards Monarchy",
+      "description": "The public\u2019s overall sentiment towards the monarchy.",
+      "type": "outcome",
+      "observed": true,
+      "values": [
+        "Neutral/Negative Sentiment",
+        "Positive Sentiment"
+      ],
+      "parents": [
+        "Royal Family Public Address",
+        "Media Coverage Intensity",
+        "Social Media Engagement",
+        "Public Empathy for Royalty"
+      ]
+    },
+    {
+      "name": "Celebrity Endorsements",
+      "description": "Celebrity endorsements related to royal events.",
+      "type": "collider",
+      "observed": false,
+      "values": [
+        "Absence of Endorsements",
+        "Presence of Endorsements"
+      ],
+      "parents": [
+        "Media Coverage Intensity",
+        "Public Sentiment Towards Monarchy"
+      ]
+    }
+  ],
+  "stats": {
+    "1": [
+      0.6,
+      0.7
+    ],
+    "2": [
+      0.2,
+      0.3
+    ],
+    "3": [
+      0.7,
+      0.8
+    ],
+    "4": [
+      0.4,
+      0.5
+    ],
+    "5": [
+      0.6,
+      0.7
+    ],
+    "6": [
+      0.1,
+      0.2
+    ],
+    "7": [
+      0.3,
+      0.4
+    ],
+    "8": [
+      0.5,
+      0.6
+    ],
+    "9": [
+      0.7,
+      0.8
+    ],
+    "10": [
+      0.5,
+      0.6
+    ],
+    "11": [
+      0.2,
+      0.3
+    ],
+    "12": [
+      0.4,
+      0.5
+    ],
+    "13": [
+      0.3,
+      0.4
+    ],
+    "14": [
+      0.5,
+      0.6
+    ],
+    "15": [
+      0.3,
+      0.4
+    ],
+    "16": [
+      0.5,
+      0.6
+    ],
+    "17": [
+      0.4,
+      0.5
+    ],
+    "18": [
+      0.6,
+      0.7
+    ],
+    "19": [
+      0.4,
+      0.5
+    ],
+    "20": [
+      0.6,
+      0.7
+    ],
+    "21": [
+      0.5,
+      0.6
+    ],
+    "22": [
+      0.7,
+      0.8
+    ],
+    "23": [
+      0.5,
+      0.6
+    ],
+    "24": [
+      0.7,
+      0.8
+    ],
+    "25": [
+      0.6,
+      0.7
+    ],
+    "26": [
+      0.8,
+      0.9
+    ],
+    "27": [
+      0.2,
+      0.3
+    ],
+    "28": [
+      0.4,
+      0.5
+    ],
+    "29": [
+      0.5,
+      0.6
+    ],
+    "30": [
+      0.7,
+      0.8
+    ]
+  },
+  "verbs": {
+    "Historical Public Sentiment": {
+      "1": {
+        "variable": [
+          "historical public sentiment towards the monarchy",
+          "public's past sentiment about the monarchy"
+        ]
+      },
+      "2": {
+        "subject": "the public's sentiment",
+        "value": {
+          "0": [
+            "was neutral or negative towards the monarchy",
+            "held a neutral or negative view of the monarchy"
+          ],
+          "1": [
+            "was positive towards the monarchy",
+            "favored the monarchy"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "the public was neutral or negative towards the monarchy",
+            "there was a neutral or negative public sentiment towards the monarchy"
+          ],
+          "1": [
+            "the public was positive towards the monarchy",
+            "there was a favorable public sentiment towards the monarchy"
+          ]
+        }
+      },
+      "4": {
+        "domain": "public sentiment",
+        "value": {
+          "0": [
+            "was neutral or negative towards the monarchy",
+            "held a neutral or negative view of the monarchy"
+          ],
+          "1": [
+            "was positive towards the monarchy",
+            "favored the monarchy"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "public sentiment towards the monarchy is neutral or negative",
+            "the monarchy faces neutral or negative public sentiment"
+          ],
+          "1": [
+            "public sentiment towards the monarchy is positive",
+            "the monarchy enjoys positive public sentiment"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "When the public sentiment towards the monarchy is neutral or negative",
+            "In times of neutral or negative public sentiment towards the monarchy"
+          ],
+          "1": [
+            "When the public sentiment towards the monarchy is positive",
+            "In times of favorable public sentiment towards the monarchy"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if public sentiment towards the monarchy turns neutral or negative",
+            "if the monarchy faces a shift to neutral or negative public sentiment"
+          ],
+          "1": [
+            "if public sentiment towards the monarchy becomes positive",
+            "if the monarchy gains favorable public sentiment"
+          ]
+        }
+      }
+    },
+    "Royal Family Public Address": {
+      "1": {
+        "variable": [
+          "royal family's public address",
+          "public statements by the royal family"
+        ]
+      },
+      "2": {
+        "subject": "a royal family member",
+        "value": {
+          "0": [
+            "does not make a significant public address",
+            "gives a neutral or no public address"
+          ],
+          "1": [
+            "makes an emotional or significant public address",
+            "delivers a heartfelt or important public statement"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "a royal family member does not make a significant public address",
+            "there is a neutral or no public address by a royal family member"
+          ],
+          "1": [
+            "a royal family member makes an emotional or significant public address",
+            "there is a heartfelt or important public statement by a royal family member"
+          ]
+        }
+      },
+      "4": {
+        "domain": "royal family members",
+        "value": {
+          "0": [
+            "do not make a significant public address",
+            "give a neutral or no public address"
+          ],
+          "1": [
+            "make an emotional or significant public address",
+            "deliver a heartfelt or important public statement"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "a royal family member does not make a significant address",
+            "there is no significant public address from the royal family"
+          ],
+          "1": [
+            "a royal family member makes an emotional or significant address",
+            "there is an important public statement from the royal family"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "If a royal family member does not make a significant public address",
+            "When there is no significant public address from the royal family"
+          ],
+          "1": [
+            "If a royal family member makes an emotional or significant public address",
+            "When there is an important public statement from the royal family"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if a royal family member refrains from making a significant public address",
+            "if there is no significant public statement from the royal family"
+          ],
+          "1": [
+            "if a royal family member makes an emotional or significant public address",
+            "if an important public statement is made by the royal family"
+          ]
+        }
+      }
+    },
+    "Media Coverage Intensity": {
+      "1": {
+        "variable": [
+          "intensity of media coverage on royal events",
+          "extent of media focus on royal affairs"
+        ]
+      },
+      "2": {
+        "subject": "media coverage",
+        "value": {
+          "0": [
+            "is limited or neutral on royal events",
+            "maintains a neutral or limited focus on royal affairs"
+          ],
+          "1": [
+            "is extensive or sensational on royal events",
+            "takes an extensive or sensational approach to royal affairs"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "media coverage is limited or neutral on royal events",
+            "there is a neutral or limited focus in media on royal affairs"
+          ],
+          "1": [
+            "media coverage is extensive or sensational on royal events",
+            "there is an extensive or sensational focus in media on royal affairs"
+          ]
+        }
+      },
+      "4": {
+        "domain": "media outlets",
+        "value": {
+          "0": [
+            "provide limited or neutral coverage on royal events",
+            "maintain a neutral or limited focus on royal affairs"
+          ],
+          "1": [
+            "provide extensive or sensational coverage on royal events",
+            "take an extensive or sensational approach to royal affairs"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "media coverage of royal events is limited or neutral",
+            "the focus on royal affairs in the media is neutral or limited"
+          ],
+          "1": [
+            "media coverage of royal events is extensive or sensational",
+            "the focus on royal affairs in the media is extensive or sensational"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "When media coverage of royal events is limited or neutral",
+            "In cases of neutral or limited media focus on royal affairs"
+          ],
+          "1": [
+            "When media coverage of royal events is extensive or sensational",
+            "In cases of extensive or sensational media focus on royal affairs"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if media coverage of royal events becomes limited or neutral",
+            "if the media focus on royal affairs turns neutral or limited"
+          ],
+          "1": [
+            "if media coverage of royal events becomes extensive or sensational",
+            "if the media focus on royal affairs turns extensive or sensational"
+          ]
+        }
+      }
+    },
+    "Social Media Engagement": {
+      "1": {
+        "variable": [
+          "social media engagement with royal events",
+          "level of interaction on social media about royal affairs"
+        ]
+      },
+      "2": {
+        "subject": "social media engagement",
+        "value": {
+          "0": [
+            "is low regarding royal events",
+            "remains low for royal affairs"
+          ],
+          "1": [
+            "is high regarding royal events",
+            "soars for royal affairs"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "social media engagement is low regarding royal events",
+            "there is minimal interaction on social media about royal affairs"
+          ],
+          "1": [
+            "social media engagement is high regarding royal events",
+            "there is significant interaction on social media about royal affairs"
+          ]
+        }
+      },
+      "4": {
+        "domain": "social media posts",
+        "value": {
+          "0": [
+            "show low engagement with royal events",
+            "reflect minimal interaction about royal affairs"
+          ],
+          "1": [
+            "show high engagement with royal events",
+            "reflect significant interaction about royal affairs"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "social media engagement with royal events is low",
+            "interaction on social media about royal affairs remains minimal"
+          ],
+          "1": [
+            "social media engagement with royal events is high",
+            "interaction on social media about royal affairs is significant"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "When social media engagement with royal events is low",
+            "If interaction on social media about royal affairs remains minimal"
+          ],
+          "1": [
+            "When social media engagement with royal events is high",
+            "If interaction on social media about royal affairs is significant"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if social media engagement with royal events remains low",
+            "if interaction on social media about royal affairs stays minimal"
+          ],
+          "1": [
+            "if social media engagement with royal events becomes high",
+            "if interaction on social media about royal affairs becomes significant"
+          ]
+        }
+      }
+    },
+    "Public Empathy for Royalty": {
+      "1": {
+        "variable": [
+          "public empathy for the royal family",
+          "the public's compassion towards royalty"
+        ]
+      },
+      "2": {
+        "subject": "public empathy",
+        "value": {
+          "0": [
+            "is low for the royal family",
+            "remains minimal towards royalty"
+          ],
+          "1": [
+            "is high for the royal family",
+            "is strong towards royalty"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "public empathy for the royal family is low",
+            "there is minimal compassion towards royalty in the public"
+          ],
+          "1": [
+            "public empathy for the royal family is high",
+            "there is strong compassion towards royalty in the public"
+          ]
+        }
+      },
+      "4": {
+        "domain": "public opinions",
+        "value": {
+          "0": [
+            "show low empathy for the royal family",
+            "reflect minimal compassion towards royalty"
+          ],
+          "1": [
+            "show high empathy for the royal family",
+            "reflect strong compassion towards royalty"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "public empathy for the royal family is low",
+            "compassion towards royalty in the public remains minimal"
+          ],
+          "1": [
+            "public empathy for the royal family is high",
+            "compassion towards royalty in the public is strong"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "When public empathy for the royal family is low",
+            "If compassion towards royalty in the public remains minimal"
+          ],
+          "1": [
+            "When public empathy for the royal family is high",
+            "If compassion towards royalty in the public is strong"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if public empathy for the royal family remains low",
+            "if compassion towards royalty in the public stays minimal"
+          ],
+          "1": [
+            "if public empathy for the royal family becomes high",
+            "if compassion towards royalty in the public becomes strong"
+          ]
+        }
+      }
+    },
+    "Public Sentiment Towards Monarchy": {
+      "1": {
+        "variable": [
+          "the public's view of the monarchy",
+          "societal opinion of the royal family"
+        ]
+      },
+      "2": {
+        "subject": "society",
+        "value": {
+          "0": [
+            "is indifferent or critical towards the monarchy",
+            "holds a neutral or negative view of the monarchy"
+          ],
+          "1": [
+            "favors the monarchy",
+            "holds a positive view of the monarchy"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "the public is indifferent or critical towards the monarchy",
+            "society holds a neutral or negative view of the monarchy"
+          ],
+          "1": [
+            "the public favors the monarchy",
+            "society holds a positive view of the monarchy"
+          ]
+        }
+      },
+      "4": {
+        "domain": "the public",
+        "value": {
+          "0": [
+            "is indifferent or critical towards the monarchy",
+            "holds a neutral or negative view of the monarchy"
+          ],
+          "1": [
+            "favors the monarchy",
+            "holds a positive view of the monarchy"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "public sentiment is neutral or negative towards the monarchy",
+            "societal views are indifferent or critical of the monarchy"
+          ],
+          "1": [
+            "public sentiment is positive towards the monarchy",
+            "societal views favor the monarchy"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "If the public is indifferent or critical towards the monarchy",
+            "In cases where society holds a neutral or negative view of the monarchy"
+          ],
+          "1": [
+            "If the public favors the monarchy",
+            "When society holds a positive view of the monarchy"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "If the public becomes indifferent or critical towards the monarchy",
+            "If society adopts a neutral or negative view of the monarchy"
+          ],
+          "1": [
+            "If the public starts favoring the monarchy",
+            "If society adopts a positive view of the monarchy"
+          ]
+        }
+      }
+    },
+    "Celebrity Endorsements": {
+      "1": {
+        "variable": [
+          "celebrity involvement in royal events",
+          "celebrity support for the monarchy"
+        ]
+      },
+      "2": {
+        "subject": "celebrities",
+        "value": {
+          "0": [
+            "do not endorse royal events",
+            "stay away from royal endorsements"
+          ],
+          "1": [
+            "endorse royal events",
+            "show their support for the monarchy"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "celebrities do not endorse royal events",
+            "celebrities stay away from royal endorsements"
+          ],
+          "1": [
+            "celebrities endorse royal events",
+            "celebrities show their support for the monarchy"
+          ]
+        }
+      },
+      "4": {
+        "domain": "celebrities",
+        "value": {
+          "0": [
+            "do not endorse royal events",
+            "stay away from royal endorsements"
+          ],
+          "1": [
+            "endorse royal events",
+            "show their support for the monarchy"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "there is no celebrity endorsement for royal events",
+            "celebrities are not supporting the monarchy"
+          ],
+          "1": [
+            "there is celebrity endorsement for royal events",
+            "celebrities are supporting the monarchy"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "For celebrities who do not endorse royal events",
+            "Among celebrities who stay away from royal endorsements"
+          ],
+          "1": [
+            "For celebrities who endorse royal events",
+            "Among celebrities who show their support for the monarchy"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if celebrities stop endorsing royal events",
+            "if celebrities withdraw their support for the monarchy"
+          ],
+          "1": [
+            "if celebrities start endorsing royal events",
+            "if celebrities show support for the monarchy"
+          ]
+        }
+      }
+    }
+  },
+  "questions": {
+    "introduction": "Following the death of Prince Philip, Prince Charles's heartfelt address to the nation marked a significant moment. This event offers a unique opportunity to explore how such personal moments in the lives of public figures influence public opinion and media dynamics.",
+    "overview": "In this scenario, we're looking at how different factors like a royal family member's public address, media coverage, and historical public sentiments interact and shape current public opinion. It's like a web where each thread\u2014be it the type of media coverage or the emotional tone of a royal address\u2014affects how the public feels about the monarchy.",
+    "questions": {
+      "1": {
+        "question": "Is a significant public address by a royal family member less likely to result in positive public sentiment towards the monarchy?",
+        "answer": "no",
+        "explanation": "A significant and emotional address by a royal family member often resonates with the public, potentially leading to more positive sentiments.",
+        "wrong_explanation": "A significant address by a royal family member might overshadow other factors, possibly leading to a decrease in positive public sentiment."
+      },
+      "2": {
+        "question": "Does extensive media coverage contribute to a more positive public sentiment towards the monarchy?",
+        "answer": "yes",
+        "explanation": "Extensive and possibly sensational media coverage can amplify the impact of events, swaying public sentiment towards a more positive view of the monarchy.",
+        "wrong_explanation": "Extensive media coverage might overexpose the monarchy, potentially leading to a more negative public sentiment."
+      },
+      "3": {
+        "question": "Does a royal family's public address have a greater impact on public sentiment than the intensity of media coverage?",
+        "answer": "no",
+        "explanation": "The intensity of media coverage often has a broader reach and can be more influential in shaping public sentiment than a single address.",
+        "wrong_explanation": "A royal family's emotional public address might have a more direct and stronger impact on public sentiment compared to media coverage."
+      },
+      "4": {
+        "question": "Is the impact of media coverage on public sentiment towards the monarchy more significant than that of a royal family's public address?",
+        "answer": "yes",
+        "explanation": "The pervasive nature of media, especially when coverage is extensive or sensational, tends to have a larger influence on public sentiment than a singular public address.",
+        "wrong_explanation": "The personal and emotional connection established during a royal family's public address might have a stronger impact on public sentiment than media coverage."
+      },
+      "5": {
+        "question": "When historical public sentiment is neutral or negative, does a royal family's public address have a negative impact on current public sentiment?",
+        "answer": "no",
+        "explanation": "Even when past sentiments are neutral or negative, a heartfelt public address can resonate positively with the public.",
+        "wrong_explanation": "If the historical public sentiment is already neutral or negative, a royal family's public address might reinforce these sentiments, leading to a further decline in positivity."
+      },
+      "6": {
+        "question": "When historical public sentiment is neutral or negative, does extensive media coverage positively influence current public sentiment?",
+        "answer": "yes",
+        "explanation": "Even with a historically neutral or negative backdrop, extensive media coverage can turn the tide, creating a more positive public sentiment.",
+        "wrong_explanation": "Extensive media coverage in the context of historically neutral or negative sentiments might fail to shift the public's opinion positively."
+      },
+      "7": {
+        "question": "Is the positive influence of extensive media coverage on public sentiment greater than that of a royal family's public address when historical sentiments are neutral or negative?",
+        "answer": "yes",
+        "explanation": "In a scenario with neutral or negative historical sentiments, the wide reach of media often has a more significant positive influence compared to a singular public address.",
+        "wrong_explanation": "Even with neutral or negative historical sentiments, a royal family's public address might have a more profound impact than media coverage."
+      },
+      "8": {
+        "question": "When historical public sentiment is neutral or negative, does a royal family's public address have a greater positive influence than media coverage on current public sentiment?",
+        "answer": "no",
+        "explanation": "In this context, the broader impact of media coverage tends to overshadow the influence of a royal family's public address.",
+        "wrong_explanation": "A royal family's heartfelt address can resonate more deeply with the public compared to the general impact of media coverage."
+      },
+      "9": {
+        "question": "When historical public sentiment is positive, does a royal family's public address negatively affect current public sentiment?",
+        "answer": "no",
+        "explanation": "With a foundation of positive historical sentiment, a royal family's public address is likely to further bolster positive feelings towards the monarchy.",
+        "wrong_explanation": "A royal family's address, even in the context of positive historical sentiment, might not resonate well, leading to a decrease in current positive sentiment."
+      },
+      "10": {
+        "question": "Does extensive media coverage have a negative impact on public sentiment towards the monarchy when historical public sentiment is already positive?",
+        "answer": "no",
+        "explanation": "In the context of already positive historical sentiment, extensive media coverage typically reinforces or maintains the positive public sentiment.",
+        "wrong_explanation": "Extensive media coverage might lead to overexposure and fatigue, turning a previously positive sentiment negative."
+      },
+      "11": {
+        "question": "Is the negative impact of media coverage on public sentiment towards the monarchy greater than that of a royal family's public address when historical sentiments are positive?",
+        "answer": "no",
+        "explanation": "In a positive historical context, neither extensive media coverage nor a royal family's public address is likely to significantly diminish public sentiment.",
+        "wrong_explanation": "In a scenario of positive historical sentiment, extensive media coverage might overshadow and reduce the impact of a royal family's public address."
+      },
+      "12": {
+        "question": "Does extensive media coverage have a greater impact on public sentiment towards the monarchy than a royal family's public address when historical public sentiment is positive?",
+        "answer": "yes",
+        "explanation": "Given a positive historical sentiment, the wide-reaching influence of media coverage tends to have a more substantial impact on public sentiment.",
+        "wrong_explanation": "In the presence of positive historical sentiment, a royal family's address might resonate more strongly with the public than media coverage."
+      },
+      "13": {
+        "question": "Does a royal family's public address have a more positive impact on current public sentiment when historical sentiment is neutral/negative than when it is positive?",
+        "answer": "no",
+        "explanation": "The impact of a royal family's public address on current public sentiment is generally more positive when the historical sentiment is already positive.",
+        "wrong_explanation": "A royal family's public address might have a stronger positive impact against a backdrop of neutral or negative historical sentiment."
+      },
+      "14": {
+        "question": "Is the positive impact of a royal family's public address on current public sentiment more pronounced when historical sentiment is neutral/negative than when it is positive?",
+        "answer": "no",
+        "explanation": "A positive historical sentiment provides a stronger foundation for a royal family's public address to reinforce or enhance positive current sentiment.",
+        "wrong_explanation": "The contrast provided by a neutral/negative historical sentiment might make a royal family's public address more impactful in shifting current sentiment."
+      },
+      "15": {
+        "question": "Does extensive media coverage have a less positive impact on current public sentiment when historical sentiment is neutral/negative compared to when it is positive?",
+        "answer": "yes",
+        "explanation": "Extensive media coverage tends to have a more pronounced positive impact in the context of already positive historical sentiment compared to a neutral/negative one.",
+        "wrong_explanation": "In a scenario with neutral/negative historical sentiment, extensive media coverage might be more effective in positively influencing current public sentiment."
+      },
+      "16": {
+        "question": "Is the positive impact of media coverage on current public sentiment more significant when historical sentiment is neutral/negative than when it is positive?",
+        "answer": "no",
+        "explanation": "The influence of media coverage in shaping current public sentiment is often more substantial when it builds on a foundation of positive historical sentiment.",
+        "wrong_explanation": "Extensive media coverage might have a stronger effect in shifting public sentiment from neutral/negative to positive compared to reinforcing already positive sentiment."
+      }
+    }
+  },
+  "queries": [
+    {
+      "treatment": "Royal Family Public Address",
+      "query": "ate",
+      "type": "ate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "query": "ate",
+      "type": "ate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Royal Family Public Address",
+      "treatment2": "Media Coverage Intensity",
+      "query": "ate",
+      "type": "ate-compare",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Royal Family Public Address",
+      "treatment2": "Media Coverage Intensity",
+      "query": "ate",
+      "type": "ate-compare-mag",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Media Coverage Intensity",
+      "treatment2": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Royal Family Public Address",
+      "treatment2": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Media Coverage Intensity",
+      "treatment2": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Media Coverage Intensity",
+      "treatment2": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Royal Family Public Address",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Media Coverage Intensity",
+      "confounder": "Historical Public Sentiment",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": "<"
+    }
+  ]
+}

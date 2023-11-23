@@ -291,17 +291,7 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		assert treatment == do, f'Expected treatment to be {do}, got {treatment}'
 		assert outcome == out, f'Expected outcome to be {out}, got {outcome}'
 
-		terms = []
-
-
-		if len(cond):
-
-			pass
-
-
-		return
-
-		pass
+		raise NotImplementedError
 
 	def backdoor_estimand(self, treatment: str, outcome: str):
 		model = self.to_dowhy(treatment, outcome)

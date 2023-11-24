@@ -1,0 +1,1211 @@
+{
+  "seed": 3872909,
+  "spark": "Title: Huge fire and explosion at oil refinery in Indonesia - RTL News\nDescription: A huge fire has broken out at an oil refinery on the Indonesian island of Java. Images show a huge blaze and a gigantic explosion can be heard. Hundreds of people have been evacuated. Five people have been injured so far.\nOriginal Language: Dutch",
+  "nodes": [
+    {
+      "name": "Refinery Age",
+      "description": "Age of the refinery",
+      "type": "confounder",
+      "observed": true,
+      "values": [
+        "New refinery",
+        "Old refinery"
+      ],
+      "parents": []
+    },
+    {
+      "name": "Regulatory Oversight",
+      "description": "Level of regulatory oversight at the refinery",
+      "type": "confounder",
+      "observed": true,
+      "values": [
+        "Weak regulation",
+        "Strong regulation"
+      ],
+      "parents": []
+    },
+    {
+      "name": "Refinery Safety Protocols",
+      "description": "Safety protocols in place at the refinery",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "Inadequate safety protocols",
+        "Adequate safety protocols"
+      ],
+      "parents": [
+        "Refinery Age",
+        "Regulatory Oversight"
+      ]
+    },
+    {
+      "name": "Emergency Response Efficiency",
+      "description": "Efficiency of emergency response following the incident",
+      "type": "treatment",
+      "observed": true,
+      "values": [
+        "Inefficient emergency response",
+        "Efficient emergency response"
+      ],
+      "parents": [
+        "Refinery Age",
+        "Regulatory Oversight"
+      ]
+    },
+    {
+      "name": "Alarm System Efficiency",
+      "description": "Efficiency of the alarm system at the refinery",
+      "type": "mediator",
+      "observed": true,
+      "values": [
+        "Inefficient alarm system",
+        "Efficient alarm system"
+      ],
+      "parents": [
+        "Refinery Safety Protocols"
+      ]
+    },
+    {
+      "name": "Human Casualties",
+      "description": "Casualties as a result of the refinery incident",
+      "type": "outcome",
+      "observed": true,
+      "values": [
+        "No casualties",
+        "Casualties occurred"
+      ],
+      "parents": [
+        "Refinery Safety Protocols",
+        "Emergency Response Efficiency",
+        "Alarm System Efficiency"
+      ]
+    },
+    {
+      "name": "Media Coverage",
+      "description": "Extent of media coverage of the incident",
+      "type": "collider",
+      "observed": true,
+      "values": [
+        "Limited coverage",
+        "Extensive coverage"
+      ],
+      "parents": [
+        "Emergency Response Efficiency",
+        "Human Casualties"
+      ]
+    }
+  ],
+  "stats": {
+    "1": [
+      0.7,
+      0.8
+    ],
+    "2": [
+      0.4,
+      0.6
+    ],
+    "3": [
+      0.5,
+      0.7
+    ],
+    "4": [
+      0.8,
+      0.9
+    ],
+    "5": [
+      0.2,
+      0.4
+    ],
+    "6": [
+      0.6,
+      0.8
+    ],
+    "7": [
+      0.5,
+      0.7
+    ],
+    "8": [
+      0.7,
+      0.9
+    ],
+    "9": [
+      0.3,
+      0.5
+    ],
+    "10": [
+      0.6,
+      0.7
+    ],
+    "11": [
+      0.2,
+      0.3
+    ],
+    "12": [
+      0.7,
+      0.9
+    ],
+    "13": [
+      0.7,
+      0.9
+    ],
+    "14": [
+      0.5,
+      0.7
+    ],
+    "15": [
+      0.6,
+      0.8
+    ],
+    "16": [
+      0.4,
+      0.6
+    ],
+    "17": [
+      0.3,
+      0.5
+    ],
+    "18": [
+      0.2,
+      0.4
+    ],
+    "19": [
+      0.1,
+      0.3
+    ],
+    "20": [
+      0.05,
+      0.2
+    ],
+    "21": [
+      0.5,
+      0.7
+    ],
+    "22": [
+      0.8,
+      0.9
+    ],
+    "23": [
+      0.4,
+      0.6
+    ],
+    "24": [
+      0.7,
+      0.8
+    ]
+  },
+  "verbs": {
+    "Refinery Age": {
+      "1": {
+        "variable": [
+          "the age of the refinery",
+          "how long the refinery has been operational"
+        ]
+      },
+      "2": {
+        "subject": "the refinery",
+        "value": {
+          "0": [
+            "is a new facility",
+            "has been recently established"
+          ],
+          "1": [
+            "has been operating for many years",
+            "is an older establishment"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "the refinery is newly built",
+            "the refinery has been recently established"
+          ],
+          "1": [
+            "the refinery is quite old",
+            "the refinery has many years of operation"
+          ]
+        }
+      },
+      "4": {
+        "domain": "refineries",
+        "value": {
+          "0": [
+            "are new establishments",
+            "have been recently built"
+          ],
+          "1": [
+            "are older facilities",
+            "have been operating for many years"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "the refinery is a new establishment",
+            "the refinery has been recently constructed"
+          ],
+          "1": [
+            "the refinery is an old establishment",
+            "the refinery has been operating for a long time"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "If the refinery is newly established",
+            "In newer refineries"
+          ],
+          "1": [
+            "If the refinery has been around for many years",
+            "In older refineries"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if the refinery is new",
+            "if the refinery has just started operations"
+          ],
+          "1": [
+            "if the refinery is old",
+            "if the refinery has been operating for decades"
+          ]
+        }
+      }
+    },
+    "Regulatory Oversight": {
+      "1": {
+        "variable": [
+          "the level of regulatory oversight at the refinery",
+          "how strictly the refinery is regulated"
+        ]
+      },
+      "2": {
+        "subject": "the refinery",
+        "value": {
+          "0": [
+            "operates under weak regulatory oversight",
+            "has minimal regulatory supervision"
+          ],
+          "1": [
+            "is subject to strong regulatory oversight",
+            "is tightly regulated"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "the refinery faces weak regulation",
+            "regulatory oversight is minimal"
+          ],
+          "1": [
+            "there is strong regulation in place",
+            "the oversight is stringent"
+          ]
+        }
+      },
+      "4": {
+        "domain": "refineries",
+        "value": {
+          "0": [
+            "operate under weak regulation",
+            "have minimal regulatory supervision"
+          ],
+          "1": [
+            "are tightly regulated",
+            "are subject to strong oversight"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "regulation is lax",
+            "oversight is minimal"
+          ],
+          "1": [
+            "regulation is stringent",
+            "oversight is thorough"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "Under weak regulatory oversight",
+            "With minimal regulation"
+          ],
+          "1": [
+            "With strong regulatory oversight",
+            "Under strict regulation"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if regulatory oversight is weak",
+            "if regulation is minimal"
+          ],
+          "1": [
+            "if there is strong regulatory oversight",
+            "if the refinery is tightly regulated"
+          ]
+        }
+      }
+    },
+    "Refinery Safety Protocols": {
+      "1": {
+        "variable": [
+          "the safety protocols in place at the refinery",
+          "how well the refinery follows safety guidelines"
+        ]
+      },
+      "2": {
+        "subject": "the refinery",
+        "value": {
+          "0": [
+            "lacks adequate safety protocols",
+            "has insufficient safety measures"
+          ],
+          "1": [
+            "maintains adequate safety protocols",
+            "has robust safety measures"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "safety protocols are inadequate",
+            "safety measures are not up to standard"
+          ],
+          "1": [
+            "safety protocols are thoroughly implemented",
+            "safety measures are comprehensive"
+          ]
+        }
+      },
+      "4": {
+        "domain": "refineries",
+        "value": {
+          "0": [
+            "lack adequate safety measures",
+            "do not follow safety guidelines properly"
+          ],
+          "1": [
+            "have robust safety protocols",
+            "adhere strictly to safety guidelines"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "safety protocols are not followed properly",
+            "safety measures are neglected"
+          ],
+          "1": [
+            "safety protocols are strictly followed",
+            "safety measures are taken seriously"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "If safety protocols are lacking",
+            "In refineries with insufficient safety measures"
+          ],
+          "1": [
+            "When safety protocols are adequate",
+            "In refineries with comprehensive safety measures"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if safety protocols are not followed",
+            "if safety measures are inadequate"
+          ],
+          "1": [
+            "if safety protocols are well implemented",
+            "if the refinery has strong safety measures"
+          ]
+        }
+      }
+    },
+    "Emergency Response Efficiency": {
+      "1": {
+        "variable": [
+          "the efficiency of emergency response at the refinery",
+          "how quickly the refinery responds to emergencies"
+        ]
+      },
+      "2": {
+        "subject": "the emergency response team",
+        "value": {
+          "0": [
+            "is slow to respond to emergencies",
+            "struggles with efficient response"
+          ],
+          "1": [
+            "responds swiftly to emergencies",
+            "handles emergency situations efficiently"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "emergency response is slow",
+            "response to emergencies is not efficient"
+          ],
+          "1": [
+            "emergency response is quick",
+            "there is an efficient response to emergencies"
+          ]
+        }
+      },
+      "4": {
+        "domain": "emergency response teams",
+        "value": {
+          "0": [
+            "are slow to react in crisis",
+            "struggle with quick response"
+          ],
+          "1": [
+            "respond quickly in emergencies",
+            "are efficient in crisis situations"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "emergency response is often delayed",
+            "efficiency in emergency situations is lacking"
+          ],
+          "1": [
+            "emergency response is prompt",
+            "emergencies are handled with efficiency"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "If the emergency response is sluggish",
+            "When response to emergencies is inefficient"
+          ],
+          "1": [
+            "When the emergency response is quick",
+            "If there is an efficient response to emergencies"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if the emergency response is slow",
+            "if the response to emergencies is inefficient"
+          ],
+          "1": [
+            "if emergency response is quick",
+            "if emergencies are handled efficiently"
+          ]
+        }
+      }
+    },
+    "Alarm System Efficiency": {
+      "1": {
+        "variable": [
+          "the efficiency of the alarm system at the refinery",
+          "how effective the refinery's alarm system is"
+        ]
+      },
+      "2": {
+        "subject": "the alarm system",
+        "value": {
+          "0": [
+            "is not very effective",
+            "often fails to alert in time"
+          ],
+          "1": [
+            "is highly efficient",
+            "alerts promptly in case of emergencies"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "the alarm system is inefficient",
+            "alarms often fail to go off in time"
+          ],
+          "1": [
+            "the alarm system functions efficiently",
+            "alarms are quick to alert in emergencies"
+          ]
+        }
+      },
+      "4": {
+        "domain": "alarm systems",
+        "value": {
+          "0": [
+            "are not very effective",
+            "often fail to alert in time"
+          ],
+          "1": [
+            "are highly efficient",
+            "alert promptly in emergencies"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "the alarm system often malfunctions",
+            "there are delays in the alarm system"
+          ],
+          "1": [
+            "the alarm system works efficiently",
+            "alarms go off promptly"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "If the alarm system is inefficient",
+            "When alarms fail to alert in time"
+          ],
+          "1": [
+            "When the alarm system is efficient",
+            "If alarms promptly alert in emergencies"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if the alarm system is not effective",
+            "if the alarms fail to alert in time"
+          ],
+          "1": [
+            "if the alarm system is efficient",
+            "if alarms quickly signal emergencies"
+          ]
+        }
+      }
+    },
+    "Human Casualties": {
+      "1": {
+        "variable": [
+          "the occurrence of casualties in the refinery incident",
+          "whether there were casualties as a result of the incident"
+        ]
+      },
+      "2": {
+        "subject": "the incident",
+        "value": {
+          "0": [
+            "did not result in any casualties",
+            "was without any loss of life"
+          ],
+          "1": [
+            "led to casualties",
+            "resulted in loss of life"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "there were no casualties",
+            "there was no loss of life"
+          ],
+          "1": [
+            "there were casualties",
+            "loss of life occurred"
+          ]
+        }
+      },
+      "4": {
+        "domain": "incidents",
+        "value": {
+          "0": [
+            "result in no casualties",
+            "do not lead to loss of life"
+          ],
+          "1": [
+            "lead to casualties",
+            "result in loss of life"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "casualties are avoided",
+            "there is no loss of life"
+          ],
+          "1": [
+            "casualties occur",
+            "there is loss of life"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "If there are no casualties",
+            "When there is no loss of life"
+          ],
+          "1": [
+            "If casualties occur",
+            "When there is loss of life"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if there are no casualties",
+            "if there is no loss of life"
+          ],
+          "1": [
+            "if there are casualties",
+            "if loss of life occurs"
+          ]
+        }
+      }
+    },
+    "Media Coverage": {
+      "1": {
+        "variable": [
+          "the extent of media coverage",
+          "media attention",
+          "coverage in the news"
+        ]
+      },
+      "2": {
+        "subject": "this incident",
+        "value": {
+          "0": [
+            "received minimal media attention",
+            "was scarcely covered by the media",
+            "got limited coverage in the news"
+          ],
+          "1": [
+            "was widely covered in the media",
+            "received extensive media coverage",
+            "was a major story in the news"
+          ]
+        }
+      },
+      "3": {
+        "value": {
+          "0": [
+            "the incident gets minimal media attention",
+            "there is limited coverage of the incident",
+            "the event is scarcely covered in the news"
+          ],
+          "1": [
+            "the incident receives widespread media attention",
+            "there is extensive coverage of the incident",
+            "the event is prominently featured in the news"
+          ]
+        }
+      },
+      "4": {
+        "domain": "incidents",
+        "value": {
+          "0": [
+            "receive minimal media attention",
+            "get limited coverage in the news",
+            "are scarcely covered by the media"
+          ],
+          "1": [
+            "are widely covered in the media",
+            "receive extensive media coverage",
+            "become major stories in the news"
+          ]
+        }
+      },
+      "5": {
+        "value": {
+          "0": [
+            "the incident receives minimal media attention",
+            "there is limited coverage of the event",
+            "the event is scarcely mentioned in the news"
+          ],
+          "1": [
+            "the incident receives extensive media attention",
+            "there is widespread coverage of the event",
+            "the event dominates news headlines"
+          ]
+        }
+      },
+      "6": {
+        "value": {
+          "0": [
+            "With limited media coverage",
+            "When the media scarcely covers the incident",
+            "If the event receives minimal attention in the news"
+          ],
+          "1": [
+            "With extensive media coverage",
+            "When the media widely covers the incident",
+            "If the event is prominently featured in the news"
+          ]
+        }
+      },
+      "7": {
+        "value": {
+          "0": [
+            "if the incident receives minimal media attention",
+            "if there is limited coverage of the event",
+            "if the event is scarcely mentioned in the news"
+          ],
+          "1": [
+            "if the incident receives extensive media coverage",
+            "if there is widespread coverage of the event",
+            "if the event dominates news headlines"
+          ]
+        }
+      }
+    }
+  },
+  "queries": [
+    {
+      "treatment": "Refinery Safety Protocols",
+      "query": "ate",
+      "type": "ate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "query": "ate",
+      "type": "ate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Refinery Safety Protocols",
+      "treatment2": "Emergency Response Efficiency",
+      "query": "ate",
+      "type": "ate-compare",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Refinery Safety Protocols",
+      "treatment2": "Emergency Response Efficiency",
+      "query": "ate",
+      "type": "ate-compare-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Refinery Age",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Refinery Age",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Refinery Safety Protocols",
+      "treatment2": "Emergency Response Efficiency",
+      "confounder": "Refinery Age",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Refinery Safety Protocols",
+      "treatment2": "Emergency Response Efficiency",
+      "confounder": "Refinery Age",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Refinery Age",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Refinery Age",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Emergency Response Efficiency",
+      "treatment2": "Refinery Safety Protocols",
+      "confounder": "Refinery Age",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Refinery Safety Protocols",
+      "treatment2": "Emergency Response Efficiency",
+      "confounder": "Refinery Age",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Refinery Age",
+      "confounder_order": [
+        1,
+        0
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Refinery Age",
+      "confounder_order": [
+        1,
+        0
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Refinery Age",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Refinery Age",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Refinery Safety Protocols",
+      "treatment2": "Emergency Response Efficiency",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Refinery Safety Protocols",
+      "treatment2": "Emergency Response Efficiency",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 0,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-sign",
+      "criterion": "<"
+    },
+    {
+      "treatment1": "Emergency Response Efficiency",
+      "treatment2": "Refinery Safety Protocols",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c",
+      "criterion": ">"
+    },
+    {
+      "treatment1": "Emergency Response Efficiency",
+      "treatment2": "Refinery Safety Protocols",
+      "confounder": "Regulatory Oversight",
+      "confounder_value": 1,
+      "query": "cate",
+      "type": "cate-compare-c-mag",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Regulatory Oversight",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Refinery Safety Protocols",
+      "confounder": "Regulatory Oversight",
+      "confounder_order": [
+        1,
+        0
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": ">"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Regulatory Oversight",
+      "confounder_order": [
+        1,
+        0
+      ],
+      "query": "cate",
+      "type": "cate-compare-t",
+      "criterion": "<"
+    },
+    {
+      "treatment": "Emergency Response Efficiency",
+      "confounder": "Regulatory Oversight",
+      "confounder_order": [
+        0,
+        1
+      ],
+      "query": "cate",
+      "type": "cate-compare-t-mag",
+      "criterion": ">"
+    }
+  ],
+  "questions": {
+    "introduction": "Following a major fire and explosion at an oil refinery in Java, Indonesia, there's a growing interest in understanding the factors that might have influenced the severity of this incident. This exploration could help in improving safety measures and emergency responses for future incidents.",
+    "overview": "In our exploration, we consider several factors such as the age of the refinery, the level of safety protocols in place, and the efficiency of the emergency response. These factors, along with regulatory oversight, help us understand their influence on the likelihood of casualties and the extent of media coverage.",
+    "questions": {
+      "1": {
+        "question": "Is implementing adequate safety protocols at the refinery likely to reduce the chance of casualties?",
+        "answer": "yes",
+        "explanation": "Adequate safety protocols are expected to lower the risk of casualties in such incidents.",
+        "wrong_explanation": "Adequate safety protocols may not significantly impact the likelihood of casualties due to other overriding factors."
+      },
+      "2": {
+        "question": "Does a more efficient emergency response tend to increase the chance of casualties?",
+        "answer": "no",
+        "explanation": "An efficient emergency response is generally associated with a reduced likelihood of casualties.",
+        "wrong_explanation": "An efficient emergency response might inadvertently increase the risk of casualties due to unforeseen complications."
+      },
+      "3": {
+        "question": "Are the benefits of efficient emergency response greater than those of having adequate safety protocols in preventing casualties?",
+        "answer": "no",
+        "explanation": "While both are important, adequate safety protocols typically have a more direct impact on preventing casualties than the efficiency of emergency response.",
+        "wrong_explanation": "The efficiency of emergency response is generally more crucial than safety protocols in reducing casualties."
+      },
+      "4": {
+        "question": "Is the impact of having adequate safety protocols on preventing casualties greater than that of an efficient emergency response?",
+        "answer": "yes",
+        "explanation": "Implementing adequate safety protocols often has a more substantial effect on reducing casualties compared to the efficiency of emergency response.",
+        "wrong_explanation": "The efficiency of emergency response generally has a greater impact on casualty reduction than the presence of adequate safety protocols."
+      },
+      "5": {
+        "question": "In the context of newer refineries, does implementing adequate safety protocols reduce the chance of casualties?",
+        "answer": "no",
+        "explanation": "For newer refineries, the implementation of safety protocols might not significantly decrease the likelihood of casualties due to modern design and technology already in place.",
+        "wrong_explanation": "Even in newer refineries, the implementation of adequate safety protocols is crucial for significantly reducing the chance of casualties."
+      },
+      "6": {
+        "question": "Does a more efficient emergency response in newer refineries tend to reduce the chance of casualties?",
+        "answer": "no",
+        "explanation": "In newer refineries, the existing advanced infrastructure and technology might diminish the relative importance of emergency response efficiency in reducing casualties.",
+        "wrong_explanation": "Efficient emergency response is particularly effective in newer refineries in lowering the risk of casualties."
+      },
+      "7": {
+        "question": "For new refineries, is the impact of efficient emergency response on reducing casualties less than that of implementing adequate safety protocols?",
+        "answer": "yes",
+        "explanation": "In the setting of new refineries, safety protocols are likely to have a greater impact on casualty reduction than the efficiency of emergency response due to advanced design and technology.",
+        "wrong_explanation": "In new refineries, emergency response efficiency is generally more crucial than safety protocols in reducing casualties."
+      },
+      "8": {
+        "question": "In new refineries, is the effectiveness of safety protocols in preventing casualties greater than that of emergency response efficiency?",
+        "answer": "yes",
+        "explanation": "Given the modern infrastructure of new refineries, the role of safety protocols in preventing casualties is likely more pronounced than that of emergency response efficiency.",
+        "wrong_explanation": "Emergency response efficiency is more significant than safety protocols in preventing casualties in new refineries."
+      },
+      "9": {
+        "question": "In older refineries, does implementing adequate safety protocols increase the chance of casualties?",
+        "answer": "no",
+        "explanation": "In older refineries, adequate safety protocols are crucial and likely help in reducing the chance of casualties.",
+        "wrong_explanation": "Adequate safety protocols in older refineries might inadvertently lead to an increased chance of casualties due to outdated infrastructure."
+      },
+      "10": {
+        "question": "Is a more efficient emergency response in older refineries associated with a decrease in casualties?",
+        "answer": "yes",
+        "explanation": "In the context of older refineries, efficient emergency response can be particularly effective in reducing casualties.",
+        "wrong_explanation": "In older refineries, the efficiency of emergency response might not significantly impact the likelihood of casualties."
+      },
+      "11": {
+        "question": "In older refineries, does emergency response efficiency have a greater effect on casualty reduction than safety protocols?",
+        "answer": "no",
+        "explanation": "Despite their age, safety protocols in older refineries are likely more influential in reducing casualties than the efficiency of emergency response.",
+        "wrong_explanation": "For older refineries, the efficiency of emergency response is usually more important than safety protocols in preventing casualties."
+      },
+      "12": {
+        "question": "Does the effectiveness of safety protocols in preventing casualties exceed that of emergency response efficiency in older refineries?",
+        "answer": "yes",
+        "explanation": "Due to potential outdated infrastructure in older refineries, the role of safety protocols in reducing casualties is likely more significant than that of emergency response efficiency.",
+        "wrong_explanation": "In older refineries, emergency response efficiency tends to be more crucial than safety protocols in reducing casualties."
+      },
+      "13": {
+        "question": "Is the effect of safety protocols on reducing casualties lesser in older refineries compared to newer ones?",
+        "answer": "no",
+        "explanation": "Safety protocols may be equally if not more important in older refineries due to potential risks associated with outdated infrastructure.",
+        "wrong_explanation": "In older refineries, the implementation of safety protocols is less effective in reducing casualties compared to newer refineries."
+      },
+      "14": {
+        "question": "Is the importance of safety protocols in preventing casualties lower in older refineries than in newer ones?",
+        "answer": "yes",
+        "explanation": "The effectiveness of safety protocols might be somewhat diminished in older refineries due to their aging infrastructure compared to newer ones.",
+        "wrong_explanation": "Safety protocols tend to be more effective in older refineries than in newer ones due to the increased risks associated with older infrastructure."
+      },
+      "15": {
+        "question": "Does emergency response efficiency have a smaller impact on reducing casualties in new refineries compared to old ones?",
+        "answer": "yes",
+        "explanation": "In new refineries, the advanced design and technology might reduce the relative impact of emergency response efficiency compared to older refineries.",
+        "wrong_explanation": "Emergency response efficiency is likely more impactful in new refineries due to their modern infrastructure and technology."
+      },
+      "16": {
+        "question": "Is the impact of emergency response efficiency on casualty reduction lesser in new refineries compared to old ones?",
+        "answer": "yes",
+        "explanation": "The modern infrastructure of new refineries might make the efficiency of emergency response less critical in reducing casualties compared to older refineries.",
+        "wrong_explanation": "In new refineries, the efficiency of emergency response plays a more crucial role in reducing casualties compared to older refineries."
+      },
+      "17": {
+        "question": "Under weak regulatory oversight, does implementing adequate safety protocols at the refinery increase the chance of casualties?",
+        "answer": "no",
+        "explanation": "Even under weak regulatory oversight, adequate safety protocols are likely to help in reducing the chance of casualties.",
+        "wrong_explanation": "Adequate safety protocols might be less effective under weak regulatory oversight, potentially leading to an increased chance of casualties."
+      },
+      "18": {
+        "question": "With weak regulation, does a more efficient emergency response tend to increase the chance of casualties?",
+        "answer": "no",
+        "explanation": "An efficient emergency response is expected to reduce the chance of casualties, even under weak regulatory oversight.",
+        "wrong_explanation": "Under weak regulation, efficient emergency response might inadvertently increase the chance of casualties."
+      },
+      "19": {
+        "question": "Under weak regulatory oversight, is the benefit of efficient emergency response in reducing casualties less than that of implementing adequate safety protocols?",
+        "answer": "yes",
+        "explanation": "Even with weak regulation, safety protocols might be more crucial than emergency response efficiency in reducing casualties.",
+        "wrong_explanation": "Under weak regulation, the efficiency of emergency response is generally more important than safety protocols in reducing casualties."
+      },
+      "20": {
+        "question": "With weak regulation, is the impact of safety protocols on preventing casualties greater than that of emergency response efficiency?",
+        "answer": "yes",
+        "explanation": "Safety protocols likely play a more significant role in reducing casualties than emergency response efficiency, even under weak regulatory oversight.",
+        "wrong_explanation": "Emergency response efficiency tends to have a greater impact than safety protocols under weak regulatory conditions."
+      },
+      "21": {
+        "question": "Is the improvement in safety protocols at the refinery less noticeable under strong regulatory oversight compared to weak oversight?",
+        "answer": "yes",
+        "explanation": "Strong regulatory oversight likely ensures high safety standards to begin with, making additional improvements less pronounced.",
+        "wrong_explanation": "Strong regulatory oversight could lead to more significant improvements in safety protocols compared to weak oversight."
+      },
+      "22": {
+        "question": "Does the efficiency of emergency response tend to decrease when regulatory oversight is strong?",
+        "answer": "yes",
+        "explanation": "In a strongly regulated environment, emergency response may already be at a high level, making further improvements less likely.",
+        "wrong_explanation": "Strong regulatory oversight generally leads to continuous improvements in emergency response efficiency."
+      },
+      "23": {
+        "question": "Is the impact of strong regulatory oversight greater on emergency response efficiency than on safety protocols?",
+        "answer": "yes",
+        "explanation": "Regulatory oversight might more directly influence emergency response processes compared to safety protocols.",
+        "wrong_explanation": "Safety protocols are more likely to be influenced by regulatory oversight than emergency response efficiency."
+      },
+      "24": {
+        "question": "Is the variation in emergency response efficiency under strong oversight less than the variation in safety protocols?",
+        "answer": "yes",
+        "explanation": "Strong oversight might standardize emergency response more consistently than it does safety protocols.",
+        "wrong_explanation": "Safety protocols under strong oversight might show less variation compared to emergency response efficiency."
+      },
+      "25": {
+        "question": "Are safety protocols at the refinery more likely to be adequate under weak regulation than under strong regulation?",
+        "answer": "no",
+        "explanation": "Strong regulation typically enforces stricter safety standards than weak regulation.",
+        "wrong_explanation": "Weak regulation allows for greater flexibility and innovation in safety protocols, potentially leading to higher adequacy."
+      },
+      "26": {
+        "question": "Is the difference in safety protocols more pronounced under strong regulation than under weak regulation?",
+        "answer": "yes",
+        "explanation": "Strong regulation likely results in more uniform and consistently higher safety standards, leading to a greater difference compared to weak regulation.",
+        "wrong_explanation": "Weak regulation might lead to a larger variance in safety protocols as companies are left to their own devices."
+      },
+      "27": {
+        "question": "Does emergency response efficiency improve more in the presence of weak regulatory oversight compared to strong oversight?",
+        "answer": "no",
+        "explanation": "Strong regulatory oversight typically ensures higher standards of emergency response, leaving less room for improvement.",
+        "wrong_explanation": "Weak regulatory oversight provides more opportunity for significant improvements in emergency response efficiency."
+      },
+      "28": {
+        "question": "Is there less variability in emergency response efficiency under weak regulatory oversight than under strong oversight?",
+        "answer": "no",
+        "explanation": "Strong regulatory oversight likely leads to more consistent standards in emergency response, reducing variability.",
+        "wrong_explanation": "Weak regulatory oversight might result in more standardized emergency response practices, decreasing variability."
+      }
+    }
+  }
+}

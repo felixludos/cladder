@@ -1,19 +1,17 @@
 // Causal Model
 digraph {
-	"Brain Stimulation Activities" [label="Brain Stimulation Activities" color=lightpink shape=ellipse style=filled]
-	Age [label=Age color=lightblue shape=diamond style=filled]
-	"Physical Exercise" [label="Physical Exercise" color=lightpink shape=ellipse style=filled]
-	"Genetic Predisposition" [label="Genetic Predisposition" color=lightblue shape=diamond style=filled]
-	"Mental Health Status" [label="Mental Health Status" color=lightyellow shape=box style=filled]
-	"Cognitive Decline" [label="Cognitive Decline" color=lightgreen shape=ellipse style=filled]
-	"Overall Health Status" [label="Overall Health Status" color=lightgray shape=box style=filled]
-	Age -> "Physical Exercise"
-	"Brain Stimulation Activities" -> "Mental Health Status"
-	"Physical Exercise" -> "Mental Health Status"
-	Age -> "Cognitive Decline"
-	"Genetic Predisposition" -> "Cognitive Decline"
-	"Mental Health Status" -> "Cognitive Decline"
-	"Brain Stimulation Activities" -> "Overall Health Status"
-	"Physical Exercise" -> "Overall Health Status"
-	"Cognitive Decline" -> "Overall Health Status"
+	EconomicClimate [label=EconomicClimate color=lightblue shape=diamond style=filled]
+	StadiumDecision [label=StadiumDecision color=lightpink shape=ellipse style=filled]
+	MunicipalityInvestment [label=MunicipalityInvestment color=lightpink shape=ellipse style=filled]
+	LocalBusinessSupport [label=LocalBusinessSupport color=lightyellow shape=box style=filled]
+	FeyenoordCityDevelopment [label=FeyenoordCityDevelopment color=lightgreen shape=ellipse style=filled]
+	PropertyPrices [label=PropertyPrices color=lightgray shape=box style=filled]
+	EconomicClimate -> StadiumDecision
+	EconomicClimate -> MunicipalityInvestment
+	EconomicClimate -> LocalBusinessSupport
+	StadiumDecision -> FeyenoordCityDevelopment
+	MunicipalityInvestment -> FeyenoordCityDevelopment
+	LocalBusinessSupport -> FeyenoordCityDevelopment
+	StadiumDecision -> PropertyPrices
+	FeyenoordCityDevelopment -> PropertyPrices
 }

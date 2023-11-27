@@ -1,17 +1,21 @@
 // Causal Model
 digraph {
-	EconomicClimate [label=EconomicClimate color=lightblue shape=diamond style=filled]
-	StadiumDecision [label=StadiumDecision color=lightpink shape=ellipse style=filled]
-	MunicipalityInvestment [label=MunicipalityInvestment color=lightpink shape=ellipse style=filled]
-	LocalBusinessSupport [label=LocalBusinessSupport color=lightyellow shape=box style=filled]
-	FeyenoordCityDevelopment [label=FeyenoordCityDevelopment color=lightgreen shape=ellipse style=filled]
-	PropertyPrices [label=PropertyPrices color=lightgray shape=box style=filled]
-	EconomicClimate -> StadiumDecision
-	EconomicClimate -> MunicipalityInvestment
-	EconomicClimate -> LocalBusinessSupport
-	StadiumDecision -> FeyenoordCityDevelopment
-	MunicipalityInvestment -> FeyenoordCityDevelopment
-	LocalBusinessSupport -> FeyenoordCityDevelopment
-	StadiumDecision -> PropertyPrices
-	FeyenoordCityDevelopment -> PropertyPrices
+	LocalEconCond [label=LocalEconCond color=lightblue shape=diamond style=filled]
+	ParticipationAppleAcademy [label=ParticipationAppleAcademy color=lightpink shape=ellipse style=filled]
+	UnivIndustryCollab [label=UnivIndustryCollab color=lightpink shape=ellipse style=filled]
+	SkillDevelopment [label=SkillDevelopment color=lightyellow shape=box style=filled]
+	NetworkBuilding [label=NetworkBuilding color=lightyellow shape=box style=filled]
+	EmploymentRateTech [label=EmploymentRateTech color=lightgreen shape=ellipse style=filled]
+	StudentMotivation [label=StudentMotivation color=lightgray shape=box style=filled]
+	LocalEconCond -> ParticipationAppleAcademy
+	LocalEconCond -> UnivIndustryCollab
+	ParticipationAppleAcademy -> SkillDevelopment
+	UnivIndustryCollab -> SkillDevelopment
+	ParticipationAppleAcademy -> NetworkBuilding
+	UnivIndustryCollab -> NetworkBuilding
+	SkillDevelopment -> EmploymentRateTech
+	NetworkBuilding -> EmploymentRateTech
+	LocalEconCond -> EmploymentRateTech
+	SkillDevelopment -> StudentMotivation
+	EmploymentRateTech -> StudentMotivation
 }

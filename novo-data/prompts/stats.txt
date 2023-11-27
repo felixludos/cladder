@@ -1,0 +1,25 @@
+We have a causal bayes net based on the following article:
+
+```
+{spark}
+```
+
+Now we would like to estimate the probabilities of certain events.
+
+Using commonsense, estimate the probabilities of the following events:
+
+{prob_questions}
+
+Where the variables are defined as:
+{descriptions}
+
+For each question above, answer with the lower and upper bound estimates of the probabilities as a python dictionary where the key corresponds to the question index in exactly the following format:
+
+```python
+probabilities = {{
+  1: [0.3, 0.4],
+  ...
+}}
+```
+
+Answer concisely and precisely in the desired format.

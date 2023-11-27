@@ -15,6 +15,10 @@ def assets_root():
 	return repo_root() / 'assets'
 
 
+def prompt_root():
+	return data_root() / 'prompts'
+
+
 def temp_root():
 	return data_root() / 'temp'
 

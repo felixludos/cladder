@@ -1,0 +1,41 @@
+We have a causal bayes net based on the following article:
+
+```
+{spark}
+```
+
+Now we would like to use this model to generate some interesting research questions:
+
+1. Write a short two sentence introduction to describe motivation and purpose of the causal model to provide context to the questions in an conversational/debate setting. Where possible, include relevant details from the original article headline or related information you can infer therefrom. Avoid discussing specific structural properties or assumptions in the causal graph, and instead focus on the overall motivation and potential applications for the model. Refrain from mentioning words like "causal inference" or "model".
+Make sure not to use any technical terms from causal inference so that the introduction is easy to understand even for a layperson, as if this were in a newspaper or casual discussion.
+2. Write a short two sentence overview of the structure of the causal graph including noteworthy properties and assumptions. Use an intuitive conversational style to describe the causal graph, and avoid using technical terms or jargon, but you can describe the variables and their relationships (including using terms like "confounder"/"confounding", "mediator"/"mediates") as long as you explain them in a way that is understandable to a layperson.
+3. Verbalize an interesting "yes"/"no" question where the correct answer depends computation of each of the following quantities:
+
+{query_description}
+
+Where "| * |" is the absolute value and the definitions of "ATE('X')" (average treatment effect) and "CATE('X' | 'U'=u)" are:
+
+ATE('X') = E['Y' | do('X' = 1)] - E['Y' | do('X' = 0)]
+CATE('X' | 'U'=u) = E['Y' | 'U'=u, do('X' = 1)] - E['Y' | 'U'=u, do('X' = 0)]
+
+Where 'X' is a treatment variable, 'Y' is the outcome variable, and 'U' is a confounder variable.
+
+4. In addition to the questions and associated answers include a one sentence explanation for each question, and "wrong_explanation" which is just like the explanation but argues for the opposite answer.
+
+The meanings of all the variables (all of which are binary) in the statistical model are:
+
+{variable_description}
+
+Answer in the form of a python dictionary in the following format:
+
+```python
+setting = {{
+  "introduction": "[introduction]",
+  "overview": "[overview]",
+  "questions": {{
+    1: {{"question": "[question]", "answer": "yes", "explanation": "[explanation]", "wrong_explanation": "[wrong_explanation]"}},
+    ...
+  }},
+}}
+```
+Answer concisely and precisely in the desired format. Do not add any additional comments or discussion. Most importantly, do not use any technical terms from causal inference such as ATE or CATE in the questions and explanations so that everything is easy to understand even for a layperson.

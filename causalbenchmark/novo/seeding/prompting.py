@@ -2,17 +2,17 @@ from pathlib import Path
 from itertools import product
 import networkx as nx
 
-from omnibelt import load_json, save_json
+from omnibelt import load_json, save_json, pformat, pformat_vars
 import omnifig as fig
 from omniply import tool, ToolKit, Context, Scope, Selection, MissingGadget
 
 import torch
 
-from ..templating import FixedTemplate
+from ..templating import FixedTemplate, FileTemplate, LoadedTemplate
 from .. import misc
-from .prompt_templates import (default_story_prompt_template, default_graph_prompt_template,
-							   default_stats_prompt_template, default_verb_prompt_template,
-							   default_question_prompt_template)
+# from .prompt_templates import (default_story_prompt_template, default_graph_prompt_template,
+# 							   default_stats_prompt_template, default_verb_prompt_template,
+# 							   default_question_prompt_template)
 
 
 # def build_model(nodes, probs):
@@ -41,12 +41,10 @@ class Story(Context, fig.Configurable):
 
 	def populate_defaults(self, story_prompt_tempalte=None, graph_prompt_template=None,
 						  stats_prompt_template=None, verb_prompt_template=None, questions_prompt_template=None):
-		if story_prompt_tempalte is None:
-			story_prompt_tempalte = default_story_prompt_template
-		if graph_prompt_template is None:
-			graph_prompt_template = default_graph_prompt_template
-		story_template = FixedTemplate('prompt_story', story_prompt_tempalte)
-		graph_template = FixedTemplate('prompt_graph', graph_prompt_template)
+		story_template = LoadedTemplate('prompt_story', 'story') if story_prompt_tempalte is None \
+			else FixedTemplate('prompt_story', story_prompt_tempalte)
+		graph_template = LoadedTemplate('prompt_graph', 'graph') if graph_prompt_template is None \
+			else FixedTemplate('prompt_graph', graph_prompt_template)
 		prob_template = StatisticsPrompting(stats_prompt_template)
 		verb_template = VerbalizationPrompting(verb_prompt_template, questions_prompt_template)
 		self.include(story_template, graph_template, prob_template, verb_template,
@@ -138,8 +136,6 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 	def __init__(self, prompt_template: str = None,
 				 question_template=None, val_template=None, cond_template=None, parent_template=None,
 				 desc_template=None, separator=None, **kwargs):
-		if prompt_template is None:
-			prompt_template = default_stats_prompt_template
 		if question_template is None:
 			question_template = '{index}. {parents}what is the probability that {outcome}?'
 		if val_template is None:
@@ -153,7 +149,8 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 		if separator is None:
 			separator = ' and '
 		super().__init__(**kwargs)
-		self.include(FixedTemplate('prompt_stats', template=prompt_template))
+		self.include(LoadedTemplate('prompt_stats', 'stats') if prompt_template is None
+					 else FixedTemplate('prompt_stats', template=prompt_template))
 		self.question_template = question_template
 		self.val_template = val_template
 		self.parent_template = parent_template
@@ -197,23 +194,25 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 class VerbalizationPrompting(ToolKit, fig.Configurable):
 	def __init__(self, verbalization_prompt_template: str = None, question_prompt_template=None, *,
 				 rng=None, **kwargs):
-		if verbalization_prompt_template is None:
-			verbalization_prompt_template = default_verb_prompt_template
-		if question_prompt_template is None:
-			question_prompt_template = default_question_prompt_template
 		if rng is None:
 			rng = misc.get_rng(rng)
 		super().__init__(**kwargs)
 		self.rng = rng
-		self.include(FixedTemplate('prompt_verbs', template=verbalization_prompt_template),
-					 FixedTemplate('prompt_questions', template=question_prompt_template))
+		self.include(LoadedTemplate('prompt_verbs', 'verbs')
+					 if verbalization_prompt_template is None
+					 else FixedTemplate('prompt_verbs', template=verbalization_prompt_template),
+
+					 LoadedTemplate('prompt_questions', 'questions')
+					 if question_prompt_template is None
+					 else FixedTemplate('prompt_questions', template=question_prompt_template))
 
 
+	# _variable_description_template = 'Variable {name!r} (0={values[0]!r}, 1={values[1]!r}) means {description}'
+	_variable_description_template = ('Variable {name!r} ({", ".join(f"{i}={values[i]}" for i in range(len(values))}) '
+									  'means {description}')
 	@tool('variable_description')
 	def get_verbalization_info(self, nodes):
-		template = 'Variable {name!r} (0={values[0]!r}, 1={values[1]!r}) means {description}'
-		# return tabulate([(node['name'], *node['values'], node['description']) for node in nodes], headers=['Variable Name', 'Value 0', 'Value 1', 'Description'])
-		return '\n'.join([template.format(**node) for node in nodes])
+		return '\n'.join([pformat(self._variable_description_template, node) for node in nodes])
 
 
 	def _select(self, choices: list):
@@ -286,7 +285,7 @@ class VerbalizationPrompting(ToolKit, fig.Configurable):
 	}
 	@tool('query_description')
 	def get_query_descriptions(self, queries):
-		lines = [self._query_description_templates[query['type']].format(**query) for query in queries]
+		lines = [pformat(self._query_description_templates[query['type']], query) for query in queries]
 		desc = '\t' + '\n\t'.join(f'{i + 1}. {q}' for i, q in enumerate(lines))
 		return desc
 

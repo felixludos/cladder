@@ -13,15 +13,17 @@ class SimpleTemplater:
 
 
 	def fill_in(self, reqs: dict[str, str] = None, **vals: str):
-		reqs = reqs or {}
-		vals.update({key: reqs[key] for key in self.keys if key not in vals})
 		return pformat(self.template, reqs, **vals)
 
 
 
 class FixedTemplate(SingleGadgetBase, SimpleTemplater):
-	def __init__(self, gizmo: str, template: str, **kwargs):
+	def __init__(self, template: str, gizmo: str = None, **kwargs):
 		super().__init__(gizmo=gizmo, template=template, **kwargs)
+
+
+	def gizmos(self) -> Iterator[str]:
+		yield self._gizmo
 
 
 	def grab_from(self, ctx: Optional[AbstractGig], gizmo: str = None) -> Any:
@@ -48,7 +50,7 @@ class FileTemplate(SimpleTemplater):
 
 
 class LoadedTemplate(FileTemplate, FixedTemplate):
-	def __init__(self, gizmo: str, template_name: str = None, **kwargs):
+	def __init__(self, template_name: str = None, gizmo: str = None, **kwargs):
 		super().__init__(template_name=template_name, gizmo=gizmo, **kwargs)
 
 
@@ -67,13 +69,53 @@ class TokenTemplater:
 
 
 
-class TokenTemplate(SingleGadgetBase):
+class TokenTemplate(SingleGadgetBase, TokenTemplater):
+	def __init__(self, tokens: list[str], gizmo: str = None, **kwargs):
+		super().__init__(gizmo=gizmo, tokens=tokens, **kwargs)
 
 
 	def grab_from(self, ctx: Optional[AbstractGig], gizmo: str = None) -> Any:
-		# assert gizmo == self.gizmo
 		reqs = {key: ctx.grab_from(ctx, key) for key in self.keys}
 		return self.fill_in(reqs)
+
+
+
+class Template(SingleGadgetBase):
+	def __init__(self, template: str | list[str], gizmo: str = None, **kwargs):
+		if isinstance(template, str):
+			template = [template]
+		super().__init__(gizmo=gizmo, **kwargs)
+		self._tokens = template
+		self._template_keys = set(key for keys in map(pformat_vars, template) for key in keys)
+
+
+	def fill_in(self, reqs: dict[str, str] = None, **vals: str):
+		return [pformat(token, reqs, **vals) for token in self._tokens]
+
+
+	def grab_from(self, ctx: 'AbstractGig', gizmo: str = None) -> Any:
+		reqs = {key: ctx.grab_from(ctx, key) for key in self._template_keys}
+		return self.detok(self.fill_in(reqs))
+
+
+	@staticmethod
+	def detok(tokens: list[str] | str, capitalize: bool = False, sentence: bool = False):
+		if isinstance(tokens, str):
+			if capitalize:
+				tokens = tokens.capitalize()
+			if sentence:
+				tokens = tokens + '.'
+			return tokens
+
+		toks = [token + ' ' if next_token not in [',', '.'] else token
+				for token, next_token in zip(tokens, tokens[1:])] + [tokens[-1]]
+		if capitalize:
+			toks[0] = toks[0].capitalize()
+		if sentence:
+			toks.append('.')
+		return ''.join(toks)
+
+
 
 # class template:
 # 	def __init__(self, gizmo: str):

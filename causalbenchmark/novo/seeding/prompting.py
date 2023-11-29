@@ -41,10 +41,10 @@ class Story(Context, fig.Configurable):
 
 	def populate_defaults(self, story_prompt_tempalte=None, graph_prompt_template=None,
 						  stats_prompt_template=None, verb_prompt_template=None, questions_prompt_template=None):
-		story_template = LoadedTemplate('prompt_story', 'story') if story_prompt_tempalte is None \
-			else FixedTemplate('prompt_story', story_prompt_tempalte)
-		graph_template = LoadedTemplate('prompt_graph', 'graph') if graph_prompt_template is None \
-			else FixedTemplate('prompt_graph', graph_prompt_template)
+		story_template = LoadedTemplate('story', 'prompt_story') if story_prompt_tempalte is None \
+			else FixedTemplate(story_prompt_tempalte, 'prompt_story')
+		graph_template = LoadedTemplate('graph', 'prompt_graph') if graph_prompt_template is None \
+			else FixedTemplate(graph_prompt_template, 'prompt_graph')
 		prob_template = StatisticsPrompting(stats_prompt_template)
 		verb_template = VerbalizationPrompting(verb_prompt_template, questions_prompt_template)
 		self.include(story_template, graph_template, prob_template, verb_template,
@@ -149,8 +149,8 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 		if separator is None:
 			separator = ' and '
 		super().__init__(**kwargs)
-		self.include(LoadedTemplate('prompt_stats', 'stats') if prompt_template is None
-					 else FixedTemplate('prompt_stats', template=prompt_template))
+		self.include(LoadedTemplate('stats', 'prompt_stats') if prompt_template is None
+					 else FixedTemplate(prompt_template, 'prompt_stats'))
 		self.question_template = question_template
 		self.val_template = val_template
 		self.parent_template = parent_template
@@ -198,18 +198,17 @@ class VerbalizationPrompting(ToolKit, fig.Configurable):
 			rng = misc.get_rng(rng)
 		super().__init__(**kwargs)
 		self.rng = rng
-		self.include(LoadedTemplate('prompt_verbs', 'verbs')
+		self.include(LoadedTemplate('verbs', 'prompt_verbs')
 					 if verbalization_prompt_template is None
-					 else FixedTemplate('prompt_verbs', template=verbalization_prompt_template),
+					 else FixedTemplate(verbalization_prompt_template, 'prompt_verbs'),
 
-					 LoadedTemplate('prompt_questions', 'questions')
+					 LoadedTemplate('questions', 'prompt_questions')
 					 if question_prompt_template is None
-					 else FixedTemplate('prompt_questions', template=question_prompt_template))
+					 else FixedTemplate(question_prompt_template, 'prompt_questions'))
 
 
 	# _variable_description_template = 'Variable {name!r} (0={values[0]!r}, 1={values[1]!r}) means {description}'
-	_variable_description_template = ('Variable {name!r} ({", ".join(f"{i}={values[i]}" for i in range(len(values))}) '
-									  'means {description}')
+	_variable_description_template = 'Variable {name!r} (0={values[0]!r}, 1={values[1]!r}) means {description}'
 	@tool('variable_description')
 	def get_verbalization_info(self, nodes):
 		return '\n'.join([pformat(self._variable_description_template, node) for node in nodes])

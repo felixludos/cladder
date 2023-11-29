@@ -1,32 +1,39 @@
-We would like to find very natural verbalizations of the following binary variables selected from a statistical model. The verbalizations should sound more natural and organic, so that you could imagine them being used in a news paper article or casual conversation, while still being semantically equivalent to the original variable and value.
+We would like to find very natural verbalizations of the following binary variables selected from a statistical model. The verbalizations should sound more natural and organic, so that you could imagine them being used in a newspaper article or casual conversation, while still being semantically equivalent to the variable and value definition.
 
 Here are the templates that we use to verbalize the variables:
 
-1. One of the variables is {{variable}}.
-2. We estimate {{subject}} [often/usually/sometimes/rarely/etc.] {{value}}.
-3. There is a [number]% chance that {{value}}.
-4. [number]% of {{domain}} {{value}}.
-5. [number]% of the time {{value}}.
-6. Conditional sentence: {{value}}, [some consequence].
-7. Interventional: If {{value}}, [some effect].
+1. One of the variables is {{descriptor}}.
+2. {{subject}} [often/usually/sometimes/rarely/etc.] {{predicate#}}. (with pronoun: {{pronoun}})
+3. There is a [number]% chance that {{nounclause#}}.
+4. {{preposition}} [number]% of {{domain}}, {{subclause#}}.
+5. Conditional sentence: {{condition#}}, [some consequence].
+6. Interventional: If {{action#}}, [some effect].
 
 {variable_description}
 
-Here are some examples of verbalizations of the variable. For each of the templates fill in the blanks (and include 2-3 examples for each template). Format your response as a python dictionary. When replacing the key "value", make sure to include some examples for both values that the variables can take. For example, a variable "Smoking Rate" which takes the values "Low Smoking Rate"=0 and "High Smoking Rate"=1 can be verbalized like this:
+Here are some examples of verbalizations of the variable. For each of the templates fill in the blanks in the curly braces (and include 2-3 examples for each template, sorted from highest quality to least). Format your response as a python dictionary. When replacing a key that ends in "#", make sure to include some examples for both values (0 and 1) that the variables can take. For example, a variable "Smoking Rate" which takes the values "Low Smoking Rate"=0 and "High Smoking Rate"=1 can be verbalized like this:
 
 ```python
 verbalizations = {{
   "Smoking Rate": {{
-    1: {{"variable": ["the smoking rate", "proportion of smokers"]}},
-    2: {{"subject": "people", "value": {{0: ["do not smoke", "are non-smokers"], 1: ["smoke", "are smokers"]}}}},
-    3: {{"value": {{0: ["people do not smoke", "people are non-smokers"], 1: ["people smoke", "people are smokers"]}}}},
-    4: {{"domain": "people", "value": {{0: ["do not smoke", "are non-smokers"], 1: ["smoke", "are smokers"]}}}},
-    5: {{"value": {{0: ["the smoking rate decreases", "people stop smoking"], 1: ["the smoking rate increases", "people start smoking"]}}}},
-    6: {{"value": {{0: ["For people that do not smoke", "Among non-smokers"], 1: ["For people that smoke", "Among smokers"]}}}},
-    7: {{"value": {{0: ["people quite smoking", "people become non-smokers"], 1: ["people become smokers", "people take up smoking"]}}}},
+    "descriptor": ["the smoking rate", "prevalence of smokers"],
+    "subject": "people",
+    "predicate0": ["do not smoke", "are non-smokers"],
+    "predicate1": ["smoke", "are smokers"],
+    "pronoun": "they",
+    "nounclause0": ["people do not smoke", "people are non-smokers"],
+    "nounclause1": ["people smoke", "people are smokers"],
+    "preposition": "in",
+    "domain": "cases",
+    "subclause0": ["a person does not smoke", "there is no smoking habit"],
+    "subclause1": ["a person smokes", "there is a smoking habit"],
+    "condition0": ["among non-smokers", "for people that do not smoke"],
+    "condition1": ["among smokers", "for people that smoke"],
+    "action0": ["people quit smoking", "people become non-smokers"],
+    "action1": ["people become smokers", "people take up smoking"]
   }},
   ...
 }}
 ```
 
-Answer concisely and precisely in the desired format, and only replace the blanks in curly braces. Do not add any additional comments or discussion. Most importantly, the verbalizations should not contain quantitative information like "often" or "rarely", and instead always assert the corresponding value.
+Answer concisely and precisely in the desired format, and only replace the blanks in curly braces. Do not add any additional comments or discussion. Most importantly, the verbalizations should not contain quantitative information like "often" or "rarely", and instead always neutrally assert the corresponding value of the variable definition in a precise, creative, and most importantly semantically equivalent way.

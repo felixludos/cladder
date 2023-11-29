@@ -11,10 +11,10 @@ Here are the templates that we use to verbalize the variables:
 
 {variable_description}
 
-Here are some examples of verbalizations of the variable. For each of the templates fill in the blanks in the curly braces (and include 2-3 examples for each template, sorted from highest quality to least). Format your response as a python dictionary. When replacing a key that ends in "#", make sure to include some examples for both values (0 and 1) that the variables can take. For example, a variable "Smoking Rate" which takes the values "Low Smoking Rate"=0 and "High Smoking Rate"=1 can be verbalized like this:
+Here are some examples of verbalizations of the variable. For each of the templates fill in the blanks in the curly braces (and include 2-3 examples for each template, sorted from highest quality to least). Format your response as a JSON object. When replacing a key that ends in "#", make sure to include some examples for both values (0 and 1) that the variables can take. For example, a variable "Smoking Rate" which takes the values "Low Smoking Rate"=0 and "High Smoking Rate"=1 can be verbalized like this:
 
-```python
-verbalizations = {{
+```json
+{{
   "Smoking Rate": {{
     "descriptor": ["the smoking rate", "prevalence of smokers"],
     "subject": "people",
@@ -36,4 +36,4 @@ verbalizations = {{
 }}
 ```
 
-Answer concisely and precisely in the desired format, and only replace the blanks in curly braces. Do not add any additional comments or discussion. Most importantly, the verbalizations should not contain quantitative information like "often" or "rarely", and instead always neutrally assert the corresponding value of the variable definition in a precise, creative, and most importantly semantically equivalent way.
+Answer concisely and precisely in the desired format, and only replace the blanks in curly braces. Do not add any additional comments or discussion. Most importantly, the verbalizations should not contain quantitative information like "often" or "rarely" aluding to the liklihood of the variable taking that value, and instead always neutrally assert the value of the variable definition in a precise, creative, and most importantly semantically equivalent way.

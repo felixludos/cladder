@@ -1,10 +1,8 @@
-We have a causal bayes net based on the following article:
+We have a causal bayes net based on the following topic:
 
-```
-{spark}
-```
+{motivation["introduction"]}
 
-Now we would like to estimate the probabilities of certain events.
+Now we would like to estimate the probabilities of certain events in a corresponding causal bayes net.
 
 Using commonsense, estimate the probabilities of the following events:
 
@@ -13,13 +11,13 @@ Using commonsense, estimate the probabilities of the following events:
 Where the variables are defined as:
 {descriptions}
 
-For each question above, answer with the lower and upper bound estimates of the probabilities as a python dictionary where the key corresponds to the question index in exactly the following format:
+For each question above, answer with the lower and upper bound estimates of the probabilities as a JSON object where the key corresponds to the question index in exactly the following format:
 
-```python
-probabilities = {{
-  1: [0.3, 0.4],
+```json
+{{
+  "1": [0.3, 0.4],
   ...
 }}
 ```
 
-Answer concisely and precisely in the desired format.
+Answer concisely and precisely in the desired format. Do not add any additional comments or discussion.

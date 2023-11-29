@@ -39,18 +39,19 @@ class Story(Context, fig.Configurable):
 			self.load(story_id)
 
 
-	def populate_defaults(self, motivation_prompt_template=None, story_prompt_tempalte=None, graph_prompt_template=None,
+	def populate_defaults(self, motivation_prompt_template=None, graph_prompt_template=None,
 						  stats_prompt_template=None, verb_prompt_template=None, questions_prompt_template=None):
 		motivation_template = LoadedTemplate('motivation', 'prompt_motivation') \
 			if motivation_prompt_template is None \
 			else FixedTemplate(motivation_prompt_template, 'prompt_motivation')
-		story_template = LoadedTemplate('story', 'prompt_story') if story_prompt_tempalte is None \
-			else FixedTemplate(story_prompt_tempalte, 'prompt_story')
+		# story_template = LoadedTemplate('story', 'prompt_story') if story_prompt_tempalte is None \
+		# 	else FixedTemplate(story_prompt_tempalte, 'prompt_story')
 		graph_template = LoadedTemplate('graph', 'prompt_graph') if graph_prompt_template is None \
 			else FixedTemplate(graph_prompt_template, 'prompt_graph')
+		structure_template = LoadedTemplate('structure', 'prompt_structure')
 		prob_template = StatisticsPrompting(stats_prompt_template)
 		verb_template = VerbalizationPrompting(verb_prompt_template, questions_prompt_template)
-		self.include(motivation_template, story_template, graph_template, prob_template, verb_template,
+		self.include(motivation_template, graph_template, prob_template, verb_template, structure_template,
 					 GraphInfo())
 		return self
 
@@ -62,7 +63,8 @@ class Story(Context, fig.Configurable):
 
 
 	def save(self, story_id: str = None, *, overwrite=False, additional_keys=(), allow_missing=False):
-		save_keys = ['seed', 'spark', 'nodes', 'stats', 'verbs', 'queries', 'questions', *additional_keys]
+		save_keys = ['seed', 'spark', 'motivation', 'nodes', 'stats', 'structure',
+					 'verbs', 'queries', 'questions', *additional_keys]
 
 		if story_id is None and self.story_id is None:
 			raise ValueError('No story ID provided')

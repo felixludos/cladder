@@ -1,11 +1,42 @@
-1. Select some combination of 3-5 of the suggested confounder, mediator, and collider variables, in addition to the treatment and outcome variables to construct a realistic and interesting causal graph. Important: Make sure the causal graph is a DAG and that no node has more than three parents!
-2.  List all the edges in the causal graph, and make sure to mention which edges are observable and which are not.
-3. Provide a python list called `nodes` of all the nodes in the proposed graph. For each node, provide the following information in the form of a python dict:
+We are interested in building a causal model based on the explicit and implicit assumptions contained in the specified article and then using causal inference to evaluate the reasoning. Answer the following questions to design an interesting, simple, and most importantly realistic causal model from a news article.
+
+To help understand the instructions here are some tips:
+- all variables are always binary and (at least in principle) measurable, so when creating and selecting variables, make sure it is reasonable to treat them as binary
+- whenever you propose a variable, make sure to define the meaning of each value it can take, and mention whether it is observable or not
+- outcome variables are always observable, and should always have 2-3 causal parents (including treatment, mediator, and confounder variables)
+- treatment variables are always observable and intervenable, that means it must be possible to (at least in principle) change their value if desired, and these should generally have at least causal parent, and always at least one child
+- confounder variables may or may not be observable, and should always have 2-3 causal children and no causal parents
+- mediator variables may or may not be observable, and should always have 1-2 causal parents (for example, a treatment variable or confounder) and 1-2 causal children (for example, the outcome variable)
+- collider variables are always observable, and should always have 2-3 causal parents (for example, a treatment and outcome variable) and no causal children
+
+Begin by brainstorming some non-trivial interesting binary causal variables to construct a causal bayes net:
+
+1. Propose 1 outcome variable mentioned implicitly or explicitly in the introduction addressing some quantity that people are most likely to be interested in studying, especially if people tend to have misconceptions about it
+3. Propose 2 treatment variables that either directly or indirectly affect the selected outcome variable and are the most interesting to study
+4. Propose 2 confounder variables that affect some reasonable combination of the outcome, treatment, and mediator variables in a non-trivial way
+5. Propose 2 mediator variables that affect and are affected by some reasonable combination of any other variables in a non-trivial way
+6. Propose 1 collider variable that are affected by some reasonable combination of any other variables in a non-trivial way
+
+Here is the topic and original the news article headline:
+
+```
+{spark}
+
+{motivation["introduction"]}
+```
+
+The variables and causal graph should, where possible, use specific details such as names and locations mentioned in the article. Also, generally the variable value "0" should correspond to the negative, neutral, or control while the value "1" should correspond to the positive choice or active value.
+
+Next, construct a causal graph using the proposed variables by listing all the edges in the graph. Make sure to into the outcome variable and both treatment variables, and some interesting and intuitive combination of the other variables (you don't have to use all the others). Important: Make sure the causal graph is a DAG and that no node has more than three parents!
+
+Take a deep breath and think step-by-step how you are going to do this.
+
+Lastly, formalize the causal graph in the form of a JSON list of variables where each variable contains the following fields:
 - `name`: the name of the variable
 - `description`: a short description of the variable
 - `type`: the type of the variable, which can be one of the following: `outcome`, `treatment`, `confounder`, `mediator`, `collider`
 - `observed`: a boolean value indicating whether the variable is observable or not
-- `values`: a python list of the descriptions of the values the variable can take (corresponding to the index)
-- `parents`: a python list of the names of the parents of the variable (make sure they match the corresponding `name` field of the parent nodes, and remember, there should not be more than three parents for any node)
+- `values`: a JSON list of the descriptions of the values the variable can take (corresponding to the index)
+- `parents`: a JSON list of the names of the parents of the variable (make sure they match the corresponding `name` field of the parent nodes, and remember, there should not be more than three parents for any node)
 
-Take a deep breath and think step-by-step about how you will do this.
+Answer concisely and precisely in the desired format.

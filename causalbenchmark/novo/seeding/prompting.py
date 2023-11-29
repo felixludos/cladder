@@ -39,15 +39,18 @@ class Story(Context, fig.Configurable):
 			self.load(story_id)
 
 
-	def populate_defaults(self, story_prompt_tempalte=None, graph_prompt_template=None,
+	def populate_defaults(self, motivation_prompt_template=None, story_prompt_tempalte=None, graph_prompt_template=None,
 						  stats_prompt_template=None, verb_prompt_template=None, questions_prompt_template=None):
+		motivation_template = LoadedTemplate('motivation', 'prompt_motivation') \
+			if motivation_prompt_template is None \
+			else FixedTemplate(motivation_prompt_template, 'prompt_motivation')
 		story_template = LoadedTemplate('story', 'prompt_story') if story_prompt_tempalte is None \
 			else FixedTemplate(story_prompt_tempalte, 'prompt_story')
 		graph_template = LoadedTemplate('graph', 'prompt_graph') if graph_prompt_template is None \
 			else FixedTemplate(graph_prompt_template, 'prompt_graph')
 		prob_template = StatisticsPrompting(stats_prompt_template)
 		verb_template = VerbalizationPrompting(verb_prompt_template, questions_prompt_template)
-		self.include(story_template, graph_template, prob_template, verb_template,
+		self.include(motivation_template, story_template, graph_template, prob_template, verb_template,
 					 GraphInfo())
 		return self
 

@@ -1,0 +1,11 @@
+We have a news article headline, and we would like to identify a potential specific analysis that could be motivated by the article. Importantly, we would like specific details to be mentioned in the setting, even if they don't show up in the original article, to paint a vivid picture of the motivation and potential features of the data.
+
+Here is the article headline:
+
+```
+{spark}
+```
+
+Write a 2-3 sentence introduction to a statistical analysis that could be motivated by this article. Be sure to include specific details about the data that would be used and the analysis that would be performed. You do not need to write the entire analysis, just the introduction. Avoid using any technical jargon (such as words like "statistical analysis" or "model" and avoid starting with "imagine") and make sure the introduction is accessible to laypeople (albeit in a professional setting), and the motivation is clear. Imagine a casual conversation between friends or colleagues about the article that may prompt some deeper quantitative analysis when thinking about it, and make sure this introduction would sound understandable and interesting to them.
+
+Answer in the form of a json dictionary with two entries: one for the `introduction` and one for a proposed `title` for this specific setting that can serve as a file name.

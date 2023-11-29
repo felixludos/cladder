@@ -1,21 +1,19 @@
 // Causal Model
 digraph {
-	LocalEconCond [label=LocalEconCond color=lightblue shape=diamond style=filled]
-	ParticipationAppleAcademy [label=ParticipationAppleAcademy color=lightpink shape=ellipse style=filled]
-	UnivIndustryCollab [label=UnivIndustryCollab color=lightpink shape=ellipse style=filled]
-	SkillDevelopment [label=SkillDevelopment color=lightyellow shape=box style=filled]
-	NetworkBuilding [label=NetworkBuilding color=lightyellow shape=box style=filled]
-	EmploymentRateTech [label=EmploymentRateTech color=lightgreen shape=ellipse style=filled]
-	StudentMotivation [label=StudentMotivation color=lightgray shape=box style=filled]
-	LocalEconCond -> ParticipationAppleAcademy
-	LocalEconCond -> UnivIndustryCollab
-	ParticipationAppleAcademy -> SkillDevelopment
-	UnivIndustryCollab -> SkillDevelopment
-	ParticipationAppleAcademy -> NetworkBuilding
-	UnivIndustryCollab -> NetworkBuilding
-	SkillDevelopment -> EmploymentRateTech
-	NetworkBuilding -> EmploymentRateTech
-	LocalEconCond -> EmploymentRateTech
-	SkillDevelopment -> StudentMotivation
-	EmploymentRateTech -> StudentMotivation
+	"Funding for Encryption Research" [label="Funding for Encryption Research" color=lightblue shape=diamond style=filled]
+	"Funding for Quantum Computing Research" [label="Funding for Quantum Computing Research" color=lightblue shape=diamond style=filled]
+	"Development of Quantum-Resistant Encryption" [label="Development of Quantum-Resistant Encryption" color=lightpink shape=ellipse style=filled]
+	"Quantum Computing Advancement" [label="Quantum Computing Advancement" color=lightpink shape=ellipse style=filled]
+	"Adoption of Quantum-Resistant Encryption" [label="Adoption of Quantum-Resistant Encryption" color=lightyellow shape=box style=filled]
+	"Encryption Security Level" [label="Encryption Security Level" color=lightgreen shape=ellipse style=filled]
+	"Global Cybersecurity Threat Perception" [label="Global Cybersecurity Threat Perception" color=lightgray shape=box style=filled]
+	"Funding for Encryption Research" -> "Development of Quantum-Resistant Encryption"
+	"Funding for Quantum Computing Research" -> "Development of Quantum-Resistant Encryption"
+	"Funding for Quantum Computing Research" -> "Quantum Computing Advancement"
+	"Development of Quantum-Resistant Encryption" -> "Adoption of Quantum-Resistant Encryption"
+	"Funding for Encryption Research" -> "Adoption of Quantum-Resistant Encryption"
+	"Adoption of Quantum-Resistant Encryption" -> "Encryption Security Level"
+	"Quantum Computing Advancement" -> "Encryption Security Level"
+	"Development of Quantum-Resistant Encryption" -> "Global Cybersecurity Threat Perception"
+	"Quantum Computing Advancement" -> "Global Cybersecurity Threat Perception"
 }

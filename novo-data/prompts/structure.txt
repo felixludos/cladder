@@ -3,7 +3,7 @@ We have a causal bayes net model for an analysis about this topic:
 
 {motivation["introduction"]}
 
-Write a list of 4-8 concise and well-worded sentences that describe the structure and associated assumptions of the causal graph. The sentences should be ordered from describing the most noteworthy/surprising features of the graph to the most natural/intuitive features. Use an intuitive conversational style to describe the causal graph, and avoid using technical terms or jargon, but you can describe the variables and their relationships (including using terms like "affects", "confounder"/"confounding", "mediator"/"mediates") as long as you use them in a way that is understandable to a layperson. Refrain from mentioning words like "causal inference", "model", or "variable". Also, try to make the sentences flow together well, and avoid repeating yourself while still being thorough. Make sure not to mention the names or types of the variables in the graph, only what they represent to make the overview more natural.
+Write a list of 4-8 concise and well-worded sentences that describe the structure and associated assumptions of the causal graph. The sentences should be ordered from describing the most noteworthy/surprising features of the graph to the most natural/intuitive features. Use an intuitive conversational style to describe the causal graph, and avoid using technical terms or jargon, but you can describe the variables and their relationships (including using terms like "affects", "confounder"/"confounding", "mediator"/"mediates") as long as you use them in a way that is understandable to a layperson. Refrain from mentioning words like "causal inference", "model", or "variable". Also, try to make the sentences flow together well, and avoid repeating yourself while still being thorough. Make sure not to mention the names or types of the variables in the graph, only what they represent to make the overview more natural. For each of the sentences, include a list of the variables in the causal model that are mentioned explicitly in the sentence (ordered in terms of importance).
 
 The meanings and parents of all the variables (all of which are binary) in the statistical model are:
 
@@ -11,4 +11,11 @@ The meanings and parents of all the variables (all of which are binary) in the s
 {nodes}
 ```
 
-Take a deep breath and think step-by-step how you are going to do this. Once you are ready, be sure to complete your answer in the form of a JSON list of sentences in the format: ["sentence1", "sentence2", ...]
+Take a deep breath and think step-by-step how you are going to do this. Once you are ready, be sure to complete your answer in the form of a JSON list of sentences in the format:
+
+```json
+[
+	{{"sentence": "[some sentence about assumptions/structure]", "involved": ["variable 1", "variable 2", ...]}},
+	...
+]
+```

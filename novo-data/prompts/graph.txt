@@ -9,14 +9,6 @@ To help understand the instructions here are some tips:
 - mediator variables may or may not be observable, and should always have 1-2 causal parents (for example, a treatment variable or confounder) and 1-2 causal children (for example, the outcome variable)
 - collider variables are always observable, and should always have 2-3 causal parents (for example, a treatment and outcome variable) and no causal children
 
-Begin by brainstorming some non-trivial interesting binary causal variables to construct a causal bayes net:
-
-1. Propose 1 outcome variable mentioned implicitly or explicitly in the introduction addressing some quantity that people are most likely to be interested in studying, especially if people tend to have misconceptions about it
-3. Propose 2 treatment variables that either directly or indirectly affect the selected outcome variable and are the most interesting to study
-4. Propose 2 confounder variables that affect some reasonable combination of the outcome, treatment, and mediator variables in a non-trivial way
-5. Propose 2 mediator variables that affect and are affected by some reasonable combination of any other variables in a non-trivial way
-6. Propose 1 collider variable that are affected by some reasonable combination of any other variables in a non-trivial way
-
 Here is the topic and original the news article headline:
 
 ```
@@ -25,13 +17,21 @@ Here is the topic and original the news article headline:
 {motivation["introduction"]}
 ```
 
+Begin by brainstorming some non-trivial interesting binary causal variables to construct a causal bayes net:
+
+1. Propose 1 outcome variable mentioned implicitly or explicitly in the introduction addressing some quantity that people are most likely to be interested in studying, especially if people tend to have misconceptions about it
+3. Propose 2 treatment variables that either directly or indirectly affect the selected outcome variable and are the most interesting to study. Make sure the treatment variables affect the outcome (possibly through a mediator).
+4. Propose 2 confounder variables that affect some reasonable combination of the outcome, treatment, and mediator variables in a non-trivial way. Make sure the confounders have at least one child.
+5. Propose 2 mediator variables that affect and are affected by some reasonable combination of any other variables in a non-trivial way. Make sure the mediators have both parents and children.
+6. Propose 1 collider variable that are affected by some reasonable combination of any other variables in a non-trivial way. Make sure the collider has at least two parents.
+
 The variables and causal graph should, where possible, use specific details such as names and locations mentioned in the article. Also, generally the variable value "0" should correspond to the negative, neutral, or control while the value "1" should correspond to the positive choice or active value.
+
+As part of the brainstorming you should briefly first list the names of all the proposed variables.
 
 Next, construct a causal graph using the proposed variables by listing all the edges in the graph. Make sure to into the outcome variable and both treatment variables, and some interesting and intuitive combination of the other variables (you don't have to use all the others). Important: Make sure the causal graph is a DAG and that no node has more than three parents!
 
-Take a deep breath and think step-by-step how you are going to do this.
-
-Lastly, formalize the causal graph in the form of a JSON list of variables where each variable contains the following fields:
+Formalize this causal graph in the form of a JSON list of variables where each variable contains the following fields:
 - `name`: the name of the variable
 - `description`: a short description of the variable
 - `type`: the type of the variable, which can be one of the following: `outcome`, `treatment`, `confounder`, `mediator`, `collider`
@@ -39,4 +39,6 @@ Lastly, formalize the causal graph in the form of a JSON list of variables where
 - `values`: a JSON list of the descriptions of the values the variable can take (corresponding to the index)
 - `parents`: a JSON list of the names of the parents of the variable (make sure they match the corresponding `name` field of the parent nodes, and remember, there should not be more than three parents for any node)
 
-Answer concisely and precisely in the desired format.
+Aside from some brief brainstorming, answer concisely and precisely with a JSON list in the desired format.
+
+Take a deep breath and think step-by-step how you are going to do this.

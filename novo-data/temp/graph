@@ -1,21 +1,22 @@
 // Causal Model
 digraph {
-	EconomicEnvironment [label=EconomicEnvironment color=lightblue shape=diamond style=filled]
-	LegalDecision [label=LegalDecision color=lightpink shape=ellipse style=filled]
-	CovidDeltaConcern [label=CovidDeltaConcern color=lightpink shape=ellipse style=filled]
-	MediaCoverage [label=MediaCoverage color=lightblue shape=diamond style=filled]
-	FacebookStockResponse [label=FacebookStockResponse color=lightyellow shape=box style=filled]
-	PublicPerception [label=PublicPerception color=lightyellow shape=box style=filled]
-	StockMarketTrend [label=StockMarketTrend color=lightgreen shape=ellipse style=filled]
-	InvestorConfidence [label=InvestorConfidence color=lightgray shape=box style=filled]
-	EconomicEnvironment -> LegalDecision
-	EconomicEnvironment -> CovidDeltaConcern
-	LegalDecision -> FacebookStockResponse
-	MediaCoverage -> FacebookStockResponse
-	CovidDeltaConcern -> PublicPerception
-	MediaCoverage -> PublicPerception
-	FacebookStockResponse -> StockMarketTrend
-	PublicPerception -> StockMarketTrend
-	StockMarketTrend -> InvestorConfidence
-	PublicPerception -> InvestorConfidence
+	"Global Economic Health" [label="Global Economic Health" color=lightblue shape=diamond style=filled]
+	"COVID-19 Pandemic Impact" [label="COVID-19 Pandemic Impact" color=lightpink shape=ellipse style=filled]
+	"Government Economic Policy" [label="Government Economic Policy" color=lightpink shape=ellipse style=filled]
+	"Auto Industry Health" [label="Auto Industry Health" color=lightblue shape=diamond style=filled]
+	"Company Financial Stability" [label="Company Financial Stability" color=lightyellow shape=box style=filled]
+	"Public Demand for Cars" [label="Public Demand for Cars" color=lightyellow shape=box style=filled]
+	"Job Loss in Auto Industry" [label="Job Loss in Auto Industry" color=lightgreen shape=ellipse style=filled]
+	"Media Coverage of Job Losses" [label="Media Coverage of Job Losses" color=lightgray shape=box style=filled]
+	"Global Economic Health" -> "COVID-19 Pandemic Impact"
+	"Global Economic Health" -> "Government Economic Policy"
+	"COVID-19 Pandemic Impact" -> "Company Financial Stability"
+	"Government Economic Policy" -> "Company Financial Stability"
+	"Auto Industry Health" -> "Company Financial Stability"
+	"Auto Industry Health" -> "Public Demand for Cars"
+	"Company Financial Stability" -> "Job Loss in Auto Industry"
+	"Public Demand for Cars" -> "Job Loss in Auto Industry"
+	"COVID-19 Pandemic Impact" -> "Job Loss in Auto Industry"
+	"COVID-19 Pandemic Impact" -> "Media Coverage of Job Losses"
+	"Job Loss in Auto Industry" -> "Media Coverage of Job Losses"
 }

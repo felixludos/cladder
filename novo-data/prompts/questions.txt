@@ -13,18 +13,19 @@ CATE('X' | 'U'=u) = E['Y' | 'U'=u, do('X' = 1)] - E['Y' | 'U'=u, do('X' = 0)]
 
 Where 'X' is a treatment variable, 'Y' is the outcome variable, and 'U' is a confounder variable.
 
-In addition to the questions and associated answers include a one sentence explanation for each question, and "wrong_explanation" which is just like the explanation but argues for the opposite answer. Make sure the explanations can stand on their own without the question, so they should include all important details from the question.
+In addition to the questions and associated answers include a one sentence explanation for each question. Make sure the explanation can stand on its own without the question, so it should include all important details from the question.
 
 The meanings of all the variables (all of which are binary) in the statistical model are:
 
 {variable_description}
 
-Answer in the form of a json dictionary in the following format:
+Answer in the form of a JSON object in the following format:
 
 ```json
 {{
-    "1": {{"question": "[question]", "answer": "yes", "explanation": "[explanation]", "wrong_explanation": "[wrong_explanation]"}},
+    "1": {{"question": "[question]", "answer": "yes", "explanation": "[explanation]"}},
     ...
 }}
 ```
+
 Answer concisely and precisely in the desired format. Do not add any additional comments or discussion. Most importantly, do not use any technical terms from causal inference such as ATE or CATE in the questions and explanations so that everything is easy to understand even for a layperson in a casual conversation.

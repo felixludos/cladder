@@ -48,7 +48,7 @@ class Decision(AbstractMultiGadget):
 					yield gizmo
 
 
-	def choose(self, ctx: Context = None):
+	def choose(self, ctx: 'Verbalizer' = None):
 		return random.choice(self._choice_ids) if ctx is None else ctx.select(list(self._choice_ids))
 
 
@@ -57,6 +57,8 @@ class Decision(AbstractMultiGadget):
 			return choice.grab_from(ctx, gizmo)
 		if isinstance(choice, dict):
 			return choice[gizmo]
+		if callable(choice):
+			return choice(ctx)
 		return choice
 
 

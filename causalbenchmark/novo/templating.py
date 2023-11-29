@@ -94,7 +94,7 @@ class Template(SingleGadgetBase):
 
 
 	def grab_from(self, ctx: 'AbstractGig', gizmo: str = None) -> Any:
-		reqs = {key: ctx.grab_from(ctx, key) for key in self._template_keys}
+		reqs = {key: ctx.grab(key) for key in self._template_keys}
 		return self.detok(self.fill_in(reqs))
 
 
@@ -102,15 +102,16 @@ class Template(SingleGadgetBase):
 	def detok(tokens: list[str] | str, capitalize: bool = False, sentence: bool = False):
 		if isinstance(tokens, str):
 			if capitalize:
-				tokens = tokens.capitalize()
+				tokens = tokens[0].upper() + tokens[1:]
 			if sentence:
 				tokens = tokens + '.'
 			return tokens
 
+		assert len(tokens), f'Cannot detokenize empty list: {tokens}'
 		toks = [token + ' ' if next_token not in [',', '.'] else token
 				for token, next_token in zip(tokens, tokens[1:])] + [tokens[-1]]
 		if capitalize:
-			toks[0] = toks[0].capitalize()
+			toks[0] = toks[0][0].upper() + toks[0][1:]
 		if sentence:
 			toks.append('.')
 		return ''.join(toks)

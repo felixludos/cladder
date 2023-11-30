@@ -89,13 +89,15 @@ class Template(SingleGadgetBase):
 		self._template_keys = set(key for keys in map(pformat_vars, template) for key in keys)
 
 
-	def fill_in(self, reqs: dict[str, str] = None, **vals: str):
-		return [pformat(token, reqs, **vals) for token in self._tokens]
+	def _fill_in(self, *srcs: dict[str, str], **vals: str):
+		return [pformat(token, *srcs, **vals) for token in self._tokens]
 
+	def fill_in(self, *srcs: dict[str, str], **vals: str):
+		return self.detok(self._fill_in(*srcs, **vals))
 
 	def grab_from(self, ctx: 'AbstractGig', gizmo: str = None) -> Any:
 		reqs = {key: ctx.grab(key) for key in self._template_keys}
-		return self.detok(self.fill_in(reqs))
+		return self.fill_in(reqs)
 
 
 	@staticmethod

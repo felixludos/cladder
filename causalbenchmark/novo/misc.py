@@ -26,6 +26,8 @@ def temp_root():
 
 @fig.autocomponent('rng')
 def get_rng(seed=None, reset_master=True):
+	if isinstance(seed, torch.Generator):
+		return seed
 	if seed is None:
 		seed = np.random.randint(0, 2**16-1) # TODO what is the limit
 	if reset_master:

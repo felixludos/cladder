@@ -1,22 +1,23 @@
 // Causal Model
 digraph {
-	"Global Economic Health" [label="Global Economic Health" color=lightblue shape=diamond style=filled]
-	"COVID-19 Pandemic Impact" [label="COVID-19 Pandemic Impact" color=lightpink shape=ellipse style=filled]
-	"Government Economic Policy" [label="Government Economic Policy" color=lightpink shape=ellipse style=filled]
-	"Auto Industry Health" [label="Auto Industry Health" color=lightblue shape=diamond style=filled]
-	"Company Financial Stability" [label="Company Financial Stability" color=lightyellow shape=box style=filled]
-	"Public Demand for Cars" [label="Public Demand for Cars" color=lightyellow shape=box style=filled]
-	"Job Loss in Auto Industry" [label="Job Loss in Auto Industry" color=lightgreen shape=ellipse style=filled]
-	"Media Coverage of Job Losses" [label="Media Coverage of Job Losses" color=lightgray shape=box style=filled]
-	"Global Economic Health" -> "COVID-19 Pandemic Impact"
-	"Global Economic Health" -> "Government Economic Policy"
-	"COVID-19 Pandemic Impact" -> "Company Financial Stability"
-	"Government Economic Policy" -> "Company Financial Stability"
-	"Auto Industry Health" -> "Company Financial Stability"
-	"Auto Industry Health" -> "Public Demand for Cars"
-	"Company Financial Stability" -> "Job Loss in Auto Industry"
-	"Public Demand for Cars" -> "Job Loss in Auto Industry"
-	"COVID-19 Pandemic Impact" -> "Job Loss in Auto Industry"
-	"COVID-19 Pandemic Impact" -> "Media Coverage of Job Losses"
-	"Job Loss in Auto Industry" -> "Media Coverage of Job Losses"
+	"Prior Experience with Pandemics" [label="Prior Experience with Pandemics" color=lightblue shape=diamond style=filled]
+	"Hospital Funding" [label="Hospital Funding" color=lightblue shape=diamond style=filled]
+	"PPE Availability" [label="PPE Availability" color=lightpink shape=ellipse style=filled]
+	"Staff Training on Pandemic Protocols" [label="Staff Training on Pandemic Protocols" color=lightpink shape=ellipse style=filled]
+	"Staff Stress Levels" [label="Staff Stress Levels" color=lightyellow shape=box style=filled]
+	"Quality of Patient Care" [label="Quality of Patient Care" color=lightyellow shape=box style=filled]
+	"Staff Morale" [label="Staff Morale" color=lightgreen shape=ellipse style=filled]
+	"Staff Absenteeism" [label="Staff Absenteeism" color=lightgray shape=box style=filled]
+	"Prior Experience with Pandemics" -> "PPE Availability"
+	"Hospital Funding" -> "PPE Availability"
+	"Prior Experience with Pandemics" -> "Staff Training on Pandemic Protocols"
+	"Hospital Funding" -> "Staff Training on Pandemic Protocols"
+	"PPE Availability" -> "Staff Stress Levels"
+	"Staff Training on Pandemic Protocols" -> "Staff Stress Levels"
+	"Staff Stress Levels" -> "Quality of Patient Care"
+	"PPE Availability" -> "Staff Morale"
+	"Staff Stress Levels" -> "Staff Morale"
+	"Quality of Patient Care" -> "Staff Morale"
+	"Staff Training on Pandemic Protocols" -> "Staff Absenteeism"
+	"Staff Stress Levels" -> "Staff Absenteeism"
 }

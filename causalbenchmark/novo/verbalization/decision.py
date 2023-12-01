@@ -30,6 +30,7 @@ class Decision(CraftyGaggle, AbstractDecision):
 		assert name or id_name, f'Either name or id_name must be specified'
 		if id_name is None:
 			id_name = f'{name}_id'
+
 		super().__init__(**kwargs)
 		self._name = name
 		self._id_name = id_name
@@ -134,9 +135,18 @@ class Decision(CraftyGaggle, AbstractDecision):
 
 
 class ChoiceCraftBase(ToolCraft):
-	# TODO: add a feature to enable named choice_ids using a separate decorator like tools
+	'''
+	This decorator can only be used for methods of subclasses of Decisions!
+	'''
 	def __init__(self, fn, *, gizmo=None, **kwargs):
 		super().__init__(gizmo=gizmo, fn=fn, **kwargs)
+		self._choice_id = None
+
+
+	def __call__(self, fn):
+		self._choice_id = self._fn
+		self._fn = fn
+		return self
 
 
 	def as_skill(self, owner: Decision) -> ToolSkill:
@@ -146,7 +156,10 @@ class ChoiceCraftBase(ToolCraft):
 		unbound_fn = self._wrapped_content_leaf()
 		fn = unbound_fn.__get__(owner, type(owner))
 		skill = self._ToolSkill(owner.product, fn=fn, unbound_fn=unbound_fn, base=self)
-		owner.add_choice(skill)
+		if self._choice_id is None:
+			owner.add_choice(skill)
+		else:
+			owner.add_choice(**{self._choice_id: skill})
 		return skill
 
 

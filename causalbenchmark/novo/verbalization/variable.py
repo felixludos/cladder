@@ -80,7 +80,21 @@ class VariableVerbalization(ToolKit, VerbalizationBase):
 		del atoms['values']
 		return self.populate_verbalization_atoms(atoms, **node_info)
 
-
+	@staticmethod
+	def process_raw_verbalizations(story):
+		base_keys = ['descriptor', 'subject', 'pronoun', 'preposition', 'domain']
+		value_keys = ['predicate', 'nounclause', 'subclause', 'condition', 'action']
+		verbs = []
+		for node in story['nodes']:
+			raw = story['verbs'][node['name']]
+			info = {'values': {0: {}, 1: {}}}
+			info.update({key: raw[key] for key in base_keys})
+			for i in [0, 1]:
+				info_val = info['values'][i]
+				info_val.update({key: raw[f'{key}{i}'] for key in value_keys})
+			# node['verbs'] = info
+			verbs.append(info)
+		story['verbs'] = verbs
 
 # class ConditionVerbalization(ToolKit, AbstractDecision, VerbalizationBase):
 # 	def __init__(self, conditions = None, identity_fmt='p{idx}_{key}', **kwargs):

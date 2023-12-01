@@ -9,21 +9,6 @@ from .top import Verbalizer
 from .flavors import PrecisePercent
 
 
-def story_atoms(story):
-	base_keys = ['descriptor', 'subject', 'pronoun', 'preposition', 'domain']
-	value_keys = ['predicate', 'nounclause', 'subclause', 'condition', 'action']
-	verbs = []
-	for node in story['nodes']:
-		raw = story['verbs'][node['name']]
-		info = {'values': {0: {}, 1: {}}}
-		info.update({key: raw[key] for key in base_keys})
-		for i in [0, 1]:
-			info_val = info['values'][i]
-			info_val.update({key: raw[f'{key}{i}'] for key in value_keys})
-		# node['verbs'] = info
-		verbs.append(info)
-	story['verbs'] = verbs
-
 
 
 def test_load_story():
@@ -75,8 +60,9 @@ def test_load_story():
 	print(verbalizer)
 
 	text = verbalizer['sentence']
+	print()
 	print(text)
-
+	print()
 	identity = verbalizer.identity()
 	print(identity)
 

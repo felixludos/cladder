@@ -42,23 +42,20 @@ class MarginalVerbalization(ToolKit, VerbalizationBase):
 class AntecedentVerbalization(Decision):
 	_name = 'antecedent'
 
-	# @choice.from_context
+	@choice.from_context
 	def join_conditionals(self, ctx):
 		terms = []
 		for cond in ctx.conditions:
-			terms.append(cond.grab_from(ctx, cond.gizmo_from('condition')))
-			# terms.append(cond['condition'])
+			terms.append(cond['condition'])
 		return ' and '.join(terms)
 
 
 	_clause_template = ['{cond_conjunction}', '{clauses}']
-
 	@choice.from_context
 	def join_clauses(self, ctx):
 		terms = []
 		for cond in ctx.conditions:
-			terms.append(cond.grab_from(ctx, cond.gizmo_from('clause')))
-			# terms.append(cond['clause'])
+			terms.append(cond['clause'])
 		clauses = ' and '.join(terms)
 		return Template(self._clause_template).fill_in({'clauses':clauses}, ctx)
 
@@ -74,11 +71,13 @@ class ConditionalVerbalization(ToolKit):
 		['{consequent},', '{antecedent}'],
 	]
 
+	_cond_conjunctions = ['if', 'when', 'given that', 'provided that']
+
 	def populate_default(self, cond_templates=None, antecedent_choices=None, **kwargs):
 		cond_templates = cond_templates or self._cond_templates
 		self.include(
 			AntecedentVerbalization(antecedent_choices),
-			Decision(['if', 'when', 'given that', 'because', 'provided that'], 'cond_conjunction'),
+			Decision(self._cond_conjunctions, 'cond_conjunction'),
 			Decision([Template(tmpl, 'conditional') for tmpl in cond_templates],'conditional'),
 		)
 		return self

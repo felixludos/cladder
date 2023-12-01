@@ -3,7 +3,10 @@ from omniply import ToolKit, tool
 
 
 class PrecisePercent(ToolKit):
-	epsilon = 0.01
+	def __init__(self, *, epsilon=0.01, **kwargs):
+		super().__init__(**kwargs)
+		self.epsilon = epsilon
+
 
 	@tool('quantity')
 	def format_probability(self, mean: float):

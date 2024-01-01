@@ -23,7 +23,7 @@ Here are some examples of verbalizations of the variable. For each of the templa
     "pronoun": "they",
     "nounclause0": ["people do not smoke", "people are non-smokers"],
     "nounclause1": ["people smoke", "people are smokers"],
-    "preposition": "in",
+    "preposition": ["in", "for"],
     "domain": "cases",
     "subclause0": ["a person does not smoke", "there is no smoking habit"],
     "subclause1": ["a person smokes", "there is a smoking habit"],

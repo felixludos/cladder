@@ -1,22 +1,21 @@
 // Causal Model
 digraph {
-	"Global Economic Health" [label="Global Economic Health" color=lightblue shape=diamond style=filled]
-	"COVID-19 Pandemic Impact" [label="COVID-19 Pandemic Impact" color=lightpink shape=ellipse style=filled]
-	"Government Economic Policy" [label="Government Economic Policy" color=lightpink shape=ellipse style=filled]
-	"Auto Industry Health" [label="Auto Industry Health" color=lightblue shape=diamond style=filled]
-	"Company Financial Stability" [label="Company Financial Stability" color=lightyellow shape=box style=filled]
-	"Public Demand for Cars" [label="Public Demand for Cars" color=lightyellow shape=box style=filled]
-	"Job Loss in Auto Industry" [label="Job Loss in Auto Industry" color=lightgreen shape=ellipse style=filled]
-	"Media Coverage of Job Losses" [label="Media Coverage of Job Losses" color=lightgray shape=box style=filled]
-	"Global Economic Health" -> "COVID-19 Pandemic Impact"
-	"Global Economic Health" -> "Government Economic Policy"
-	"COVID-19 Pandemic Impact" -> "Company Financial Stability"
-	"Government Economic Policy" -> "Company Financial Stability"
-	"Auto Industry Health" -> "Company Financial Stability"
-	"Auto Industry Health" -> "Public Demand for Cars"
-	"Company Financial Stability" -> "Job Loss in Auto Industry"
-	"Public Demand for Cars" -> "Job Loss in Auto Industry"
-	"COVID-19 Pandemic Impact" -> "Job Loss in Auto Industry"
-	"COVID-19 Pandemic Impact" -> "Media Coverage of Job Losses"
-	"Job Loss in Auto Industry" -> "Media Coverage of Job Losses"
+	"Global Economic Trends" [label="Global Economic Trends" color=lightblue shape=diamond style=filled]
+	"Domestic Policy Changes" [label="Domestic Policy Changes" color=lightblue shape=diamond style=filled]
+	"GDP Growth Rate" [label="GDP Growth Rate" color=lightpink shape=ellipse style=filled]
+	"Inflation Rate" [label="Inflation Rate" color=lightpink shape=ellipse style=filled]
+	"Business Investment" [label="Business Investment" color=lightyellow shape=box style=filled]
+	"Consumer Spending" [label="Consumer Spending" color=lightyellow shape=box style=filled]
+	"Consumer Economic Confidence" [label="Consumer Economic Confidence" color=lightgreen shape=ellipse style=filled]
+	"Media Economic Reporting" [label="Media Economic Reporting" color=lightgray shape=box style=filled]
+	"Global Economic Trends" -> "GDP Growth Rate"
+	"Domestic Policy Changes" -> "GDP Growth Rate"
+	"Global Economic Trends" -> "Inflation Rate"
+	"Domestic Policy Changes" -> "Inflation Rate"
+	"GDP Growth Rate" -> "Business Investment"
+	"Inflation Rate" -> "Consumer Spending"
+	"Business Investment" -> "Consumer Economic Confidence"
+	"Consumer Spending" -> "Consumer Economic Confidence"
+	"GDP Growth Rate" -> "Media Economic Reporting"
+	"Inflation Rate" -> "Media Economic Reporting"
 }

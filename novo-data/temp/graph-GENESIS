@@ -1,0 +1,23 @@
+// Causal Model
+digraph {
+	"Prior Experience with Pandemics" [label="Prior Experience with Pandemics" color=lightblue shape=diamond style=filled]
+	"Hospital Funding" [label="Hospital Funding" color=lightblue shape=diamond style=filled]
+	"PPE Availability" [label="PPE Availability" color=lightpink shape=ellipse style=filled]
+	"Staff Training on Pandemic Protocols" [label="Staff Training on Pandemic Protocols" color=lightpink shape=ellipse style=filled]
+	"Staff Stress Levels" [label="Staff Stress Levels" color=lightyellow shape=box style=filled]
+	"Quality of Patient Care" [label="Quality of Patient Care" color=lightyellow shape=box style=filled]
+	"Staff Morale" [label="Staff Morale" color=lightgreen shape=ellipse style=filled]
+	"Staff Absenteeism" [label="Staff Absenteeism" color=lightgray shape=box style=filled]
+	"Prior Experience with Pandemics" -> "PPE Availability"
+	"Hospital Funding" -> "PPE Availability"
+	"Prior Experience with Pandemics" -> "Staff Training on Pandemic Protocols"
+	"Hospital Funding" -> "Staff Training on Pandemic Protocols"
+	"PPE Availability" -> "Staff Stress Levels"
+	"Staff Training on Pandemic Protocols" -> "Staff Stress Levels"
+	"Staff Stress Levels" -> "Quality of Patient Care"
+	"PPE Availability" -> "Staff Morale"
+	"Staff Stress Levels" -> "Staff Morale"
+	"Quality of Patient Care" -> "Staff Morale"
+	"Staff Training on Pandemic Protocols" -> "Staff Absenteeism"
+	"Staff Stress Levels" -> "Staff Absenteeism"
+}

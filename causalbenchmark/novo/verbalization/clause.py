@@ -1,95 +1,91 @@
-
+from omnibelt import pformat
 from omniply import tool, ToolKit
 
 from omniply.core.gadgets import SingleGadgetBase
 
 from .base import VerbalizationBase
-from .decision import Decision
+from .decision import Decision, choice
 from ..templating import Template
-
-
-class NumberFormatting(ToolKit):
-	@tool('quantity')
-	def format_probability(self, mean: float):
-		return f'{mean * 100:.0f}%'
 
 
 
 class MarginalVerbalization(ToolKit, VerbalizationBase):
-	_precise_templates = [
-		['there', 'is', 'a', '{quantity}', '{prob_word}', 'that', '{position}'],
-		['the', '{chance_word}', 'that', '{position}', '{"are" if chance_word == "odds" else "is"}', '{quantity}'],
-		['{quantity}', 'of', 'the', 'time', '{position}'],
+	_marginal_templates = [
+		['there', 'is', 'a', '{quantity}', '{chance_word}', 'that', '{clause}'],
+		['the', '{chance_word}', 'that', '{clause}', '{"are" if chance_word == "odds" else "is"}', '{quantity}'],
+		['{quantity}', 'of', 'the', 'time', '{clause}'],
 		['{preposition}', '{quantity}', 'of', '{domain},', '{subclause}'],
-		['with a', '{confidence_word}', 'of {quantity}, {position}']
+		['with a', '{confidence_word}', 'of {quantity}, {clause}']
 	]
-	_position_templates = [
-		['{subject}', '{predicate}',],
-		['{nounclause}',],
-		['{subclause}',],
-	]
-	_prob_words = ['probability', 'chance', 'likelihood']
 	_chance_words = ['probability', 'chance', 'likelihood', 'odds']
 	_confidence_words = ['confidence', 'certainty']
 
-	def populate_default(self, precise_templates=None, position_templates=None, **kwargs):
-		if precise_templates is None:
-			precise_templates = self._precise_templates
-		if position_templates is None:
-			position_templates = self._position_templates
+
+	def populate_default(self, marginal_templates=None, clause_templates=None, **kwargs):
+		if marginal_templates is None:
+			marginal_templates = self._marginal_templates
 
 		self.include(
-			self._DecisionType([self._TemplateType(tmpl, 'clause') for tmpl in precise_templates], 'clause'),
-			self._DecisionType([self._TemplateType(tmpl, 'position') for tmpl in position_templates], 'position'),
-			self._DecisionType(self._prob_words, 'prob_word'),
-			self._DecisionType(self._chance_words, 'chance_word'),
-			self._DecisionType(self._confidence_words, 'confidence_word'),
-			NumberFormatting(),
+			Decision([Template(tmpl, 'statement') for tmpl in marginal_templates],
+					 'marginal', 'marginal_id'),
+
+			Decision(self._chance_words, 'chance_word',
+					 choice_validator=lambda ctx, option: option not in {'odds', 'likelihood'}
+														  or ctx['marginal_id'] != 0),
+			Decision(self._confidence_words, 'confidence_word'),
 		)
 
 		return self
 
 
-	@tool('sentence')
-	def verbalize(self, clause: str):
-		return Template.detok(clause, capitalize=True, sentence=True)
+
+class AntecedentVerbalization(Decision):
+	_name = 'antecedent'
+
+	@choice.from_context
+	def join_conditionals(self, ctx):
+		terms = []
+		for cond in ctx.conditions:
+			terms.append(cond['condition'])
+		return ' and '.join(terms)
+
+
+	_clause_template = ['{cond_conjunction}', '{clauses}']
+	@choice.from_context
+	def join_clauses(self, ctx):
+		terms = []
+		for cond in ctx.conditions:
+			terms.append(cond['clause'])
+		clauses = ' and '.join(terms)
+		return Template(self._clause_template).fill_in({'clauses':clauses}, ctx)
+
+
+	# add other (smarter) options - check pronouns, order conditions, etc.
+	pass
 
 
 
-class ConditionalVerbalization(MarginalVerbalization):
+class ConditionalVerbalization(ToolKit):
 	_cond_templates = [
 		['{antecedent},', '{consequent}'],
 		['{consequent},', '{antecedent}'],
 	]
 
-	def populate_default(self, cond_templates=None, **kwargs):
-		if cond_templates is None:
-			cond_templates = self._cond_templates
-		super().populate_default(**kwargs)
+	_cond_conjunctions = ['if', 'when', 'given that', 'provided that']
+
+	def populate_default(self, cond_templates=None, antecedent_choices=None, **kwargs):
+		cond_templates = cond_templates or self._cond_templates
 		self.include(
-			self._DecisionType([self._TemplateType(tmpl, 'conditional') for tmpl in cond_templates], 'conditional'),
+			AntecedentVerbalization(antecedent_choices),
+			Decision(self._cond_conjunctions, 'cond_conjunction'),
+			Decision([Template(tmpl, 'conditional') for tmpl in cond_templates],'conditional'),
 		)
 		return self
 
-	@tool.from_context('antecedent')
-	def get_antecedent(self, ctx):
-		terms = []
-
-		# maybe cleverly sort conditions or check pronouns or merge subjects etc.
-
-		for i in range(ctx['num_conditions']):
-			terms.append(ctx[f'c{i}_condition'])
-		return ' and '.join(terms)
-
 
 	@tool('consequent')
-	def get_consequent(self, clause):
-		return clause
-
-
-	@tool('sentence')
-	def verbalize(self, conditional: str):
-		return Template.detok(conditional, capitalize=True, sentence=True)
+	def get_consequent(self, marginal):
+		return marginal
 
 
 

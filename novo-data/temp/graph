@@ -1,21 +1,23 @@
 // Causal Model
 digraph {
-	"Global Economic Trends" [label="Global Economic Trends" color=lightblue shape=diamond style=filled]
-	"Domestic Policy Changes" [label="Domestic Policy Changes" color=lightblue shape=diamond style=filled]
-	"GDP Growth Rate" [label="GDP Growth Rate" color=lightpink shape=ellipse style=filled]
-	"Inflation Rate" [label="Inflation Rate" color=lightpink shape=ellipse style=filled]
-	"Business Investment" [label="Business Investment" color=lightyellow shape=box style=filled]
-	"Consumer Spending" [label="Consumer Spending" color=lightyellow shape=box style=filled]
-	"Consumer Economic Confidence" [label="Consumer Economic Confidence" color=lightgreen shape=ellipse style=filled]
-	"Media Economic Reporting" [label="Media Economic Reporting" color=lightgray shape=box style=filled]
-	"Global Economic Trends" -> "GDP Growth Rate"
-	"Domestic Policy Changes" -> "GDP Growth Rate"
-	"Global Economic Trends" -> "Inflation Rate"
-	"Domestic Policy Changes" -> "Inflation Rate"
-	"GDP Growth Rate" -> "Business Investment"
-	"Inflation Rate" -> "Consumer Spending"
-	"Business Investment" -> "Consumer Economic Confidence"
-	"Consumer Spending" -> "Consumer Economic Confidence"
-	"GDP Growth Rate" -> "Media Economic Reporting"
-	"Inflation Rate" -> "Media Economic Reporting"
+	"Regional Sea Ice Levels" [label="Regional Sea Ice Levels" color=lightblue shape=diamond style=filled]
+	"Global Environmental Policies" [label="Global Environmental Policies" color=lightblue shape=diamond style=filled]
+	"Climate Change Intensity" [label="Climate Change Intensity" color=lightpink shape=ellipse style=filled]
+	"Conservation Efforts" [label="Conservation Efforts" color=lightpink shape=ellipse style=filled]
+	"Antarctic Ecosystem Health" [label="Antarctic Ecosystem Health" color=lightyellow shape=box style=filled]
+	"Penguin Breeding Success" [label="Penguin Breeding Success" color=lightyellow shape=box style=filled]
+	"Penguin Population Health" [label="Penguin Population Health" color=lightgreen shape=ellipse style=filled]
+	"Public Awareness" [label="Public Awareness" color=lightgray shape=box style=filled]
+	"Regional Sea Ice Levels" -> "Climate Change Intensity"
+	"Global Environmental Policies" -> "Climate Change Intensity"
+	"Global Environmental Policies" -> "Conservation Efforts"
+	"Climate Change Intensity" -> "Antarctic Ecosystem Health"
+	"Conservation Efforts" -> "Antarctic Ecosystem Health"
+	"Regional Sea Ice Levels" -> "Penguin Breeding Success"
+	"Antarctic Ecosystem Health" -> "Penguin Breeding Success"
+	"Climate Change Intensity" -> "Penguin Population Health"
+	"Conservation Efforts" -> "Penguin Population Health"
+	"Penguin Breeding Success" -> "Penguin Population Health"
+	"Penguin Population Health" -> "Public Awareness"
+	"Conservation Efforts" -> "Public Awareness"
 }

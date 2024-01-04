@@ -1,21 +1,20 @@
 // Causal Model
 digraph {
-	"Training Intensity" [label="Training Intensity" color=lightblue shape=diamond style=filled]
+	"Pre-Injury Form" [label="Pre-Injury Form" color=lightblue shape=diamond style=filled]
 	"Hand Injury" [label="Hand Injury" color=lightpink shape=ellipse style=filled]
-	"Previous Performance" [label="Previous Performance" color=lightblue shape=diamond style=filled]
-	"Mental Stress" [label="Mental Stress" color=lightpink shape=ellipse style=filled]
+	Age [label=Age color=lightblue shape=diamond style=filled]
+	"Training Intensity" [label="Training Intensity" color=lightpink shape=ellipse style=filled]
 	"Physical Fitness" [label="Physical Fitness" color=lightyellow shape=box style=filled]
-	"Shooting Accuracy" [label="Shooting Accuracy" color=lightyellow shape=box style=filled]
+	"Mental State" [label="Mental State" color=lightyellow shape=box style=filled]
 	"Performance Decline" [label="Performance Decline" color=lightgreen shape=ellipse style=filled]
 	"Media Attention" [label="Media Attention" color=lightgray shape=box style=filled]
-	"Training Intensity" -> "Hand Injury"
-	"Previous Performance" -> "Mental Stress"
-	"Hand Injury" -> "Physical Fitness"
-	"Training Intensity" -> "Physical Fitness"
-	"Hand Injury" -> "Shooting Accuracy"
-	"Mental Stress" -> "Shooting Accuracy"
-	"Physical Fitness" -> "Performance Decline"
-	"Shooting Accuracy" -> "Performance Decline"
+	"Pre-Injury Form" -> "Hand Injury"
+	Age -> "Training Intensity"
+	Age -> "Physical Fitness"
+	"Physical Fitness" -> "Mental State"
+	"Hand Injury" -> "Performance Decline"
+	"Training Intensity" -> "Performance Decline"
+	"Mental State" -> "Performance Decline"
 	"Performance Decline" -> "Media Attention"
 	"Hand Injury" -> "Media Attention"
 }

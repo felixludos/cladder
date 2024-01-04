@@ -1,20 +1,21 @@
 // Causal Model
 digraph {
-	"Pre-Injury Form" [label="Pre-Injury Form" color=lightblue shape=diamond style=filled]
-	"Hand Injury" [label="Hand Injury" color=lightpink shape=ellipse style=filled]
-	Age [label=Age color=lightblue shape=diamond style=filled]
-	"Training Intensity" [label="Training Intensity" color=lightpink shape=ellipse style=filled]
-	"Physical Fitness" [label="Physical Fitness" color=lightyellow shape=box style=filled]
-	"Mental State" [label="Mental State" color=lightyellow shape=box style=filled]
-	"Performance Decline" [label="Performance Decline" color=lightgreen shape=ellipse style=filled]
-	"Media Attention" [label="Media Attention" color=lightgray shape=box style=filled]
-	"Pre-Injury Form" -> "Hand Injury"
-	Age -> "Training Intensity"
-	Age -> "Physical Fitness"
-	"Physical Fitness" -> "Mental State"
-	"Hand Injury" -> "Performance Decline"
-	"Training Intensity" -> "Performance Decline"
-	"Mental State" -> "Performance Decline"
-	"Performance Decline" -> "Media Attention"
-	"Hand Injury" -> "Media Attention"
+	"Marketing Intensity" [label="Marketing Intensity" color=lightpink shape=ellipse style=filled]
+	"Environmental Awareness" [label="Environmental Awareness" color=lightblue shape=diamond style=filled]
+	"Disposable Income" [label="Disposable Income" color=lightblue shape=diamond style=filled]
+	"E-bike Price Reduction" [label="E-bike Price Reduction" color=lightpink shape=ellipse style=filled]
+	"Consumer Interest in E-bikes" [label="Consumer Interest in E-bikes" color=lightyellow shape=box style=filled]
+	"Retailer Stock Availability" [label="Retailer Stock Availability" color=lightyellow shape=box style=filled]
+	"E-bike Popularity Increase" [label="E-bike Popularity Increase" color=lightgreen shape=ellipse style=filled]
+	"Social Media Engagement" [label="Social Media Engagement" color=lightgray shape=box style=filled]
+	"Environmental Awareness" -> "E-bike Price Reduction"
+	"Disposable Income" -> "E-bike Price Reduction"
+	"Environmental Awareness" -> "Consumer Interest in E-bikes"
+	"Disposable Income" -> "Retailer Stock Availability"
+	"E-bike Price Reduction" -> "E-bike Popularity Increase"
+	"Marketing Intensity" -> "E-bike Popularity Increase"
+	"Consumer Interest in E-bikes" -> "E-bike Popularity Increase"
+	"Retailer Stock Availability" -> "E-bike Popularity Increase"
+	"E-bike Popularity Increase" -> "Social Media Engagement"
+	"Marketing Intensity" -> "Social Media Engagement"
 }

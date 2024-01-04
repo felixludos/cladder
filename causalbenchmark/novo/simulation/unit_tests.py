@@ -148,12 +148,17 @@ def test_ate_solver():
 	Z = Bernoulli(name='Z')
 	X = ConditionalBernoulli([Z], name='X')
 	Y = ConditionalBernoulli([X, Z], name='Y')
+
+
+	Z = Bernoulli(.4996, name='Z')
+	X = ConditionalBernoulli([Z], [.4299, .5579], name='X')
+	Y = ConditionalBernoulli([X, Z], [[.7305, .8980], [.0884, .2453]], name='Y')
 	net = BernoulliNetwork([Z, X, Y])
 
 	solver = ATE_Sign(net)
 
 	sol = Context().include(solver)
-	sol.update({'treatment': 'X', 'outcome': 'Y'})
+	sol.update({'treatment': 'Z', 'outcome': 'X'})
 
 	ate = sol['ate']
 	estimate = sol['estimate']

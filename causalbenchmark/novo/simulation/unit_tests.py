@@ -1,7 +1,7 @@
 from ..imports import *
 
 from .models import Prior, Conditional, Network, Bernoulli, ConditionalBernoulli, BernoulliNetwork
-
+from .solvers import ATE_Sign
 
 	
 def test_vars():
@@ -60,7 +60,7 @@ def test_marginals():
 
 def test_interventions():
 	X = Bernoulli(.6, name='X')
-	Y = ConditionalBernoulli([X], [[.3, .8]], name='Y')
+	Y = ConditionalBernoulli([X], [.3, .8], name='Y')
 
 	net = BernoulliNetwork([X, Y])
 
@@ -103,6 +103,62 @@ def test_confounding():
 	print(net)
 
 
+
+def test_ate():
+	X = Bernoulli(.6, name='X')
+	Y = ConditionalBernoulli([X], [.3, .8], name='Y')
+
+	net = BernoulliNetwork([X, Y])
+
+	ate = net.ate('X')['Y'].item()
+
+
+
+def test_trivial_ate_solver():
+
+	X = Bernoulli(.6, name='X')
+	Y = ConditionalBernoulli([X], [.3, .8], name='Y')
+	net = BernoulliNetwork([X, Y])
+
+	ate = net.ate('X')['Y'].item()
+
+	solver = ATE_Sign(net)
+
+	sol = Context().include(solver)
+	sol.update({'treatment': 'X', 'outcome': 'Y'})
+
+	ate = sol['ate']
+	estimate = sol['estimate']
+
+	assert abs(ate - estimate) < 0.01
+
+
+
+def test_ate_solver():
+	# Z = Bernoulli(.6, name='Z')
+	# X = ConditionalBernoulli([Z], [.4, .2], name='X')
+	# Y = ConditionalBernoulli([X, Z], [[.3, .8], [.2, .7]], name='Y')
+
+	# Z1 = Bernoulli(name='Z1')
+	# Z2 = Bernoulli(name='Z2')
+	# X = ConditionalBernoulli([Z1, Z2], name='X')
+	# Y = ConditionalBernoulli([X, Z1, Z2], name='Y')
+	# net = BernoulliNetwork([Z1, Z2, X, Y])
+
+	Z = Bernoulli(name='Z')
+	X = ConditionalBernoulli([Z], name='X')
+	Y = ConditionalBernoulli([X, Z], name='Y')
+	net = BernoulliNetwork([Z, X, Y])
+
+	solver = ATE_Sign(net)
+
+	sol = Context().include(solver)
+	sol.update({'treatment': 'X', 'outcome': 'Y'})
+
+	ate = sol['ate']
+	estimate = sol['estimate']
+
+	assert abs(ate - estimate) < 0.01
 
 
 

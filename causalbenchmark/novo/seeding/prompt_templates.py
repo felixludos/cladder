@@ -35,7 +35,7 @@ Take a deep breath and think step-by-step about how you will do this.'''
 
 
 default_graph_prompt_template = \
-'''1. From all proposed confounder, mediator, and collider variables, select between 3-5 variables that are most interesting to study and together with the treatment and outcome variables result in a realistic interesting causal graph. Important: Make sure the causal graph is a DAG and that no node has more than 3 parents!
+'''1. From all proposed confounder, mediator, and collider variables, select between 3-5 variables that are most interesting to study and together with the treatment and outcome variables result in a realistic interesting causal graph. Important: Make sure the causal graph is a DAG and that each node has at most THREE parents!
 2.  List all the edges in the causal graph, and make sure to mention which edges are observable and which are not.
 3. Provide a python list of all the nodes in the proposed graph. For each node, provide the following information in the form of a python dict:
 - `name`: the name of the variable

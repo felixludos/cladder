@@ -1,22 +1,20 @@
 // Causal Model
 digraph {
-	"Experience in Professional Cycling" [label="Experience in Professional Cycling" color=lightblue shape=diamond style=filled]
-	"Physical Fitness Level" [label="Physical Fitness Level" color=lightpink shape=ellipse style=filled]
-	"Participation in Benelux Tour" [label="Participation in Benelux Tour" color=lightpink shape=ellipse style=filled]
-	"Weather Conditions" [label="Weather Conditions" color=lightblue shape=diamond style=filled]
-	"Training Intensity" [label="Training Intensity" color=lightyellow shape=box style=filled]
-	"Fatigue Level" [label="Fatigue Level" color=lightyellow shape=box style=filled]
-	"Performance in Tour of Britain" [label="Performance in Tour of Britain" color=lightgreen shape=ellipse style=filled]
-	"Public Perception of Performance" [label="Public Perception of Performance" color=lightgray shape=box style=filled]
-	"Experience in Professional Cycling" -> "Physical Fitness Level"
-	"Physical Fitness Level" -> "Participation in Benelux Tour"
-	"Experience in Professional Cycling" -> "Participation in Benelux Tour"
-	"Physical Fitness Level" -> "Training Intensity"
-	"Weather Conditions" -> "Training Intensity"
-	"Participation in Benelux Tour" -> "Fatigue Level"
-	"Training Intensity" -> "Fatigue Level"
-	"Participation in Benelux Tour" -> "Performance in Tour of Britain"
-	"Fatigue Level" -> "Performance in Tour of Britain"
-	"Performance in Tour of Britain" -> "Public Perception of Performance"
-	"Weather Conditions" -> "Public Perception of Performance"
+	"Pre-Injury Form" [label="Pre-Injury Form" color=lightblue shape=diamond style=filled]
+	"Hand Injury" [label="Hand Injury" color=lightpink shape=ellipse style=filled]
+	Age [label=Age color=lightblue shape=diamond style=filled]
+	"Training Intensity" [label="Training Intensity" color=lightpink shape=ellipse style=filled]
+	"Physical Fitness" [label="Physical Fitness" color=lightyellow shape=box style=filled]
+	"Mental State" [label="Mental State" color=lightyellow shape=box style=filled]
+	"Performance Decline" [label="Performance Decline" color=lightgreen shape=ellipse style=filled]
+	"Media Attention" [label="Media Attention" color=lightgray shape=box style=filled]
+	"Pre-Injury Form" -> "Hand Injury"
+	Age -> "Training Intensity"
+	Age -> "Physical Fitness"
+	"Physical Fitness" -> "Mental State"
+	"Hand Injury" -> "Performance Decline"
+	"Training Intensity" -> "Performance Decline"
+	"Mental State" -> "Performance Decline"
+	"Performance Decline" -> "Media Attention"
+	"Hand Injury" -> "Media Attention"
 }

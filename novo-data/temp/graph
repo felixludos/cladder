@@ -1,21 +1,22 @@
 // Causal Model
 digraph {
-	"Global Economic Trends" [label="Global Economic Trends" color=lightblue shape=diamond style=filled]
-	"Domestic Policy Changes" [label="Domestic Policy Changes" color=lightblue shape=diamond style=filled]
-	"GDP Growth Rate" [label="GDP Growth Rate" color=lightpink shape=ellipse style=filled]
-	"Inflation Rate" [label="Inflation Rate" color=lightpink shape=ellipse style=filled]
-	"Business Investment" [label="Business Investment" color=lightyellow shape=box style=filled]
-	"Consumer Spending" [label="Consumer Spending" color=lightyellow shape=box style=filled]
-	"Consumer Economic Confidence" [label="Consumer Economic Confidence" color=lightgreen shape=ellipse style=filled]
-	"Media Economic Reporting" [label="Media Economic Reporting" color=lightgray shape=box style=filled]
-	"Global Economic Trends" -> "GDP Growth Rate"
-	"Domestic Policy Changes" -> "GDP Growth Rate"
-	"Global Economic Trends" -> "Inflation Rate"
-	"Domestic Policy Changes" -> "Inflation Rate"
-	"GDP Growth Rate" -> "Business Investment"
-	"Inflation Rate" -> "Consumer Spending"
-	"Business Investment" -> "Consumer Economic Confidence"
-	"Consumer Spending" -> "Consumer Economic Confidence"
-	"GDP Growth Rate" -> "Media Economic Reporting"
-	"Inflation Rate" -> "Media Economic Reporting"
+	"Experience in Professional Cycling" [label="Experience in Professional Cycling" color=lightblue shape=diamond style=filled]
+	"Physical Fitness Level" [label="Physical Fitness Level" color=lightpink shape=ellipse style=filled]
+	"Participation in Benelux Tour" [label="Participation in Benelux Tour" color=lightpink shape=ellipse style=filled]
+	"Weather Conditions" [label="Weather Conditions" color=lightblue shape=diamond style=filled]
+	"Training Intensity" [label="Training Intensity" color=lightyellow shape=box style=filled]
+	"Fatigue Level" [label="Fatigue Level" color=lightyellow shape=box style=filled]
+	"Performance in Tour of Britain" [label="Performance in Tour of Britain" color=lightgreen shape=ellipse style=filled]
+	"Public Perception of Performance" [label="Public Perception of Performance" color=lightgray shape=box style=filled]
+	"Experience in Professional Cycling" -> "Physical Fitness Level"
+	"Physical Fitness Level" -> "Participation in Benelux Tour"
+	"Experience in Professional Cycling" -> "Participation in Benelux Tour"
+	"Physical Fitness Level" -> "Training Intensity"
+	"Weather Conditions" -> "Training Intensity"
+	"Participation in Benelux Tour" -> "Fatigue Level"
+	"Training Intensity" -> "Fatigue Level"
+	"Participation in Benelux Tour" -> "Performance in Tour of Britain"
+	"Fatigue Level" -> "Performance in Tour of Britain"
+	"Performance in Tour of Britain" -> "Public Perception of Performance"
+	"Weather Conditions" -> "Public Perception of Performance"
 }

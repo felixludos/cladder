@@ -145,15 +145,19 @@ def test_ate_solver():
 	# Y = ConditionalBernoulli([X, Z1, Z2], name='Y')
 	# net = BernoulliNetwork([Z1, Z2, X, Y])
 
-	Z = Bernoulli(name='Z')
-	X = ConditionalBernoulli([Z], name='X')
-	Y = ConditionalBernoulli([X, Z], name='Y')
+	# Z = Bernoulli(name='Z')
+	# X = ConditionalBernoulli([Z], name='X')
+	# Y = ConditionalBernoulli([X, Z], name='Y')
 
 
-	Z = Bernoulli(.4996, name='Z')
-	X = ConditionalBernoulli([Z], [.4299, .5579], name='X')
-	Y = ConditionalBernoulli([X, Z], [[.7305, .8980], [.0884, .2453]], name='Y')
-	net = BernoulliNetwork([Z, X, Y])
+	net = BernoulliNetwork({'Z': [], 'X': ['Z'], 'Y': ['X', 'Z']},
+						   {'Z': 0.4996, 'X': [0.4299, 0.5579], 'Y': [[0.7305, 0.8980], [0.0884, 0.2453]]},)
+
+
+	# Z = Bernoulli(.4996, name='Z')
+	# X = ConditionalBernoulli([Z], [.4299, .5579], name='X')
+	# Y = ConditionalBernoulli([X, Z], [[.7305, .8980], [.0884, .2453]], name='Y')
+	# net = BernoulliNetwork([Z, X, Y])
 
 	solver = ATE_Sign(net)
 

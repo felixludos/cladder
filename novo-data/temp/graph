@@ -1,23 +1,20 @@
 // Causal Model
 digraph {
-	"Regional Sea Ice Levels" [label="Regional Sea Ice Levels" color=lightblue shape=diamond style=filled]
-	"Global Environmental Policies" [label="Global Environmental Policies" color=lightblue shape=diamond style=filled]
-	"Climate Change Intensity" [label="Climate Change Intensity" color=lightpink shape=ellipse style=filled]
-	"Conservation Efforts" [label="Conservation Efforts" color=lightpink shape=ellipse style=filled]
-	"Antarctic Ecosystem Health" [label="Antarctic Ecosystem Health" color=lightyellow shape=box style=filled]
-	"Penguin Breeding Success" [label="Penguin Breeding Success" color=lightyellow shape=box style=filled]
-	"Penguin Population Health" [label="Penguin Population Health" color=lightgreen shape=ellipse style=filled]
-	"Public Awareness" [label="Public Awareness" color=lightgray shape=box style=filled]
-	"Regional Sea Ice Levels" -> "Climate Change Intensity"
-	"Global Environmental Policies" -> "Climate Change Intensity"
-	"Global Environmental Policies" -> "Conservation Efforts"
-	"Climate Change Intensity" -> "Antarctic Ecosystem Health"
-	"Conservation Efforts" -> "Antarctic Ecosystem Health"
-	"Regional Sea Ice Levels" -> "Penguin Breeding Success"
-	"Antarctic Ecosystem Health" -> "Penguin Breeding Success"
-	"Climate Change Intensity" -> "Penguin Population Health"
-	"Conservation Efforts" -> "Penguin Population Health"
-	"Penguin Breeding Success" -> "Penguin Population Health"
-	"Penguin Population Health" -> "Public Awareness"
-	"Conservation Efforts" -> "Public Awareness"
+	"Pre-Injury Form" [label="Pre-Injury Form" color=lightblue shape=diamond style=filled]
+	"Hand Injury" [label="Hand Injury" color=lightpink shape=ellipse style=filled]
+	Age [label=Age color=lightblue shape=diamond style=filled]
+	"Training Intensity" [label="Training Intensity" color=lightpink shape=ellipse style=filled]
+	"Physical Fitness" [label="Physical Fitness" color=lightyellow shape=box style=filled]
+	"Mental State" [label="Mental State" color=lightyellow shape=box style=filled]
+	"Performance Decline" [label="Performance Decline" color=lightgreen shape=ellipse style=filled]
+	"Media Attention" [label="Media Attention" color=lightgray shape=box style=filled]
+	"Pre-Injury Form" -> "Hand Injury"
+	Age -> "Training Intensity"
+	Age -> "Physical Fitness"
+	"Physical Fitness" -> "Mental State"
+	"Hand Injury" -> "Performance Decline"
+	"Training Intensity" -> "Performance Decline"
+	"Mental State" -> "Performance Decline"
+	"Performance Decline" -> "Media Attention"
+	"Hand Injury" -> "Media Attention"
 }

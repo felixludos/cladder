@@ -162,7 +162,7 @@ def test_ate_solver():
 	solver = ATE_Sign(net)
 
 	sol = Context().include(solver)
-	sol.update({'treatment': 'Z', 'outcome': 'X'})
+	sol.update({'treatment': 'X', 'outcome': 'Y'})
 
 	ate = sol['ate']
 	estimate = sol['estimate']

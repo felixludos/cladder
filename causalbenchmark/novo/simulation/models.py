@@ -1,6 +1,8 @@
 from omnibelt import toposort
 import omnifig as fig
 
+import math
+from itertools import product
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -111,11 +113,13 @@ class BernoulliVariable(Variable):
 
 
 	def set_params(self, params: torch.FloatTensor):
-		self.probs[0].data.view(-1).copy_(torch.stack([1 - params, params], dim=-1).view(-1))
+		val = torch.stack([1 - params, params], dim=-1).view(-1)
+		self._net._factor_mapping[self].probs.data.view(-1).copy_(val)
+		self.probs[0].data.view(-1).copy_(val)
 
 
 	def get_params(self) -> torch.FloatTensor:
-		return self.probs[0].data.view(-1)
+		return self.probs[0].data[...,1].view(-1)
 
 
 	def num_params(self):
@@ -302,11 +306,59 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		return self.__class__(connectivity=connectivity, probs=probs, rng=self._rng)
 
 
-	def ate(self, treatment: str, *, conditions: dict[str, int] = None, treated_val = 1, not_treated_val = 0):
+	def old_ate(self, treatment: str, *, conditions: dict[str, int] = None, treated_val = 1, not_treated_val = 0):
+		'''sometimes produces inconsistent results, not sure why, for now use ate() instead'''
 		if conditions is None: conditions = {}
 		treated = self.intervene(**{treatment: treated_val}).marginals(**conditions)
 		not_treated = self.intervene(**{treatment: not_treated_val}).marginals(**conditions)
 		return {var.name: treated[var.name] - not_treated[var.name] for var in self.vars}
+
+
+	def ate_terms(self, treatment: str, outcome: str, *, conditions: dict[str, int] = None,
+				  treated_val = 1, not_treated_val = 0):
+		estimand = self.backdoor_estimand(treatment, outcome)
+		if estimand is None:
+			return []
+		assert estimand[0] == treatment, f'Expected treatment to be {treatment}, got {estimand[0]}'
+		assert estimand[1] == outcome, f'Expected outcome to be {outcome}, got {estimand[1]}'
+		conditions = conditions or {}
+		backdoors = [b for b in estimand[2] if b not in conditions]
+
+		terms = []
+		for b in backdoors:
+			terms.append((b, conditions.copy()))
+
+		integration = [dict(zip(backdoors, cvals)) for cvals in product(*[list(range(self[b].n)) for b in backdoors])] \
+			if backdoors else [{}]
+		for tval in [treated_val, not_treated_val]:
+			terms.extend((outcome, {treatment: tval, **conditions, **element}) for element in integration)
+
+		return terms
+
+
+	def ate(self, treatment: str, outcome: str, *, conditions: dict[str, int] = None,
+			treated_val = 1, not_treated_val = 0):
+		terms = self.ate_terms(treatment, outcome, conditions=conditions,
+							   treated_val=treated_val, not_treated_val=not_treated_val)
+		if not len(terms):
+			return torch.tensor(0.0)
+			# return None
+		conditions = conditions or {}
+		if any(term[0] != outcome for term in terms):
+			values = self.marginals(**conditions)
+			wts = {var: values[var] for var, _ in terms if var != outcome}
+			wts = {(cond, cval): val if cval == 1 else 1 - val for cond, val in wts.items() for cval in [0, 1]}
+
+		ate = []
+		for term in terms:
+			var, conds = term
+			if var == outcome:
+				sign = 1 if term[1][treatment] == treated_val else -1
+				gates = [wts[cond,cval] for cond, cval in conds.items()
+						 if cond != treatment and cond not in conditions]
+				ate.append(sign * self.marginals(**conds)[var]
+						   * (torch.prod(torch.stack(gates)) if len(gates) else 1))
+		return sum(ate)
 
 
 	def covariance(self, var1: str, var2: str, **conditions: int) -> float:
@@ -376,8 +428,9 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		model = self.to_dowhy(treatment, outcome)
 
 		estimand_info = model.identify_effect()
-		estimand = estimand_info.estimands[estimand_info.default_backdoor_id]['estimand']
-		return self._parse_backdoor_estimand(estimand, treatment, outcome)
+		if estimand_info is not None and estimand_info.estimands is not None:
+			estimand = estimand_info.estimands[estimand_info.default_backdoor_id]['estimand']
+			return self._parse_backdoor_estimand(estimand, treatment, outcome)
 
 
 
@@ -411,8 +464,11 @@ class BernoulliNetwork(Network):
 	def set_params(self, params: torch.FloatTensor):
 		params = params.view(-1)
 		for var in self.vars:
-			var.set_params(params[:var.num_params()])
-			params = params[var.num_params():]
+			N = var.num_params()
+			assert len(params) >= N, f'Expected at least {N} parameters, got {len(params)}'
+			var.set_params(params[:N])
+			params = params[N:]
+		assert len(params) == 0
 
 
 	def get_params(self):

@@ -65,7 +65,8 @@ class ATE_Sign(Solver):
 
 	@tool('ate')
 	def get_ate(self, treatment, outcome):
-		return self.net.ate(treatment)[outcome].item()
+		# return self.net.ate(treatment)[outcome].item()
+		return self.net.ate(treatment, outcome).item()
 
 
 	@tool('ground_truth')

@@ -338,7 +338,14 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 
 	def ate(self, treatment: str, outcome: str, *, conditions: dict[str, int] = None,
 			treated_val = 1, not_treated_val = 0):
-		terms = self.ate_terms(treatment, outcome, conditions=conditions,
+		return self.ate_estimate(treatment, outcome, conditions=conditions,
+								 treated_val=treated_val, not_treated_val=not_treated_val).item()
+
+
+	def ate_estimate(self, treatment: str, outcome: str, conditions: dict[str, int] = None, terms = None,
+					 *, treated_val = 1, not_treated_val = 0):
+		if terms is None:
+			terms = self.ate_terms(treatment, outcome, conditions=conditions,
 							   treated_val=treated_val, not_treated_val=not_treated_val)
 		if not len(terms):
 			return torch.tensor(0.0)

@@ -13,26 +13,26 @@ class Solver(ToolKit):
 class ATE_Sign(Solver):
 	@tool('estimand')
 	def get_estimand(self, treatment, outcome):
-		treatment, outcome, conditions = self.net.backdoor_estimand(treatment, outcome)
+		treatment, outcome, backdoors = self.net.backdoor_estimand(treatment, outcome)
 		assert treatment == treatment
 		assert outcome == outcome
-		return treatment, outcome, conditions
+		return treatment, outcome, backdoors
 
 
-	@tool('conditions')
+	@tool('backdoors')
 	def get_conditions(self, estimand):
 		return estimand[2]
 
 
 	@tool('terms')
-	def get_terms(self, treatment, outcome, conditions):
+	def get_terms(self, treatment, outcome, backdoors):
 		terms = []
-		for cond in conditions:
-			terms.append((cond, {}))
+		for bd in backdoors:
+			terms.append((bd, {}))
 		for tval in [0, 1]:
-			if conditions:
-				for cvals in product([0, 1], repeat=len(conditions)):
-					terms.append((outcome, {treatment: tval, **dict(zip(conditions, cvals))}))
+			if backdoors:
+				for cvals in product([0, 1], repeat=len(backdoors)):
+					terms.append((outcome, {treatment: tval, **dict(zip(backdoors, cvals))}))
 			else:
 				terms.append((outcome, {treatment: tval}))
 		return terms

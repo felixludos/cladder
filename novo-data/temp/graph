@@ -1,21 +1,22 @@
 // Causal Model
 digraph {
-	"Economic Conditions" [label="Economic Conditions" color=lightblue shape=diamond style=filled]
-	"TSMC Discount Policy Change" [label="TSMC Discount Policy Change" color=lightpink shape=ellipse style=filled]
-	"Global Chip Demand" [label="Global Chip Demand" color=lightpink shape=ellipse style=filled]
-	"Tech Industry Competition" [label="Tech Industry Competition" color=lightblue shape=diamond style=filled]
-	"Chip Supply" [label="Chip Supply" color=lightyellow shape=box style=filled]
-	"Manufacturer Pricing Strategy" [label="Manufacturer Pricing Strategy" color=lightyellow shape=box style=filled]
-	"Consumer Tech Price Increase" [label="Consumer Tech Price Increase" color=lightgreen shape=ellipse style=filled]
-	"Consumer Purchasing Decision" [label="Consumer Purchasing Decision" color=lightgray shape=box style=filled]
-	"Economic Conditions" -> "TSMC Discount Policy Change"
-	"Economic Conditions" -> "Global Chip Demand"
-	"TSMC Discount Policy Change" -> "Chip Supply"
-	"Global Chip Demand" -> "Chip Supply"
-	"Chip Supply" -> "Manufacturer Pricing Strategy"
-	"Tech Industry Competition" -> "Manufacturer Pricing Strategy"
-	"Manufacturer Pricing Strategy" -> "Consumer Tech Price Increase"
-	"TSMC Discount Policy Change" -> "Consumer Tech Price Increase"
-	"Consumer Tech Price Increase" -> "Consumer Purchasing Decision"
-	"Tech Industry Competition" -> "Consumer Purchasing Decision"
+	"Market Demand" [label="Market Demand" color=lightblue shape=diamond style=filled]
+	"Technology Implementation" [label="Technology Implementation" color=lightpink shape=ellipse style=filled]
+	"Management Quality" [label="Management Quality" color=lightblue shape=diamond style=filled]
+	"Training & Development" [label="Training & Development" color=lightpink shape=ellipse style=filled]
+	"Employee Engagement" [label="Employee Engagement" color=lightyellow shape=box style=filled]
+	"Process Optimization" [label="Process Optimization" color=lightyellow shape=box style=filled]
+	"Operational Efficiency Improvement" [label="Operational Efficiency Improvement" color=lightgreen shape=ellipse style=filled]
+	"Public Perception" [label="Public Perception" color=lightgray shape=box style=filled]
+	"Market Demand" -> "Technology Implementation"
+	"Management Quality" -> "Training & Development"
+	"Training & Development" -> "Employee Engagement"
+	"Management Quality" -> "Employee Engagement"
+	"Technology Implementation" -> "Process Optimization"
+	"Employee Engagement" -> "Process Optimization"
+	"Technology Implementation" -> "Operational Efficiency Improvement"
+	"Training & Development" -> "Operational Efficiency Improvement"
+	"Process Optimization" -> "Operational Efficiency Improvement"
+	"Operational Efficiency Improvement" -> "Public Perception"
+	"Market Demand" -> "Public Perception"
 }

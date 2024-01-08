@@ -13,9 +13,9 @@ class Solver(ToolKit):
 class ATE_Sign(Solver):
 	@tool('estimand')
 	def get_estimand(self, treatment, outcome):
-		treatment, outcome, backdoors = self.net.backdoor_estimand(treatment, outcome)
-		assert treatment == treatment
-		assert outcome == outcome
+		t, o, backdoors = self.net.backdoor_estimand(treatment, outcome)
+		assert t == treatment
+		assert o == outcome
 		return treatment, outcome, backdoors
 
 

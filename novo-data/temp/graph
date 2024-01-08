@@ -1,22 +1,22 @@
 // Causal Model
 digraph {
-	"Market Demand" [label="Market Demand" color=lightblue shape=diamond style=filled]
-	"Technology Implementation" [label="Technology Implementation" color=lightpink shape=ellipse style=filled]
-	"Management Quality" [label="Management Quality" color=lightblue shape=diamond style=filled]
-	"Training & Development" [label="Training & Development" color=lightpink shape=ellipse style=filled]
-	"Employee Engagement" [label="Employee Engagement" color=lightyellow shape=box style=filled]
-	"Process Optimization" [label="Process Optimization" color=lightyellow shape=box style=filled]
-	"Operational Efficiency Improvement" [label="Operational Efficiency Improvement" color=lightgreen shape=ellipse style=filled]
+	"Internet Traffic Volume" [label="Internet Traffic Volume" color=lightblue shape=diamond style=filled]
+	"Cloud Service Reliability" [label="Cloud Service Reliability" color=lightpink shape=ellipse style=filled]
+	"Cybersecurity Threat Level" [label="Cybersecurity Threat Level" color=lightblue shape=diamond style=filled]
+	"Company Preparedness" [label="Company Preparedness" color=lightpink shape=ellipse style=filled]
+	"Company Response Time" [label="Company Response Time" color=lightyellow shape=box style=filled]
+	"Service Disruption Impact" [label="Service Disruption Impact" color=lightgreen shape=ellipse style=filled]
+	"Customer Complaints" [label="Customer Complaints" color=lightyellow shape=box style=filled]
 	"Public Perception" [label="Public Perception" color=lightgray shape=box style=filled]
-	"Market Demand" -> "Technology Implementation"
-	"Management Quality" -> "Training & Development"
-	"Training & Development" -> "Employee Engagement"
-	"Management Quality" -> "Employee Engagement"
-	"Technology Implementation" -> "Process Optimization"
-	"Employee Engagement" -> "Process Optimization"
-	"Technology Implementation" -> "Operational Efficiency Improvement"
-	"Training & Development" -> "Operational Efficiency Improvement"
-	"Process Optimization" -> "Operational Efficiency Improvement"
-	"Operational Efficiency Improvement" -> "Public Perception"
-	"Market Demand" -> "Public Perception"
+	"Internet Traffic Volume" -> "Cloud Service Reliability"
+	"Cybersecurity Threat Level" -> "Company Preparedness"
+	"Internet Traffic Volume" -> "Company Response Time"
+	"Cloud Service Reliability" -> "Company Response Time"
+	"Cloud Service Reliability" -> "Service Disruption Impact"
+	"Company Preparedness" -> "Service Disruption Impact"
+	"Company Response Time" -> "Service Disruption Impact"
+	"Cybersecurity Threat Level" -> "Customer Complaints"
+	"Company Preparedness" -> "Customer Complaints"
+	"Service Disruption Impact" -> "Public Perception"
+	"Customer Complaints" -> "Public Perception"
 }

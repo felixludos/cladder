@@ -1,22 +1,20 @@
 // Causal Model
 digraph {
-	"Internet Traffic Volume" [label="Internet Traffic Volume" color=lightblue shape=diamond style=filled]
-	"Cloud Service Reliability" [label="Cloud Service Reliability" color=lightpink shape=ellipse style=filled]
-	"Cybersecurity Threat Level" [label="Cybersecurity Threat Level" color=lightblue shape=diamond style=filled]
-	"Company Preparedness" [label="Company Preparedness" color=lightpink shape=ellipse style=filled]
-	"Company Response Time" [label="Company Response Time" color=lightyellow shape=box style=filled]
-	"Service Disruption Impact" [label="Service Disruption Impact" color=lightgreen shape=ellipse style=filled]
-	"Customer Complaints" [label="Customer Complaints" color=lightyellow shape=box style=filled]
-	"Public Perception" [label="Public Perception" color=lightgray shape=box style=filled]
-	"Internet Traffic Volume" -> "Cloud Service Reliability"
-	"Cybersecurity Threat Level" -> "Company Preparedness"
-	"Internet Traffic Volume" -> "Company Response Time"
-	"Cloud Service Reliability" -> "Company Response Time"
-	"Cloud Service Reliability" -> "Service Disruption Impact"
-	"Company Preparedness" -> "Service Disruption Impact"
-	"Company Response Time" -> "Service Disruption Impact"
-	"Cybersecurity Threat Level" -> "Customer Complaints"
-	"Company Preparedness" -> "Customer Complaints"
-	"Service Disruption Impact" -> "Public Perception"
-	"Customer Complaints" -> "Public Perception"
+	"Acquisition of Solar Panel Company" [label="Acquisition of Solar Panel Company" color=lightpink shape=ellipse style=filled]
+	"Market Demand for Solar Energy" [label="Market Demand for Solar Energy" color=lightblue shape=diamond style=filled]
+	"Government Incentives for Renewable Energy" [label="Government Incentives for Renewable Energy" color=lightblue shape=diamond style=filled]
+	"Electra's Partnership with SolarEdge" [label="Electra's Partnership with SolarEdge" color=lightpink shape=ellipse style=filled]
+	"Increase in Electra's Solar Product Range" [label="Increase in Electra's Solar Product Range" color=lightyellow shape=box style=filled]
+	"Public Perception of Electra as a Green Company" [label="Public Perception of Electra as a Green Company" color=lightyellow shape=box style=filled]
+	"Financial Success of Electra's Solar Venture" [label="Financial Success of Electra's Solar Venture" color=lightgreen shape=ellipse style=filled]
+	"Electra's Overall Market Reputation" [label="Electra's Overall Market Reputation" color=lightgray shape=box style=filled]
+	"Market Demand for Solar Energy" -> "Electra's Partnership with SolarEdge"
+	"Government Incentives for Renewable Energy" -> "Electra's Partnership with SolarEdge"
+	"Electra's Partnership with SolarEdge" -> "Increase in Electra's Solar Product Range"
+	"Acquisition of Solar Panel Company" -> "Increase in Electra's Solar Product Range"
+	"Increase in Electra's Solar Product Range" -> "Public Perception of Electra as a Green Company"
+	"Market Demand for Solar Energy" -> "Financial Success of Electra's Solar Venture"
+	"Public Perception of Electra as a Green Company" -> "Financial Success of Electra's Solar Venture"
+	"Electra's Partnership with SolarEdge" -> "Electra's Overall Market Reputation"
+	"Financial Success of Electra's Solar Venture" -> "Electra's Overall Market Reputation"
 }

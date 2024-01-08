@@ -1,20 +1,21 @@
 // Causal Model
 digraph {
-	"Acquisition of Solar Panel Company" [label="Acquisition of Solar Panel Company" color=lightpink shape=ellipse style=filled]
-	"Market Demand for Solar Energy" [label="Market Demand for Solar Energy" color=lightblue shape=diamond style=filled]
-	"Government Incentives for Renewable Energy" [label="Government Incentives for Renewable Energy" color=lightblue shape=diamond style=filled]
-	"Electra's Partnership with SolarEdge" [label="Electra's Partnership with SolarEdge" color=lightpink shape=ellipse style=filled]
-	"Increase in Electra's Solar Product Range" [label="Increase in Electra's Solar Product Range" color=lightyellow shape=box style=filled]
-	"Public Perception of Electra as a Green Company" [label="Public Perception of Electra as a Green Company" color=lightyellow shape=box style=filled]
-	"Financial Success of Electra's Solar Venture" [label="Financial Success of Electra's Solar Venture" color=lightgreen shape=ellipse style=filled]
-	"Electra's Overall Market Reputation" [label="Electra's Overall Market Reputation" color=lightgray shape=box style=filled]
-	"Market Demand for Solar Energy" -> "Electra's Partnership with SolarEdge"
-	"Government Incentives for Renewable Energy" -> "Electra's Partnership with SolarEdge"
-	"Electra's Partnership with SolarEdge" -> "Increase in Electra's Solar Product Range"
-	"Acquisition of Solar Panel Company" -> "Increase in Electra's Solar Product Range"
-	"Increase in Electra's Solar Product Range" -> "Public Perception of Electra as a Green Company"
-	"Market Demand for Solar Energy" -> "Financial Success of Electra's Solar Venture"
-	"Public Perception of Electra as a Green Company" -> "Financial Success of Electra's Solar Venture"
-	"Electra's Partnership with SolarEdge" -> "Electra's Overall Market Reputation"
-	"Financial Success of Electra's Solar Venture" -> "Electra's Overall Market Reputation"
+	Public_Health_Campaigns [label=Public_Health_Campaigns color=lightpink shape=ellipse style=filled]
+	Socioeconomic_Status [label=Socioeconomic_Status color=lightblue shape=diamond style=filled]
+	Accessibility_of_Kits [label=Accessibility_of_Kits color=lightpink shape=ellipse style=filled]
+	Cultural_Beliefs [label=Cultural_Beliefs color=lightblue shape=diamond style=filled]
+	Trust_in_Medical_Services [label=Trust_in_Medical_Services color=lightyellow shape=box style=filled]
+	Awareness_of_Self_Testing [label=Awareness_of_Self_Testing color=lightyellow shape=box style=filled]
+	Increased_Cancer_Screening [label=Increased_Cancer_Screening color=lightgreen shape=ellipse style=filled]
+	Willingness_to_Participate [label=Willingness_to_Participate color=lightgray shape=box style=filled]
+	Socioeconomic_Status -> Accessibility_of_Kits
+	Public_Health_Campaigns -> Trust_in_Medical_Services
+	Socioeconomic_Status -> Trust_in_Medical_Services
+	Cultural_Beliefs -> Trust_in_Medical_Services
+	Public_Health_Campaigns -> Awareness_of_Self_Testing
+	Trust_in_Medical_Services -> Awareness_of_Self_Testing
+	Accessibility_of_Kits -> Increased_Cancer_Screening
+	Awareness_of_Self_Testing -> Increased_Cancer_Screening
+	Cultural_Beliefs -> Willingness_to_Participate
+	Awareness_of_Self_Testing -> Willingness_to_Participate
 }

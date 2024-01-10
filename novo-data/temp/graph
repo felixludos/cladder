@@ -1,24 +1,22 @@
 // Causal Model
 digraph {
-	"Environmental Concern" [label="Environmental Concern" color=lightblue shape=diamond style=filled]
-	"Economic Incentives Sensitivity" [label="Economic Incentives Sensitivity" color=lightblue shape=diamond style=filled]
-	"Deposit Policy Implementation" [label="Deposit Policy Implementation" color=lightpink shape=ellipse style=filled]
-	"Public Awareness Campaign" [label="Public Awareness Campaign" color=lightpink shape=ellipse style=filled]
-	"Recycling Convenience" [label="Recycling Convenience" color=lightyellow shape=box style=filled]
-	"Perceived Benefit of Recycling" [label="Perceived Benefit of Recycling" color=lightyellow shape=box style=filled]
-	"Increased Recycling Rate" [label="Increased Recycling Rate" color=lightgreen shape=ellipse style=filled]
-	"Supermarket Participation" [label="Supermarket Participation" color=lightgray shape=box style=filled]
-	"Environmental Concern" -> "Deposit Policy Implementation"
-	"Economic Incentives Sensitivity" -> "Deposit Policy Implementation"
-	"Environmental Concern" -> "Public Awareness Campaign"
-	"Economic Incentives Sensitivity" -> "Public Awareness Campaign"
-	"Deposit Policy Implementation" -> "Recycling Convenience"
-	"Economic Incentives Sensitivity" -> "Recycling Convenience"
-	"Environmental Concern" -> "Perceived Benefit of Recycling"
-	"Public Awareness Campaign" -> "Perceived Benefit of Recycling"
-	"Recycling Convenience" -> "Increased Recycling Rate"
-	"Perceived Benefit of Recycling" -> "Increased Recycling Rate"
-	"Deposit Policy Implementation" -> "Supermarket Participation"
-	"Recycling Convenience" -> "Supermarket Participation"
-	"Perceived Benefit of Recycling" -> "Supermarket Participation"
+	"Regional Climate" [label="Regional Climate" color=lightblue shape=diamond style=filled]
+	"Heavy Rain" [label="Heavy Rain" color=lightpink shape=ellipse style=filled]
+	"Government Policy" [label="Government Policy" color=lightblue shape=diamond style=filled]
+	"Infrastructure Investment" [label="Infrastructure Investment" color=lightpink shape=ellipse style=filled]
+	"Maintenance Efficiency" [label="Maintenance Efficiency" color=lightyellow shape=box style=filled]
+	"Emergency Response Preparedness" [label="Emergency Response Preparedness" color=lightyellow shape=box style=filled]
+	"Rail Service Disruption" [label="Rail Service Disruption" color=lightgreen shape=ellipse style=filled]
+	"Public Perception of Rail Safety" [label="Public Perception of Rail Safety" color=lightgray shape=box style=filled]
+	"Regional Climate" -> "Heavy Rain"
+	"Government Policy" -> "Infrastructure Investment"
+	"Infrastructure Investment" -> "Maintenance Efficiency"
+	"Heavy Rain" -> "Maintenance Efficiency"
+	"Infrastructure Investment" -> "Emergency Response Preparedness"
+	"Government Policy" -> "Emergency Response Preparedness"
+	"Emergency Response Preparedness" -> "Rail Service Disruption"
+	"Heavy Rain" -> "Rail Service Disruption"
+	"Maintenance Efficiency" -> "Rail Service Disruption"
+	"Heavy Rain" -> "Public Perception of Rail Safety"
+	"Rail Service Disruption" -> "Public Perception of Rail Safety"
 }

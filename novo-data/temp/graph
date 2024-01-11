@@ -1,22 +1,22 @@
 // Causal Model
 digraph {
-	"Regional Climate" [label="Regional Climate" color=lightblue shape=diamond style=filled]
-	"Heavy Rain" [label="Heavy Rain" color=lightpink shape=ellipse style=filled]
-	"Government Policy" [label="Government Policy" color=lightblue shape=diamond style=filled]
-	"Infrastructure Investment" [label="Infrastructure Investment" color=lightpink shape=ellipse style=filled]
-	"Maintenance Efficiency" [label="Maintenance Efficiency" color=lightyellow shape=box style=filled]
-	"Emergency Response Preparedness" [label="Emergency Response Preparedness" color=lightyellow shape=box style=filled]
-	"Rail Service Disruption" [label="Rail Service Disruption" color=lightgreen shape=ellipse style=filled]
-	"Public Perception of Rail Safety" [label="Public Perception of Rail Safety" color=lightgray shape=box style=filled]
-	"Regional Climate" -> "Heavy Rain"
-	"Government Policy" -> "Infrastructure Investment"
-	"Infrastructure Investment" -> "Maintenance Efficiency"
-	"Heavy Rain" -> "Maintenance Efficiency"
-	"Infrastructure Investment" -> "Emergency Response Preparedness"
-	"Government Policy" -> "Emergency Response Preparedness"
-	"Emergency Response Preparedness" -> "Rail Service Disruption"
-	"Heavy Rain" -> "Rail Service Disruption"
-	"Maintenance Efficiency" -> "Rail Service Disruption"
-	"Heavy Rain" -> "Public Perception of Rail Safety"
-	"Rail Service Disruption" -> "Public Perception of Rail Safety"
+	Social_Media_Influence [label=Social_Media_Influence color=lightblue shape=diamond style=filled]
+	Exposure_to_Movie [label=Exposure_to_Movie color=lightpink shape=ellipse style=filled]
+	Cultural_Interest [label=Cultural_Interest color=lightblue shape=diamond style=filled]
+	"Interest_in_Mother's_Youth" [label="Interest_in_Mother's_Youth" color=lightpink shape=ellipse style=filled]
+	Personal_Historical_Interest [label=Personal_Historical_Interest color=lightyellow shape=box style=filled]
+	Emotional_Resonance [label=Emotional_Resonance color=lightyellow shape=box style=filled]
+	Douyin_User_Engagement [label=Douyin_User_Engagement color=lightgreen shape=ellipse style=filled]
+	Generational_Connection [label=Generational_Connection color=lightgray shape=box style=filled]
+	Social_Media_Influence -> Exposure_to_Movie
+	Exposure_to_Movie -> "Interest_in_Mother's_Youth"
+	Cultural_Interest -> "Interest_in_Mother's_Youth"
+	"Interest_in_Mother's_Youth" -> Personal_Historical_Interest
+	Cultural_Interest -> Personal_Historical_Interest
+	Personal_Historical_Interest -> Emotional_Resonance
+	Exposure_to_Movie -> Emotional_Resonance
+	Social_Media_Influence -> Douyin_User_Engagement
+	Emotional_Resonance -> Douyin_User_Engagement
+	"Interest_in_Mother's_Youth" -> Generational_Connection
+	Personal_Historical_Interest -> Generational_Connection
 }

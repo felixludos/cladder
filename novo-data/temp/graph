@@ -1,22 +1,23 @@
 // Causal Model
 digraph {
-	Social_Media_Influence [label=Social_Media_Influence color=lightblue shape=diamond style=filled]
-	Exposure_to_Movie [label=Exposure_to_Movie color=lightpink shape=ellipse style=filled]
-	Cultural_Interest [label=Cultural_Interest color=lightblue shape=diamond style=filled]
-	"Interest_in_Mother's_Youth" [label="Interest_in_Mother's_Youth" color=lightpink shape=ellipse style=filled]
-	Personal_Historical_Interest [label=Personal_Historical_Interest color=lightyellow shape=box style=filled]
-	Emotional_Resonance [label=Emotional_Resonance color=lightyellow shape=box style=filled]
-	Douyin_User_Engagement [label=Douyin_User_Engagement color=lightgreen shape=ellipse style=filled]
-	Generational_Connection [label=Generational_Connection color=lightgray shape=box style=filled]
-	Social_Media_Influence -> Exposure_to_Movie
-	Exposure_to_Movie -> "Interest_in_Mother's_Youth"
-	Cultural_Interest -> "Interest_in_Mother's_Youth"
-	"Interest_in_Mother's_Youth" -> Personal_Historical_Interest
-	Cultural_Interest -> Personal_Historical_Interest
-	Personal_Historical_Interest -> Emotional_Resonance
-	Exposure_to_Movie -> Emotional_Resonance
-	Social_Media_Influence -> Douyin_User_Engagement
-	Emotional_Resonance -> Douyin_User_Engagement
-	"Interest_in_Mother's_Youth" -> Generational_Connection
-	Personal_Historical_Interest -> Generational_Connection
+	"Regional Sea Ice Levels" [label="Regional Sea Ice Levels" color=lightblue shape=diamond style=filled]
+	"Global Environmental Policies" [label="Global Environmental Policies" color=lightblue shape=diamond style=filled]
+	"Climate Change Intensity" [label="Climate Change Intensity" color=lightpink shape=ellipse style=filled]
+	"Conservation Efforts" [label="Conservation Efforts" color=lightpink shape=ellipse style=filled]
+	"Antarctic Ecosystem Health" [label="Antarctic Ecosystem Health" color=lightyellow shape=box style=filled]
+	"Penguin Breeding Success" [label="Penguin Breeding Success" color=lightyellow shape=box style=filled]
+	"Penguin Population Health" [label="Penguin Population Health" color=lightgreen shape=ellipse style=filled]
+	"Public Awareness" [label="Public Awareness" color=lightgray shape=box style=filled]
+	"Regional Sea Ice Levels" -> "Climate Change Intensity"
+	"Global Environmental Policies" -> "Climate Change Intensity"
+	"Global Environmental Policies" -> "Conservation Efforts"
+	"Climate Change Intensity" -> "Antarctic Ecosystem Health"
+	"Conservation Efforts" -> "Antarctic Ecosystem Health"
+	"Regional Sea Ice Levels" -> "Penguin Breeding Success"
+	"Antarctic Ecosystem Health" -> "Penguin Breeding Success"
+	"Climate Change Intensity" -> "Penguin Population Health"
+	"Conservation Efforts" -> "Penguin Population Health"
+	"Penguin Breeding Success" -> "Penguin Population Health"
+	"Penguin Population Health" -> "Public Awareness"
+	"Conservation Efforts" -> "Public Awareness"
 }

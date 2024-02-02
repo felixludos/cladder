@@ -51,7 +51,7 @@ class Verbalizer(Context, VerbalizerBase):
 		super().__init__(**kwargs)
 		self._conditions = None
 		if variable is not None:
-			self.add_variable(variable, *conditions)
+			self.set_variable(variable, *conditions)
 		elif len(conditions):
 			raise ValueError(f'Must specify variable if conditions are specified: {conditions}')
 
@@ -65,7 +65,7 @@ class Verbalizer(Context, VerbalizerBase):
 		return self
 
 
-	def add_variable(self, variable: VariableVerbalization, *conditions: VariableVerbalization):
+	def set_variable(self, variable: VariableVerbalization, *conditions: VariableVerbalization):
 		if self._conditions is not None:
 			raise ValueError(f'A Variable has already been added to this verbalizer (create a new one)')
 		conds = []

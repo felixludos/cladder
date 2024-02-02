@@ -11,13 +11,14 @@ from .. import misc
 
 @fig.component('news-headlines-sparks')
 class NewsHeadlines(ToolKit, fig.Configurable):
-	def __init__(self, dataset_root=None, *, rng=None, locs=None, **kwargs):
+	def __init__(self, dataset_root=None, *, rng=None, locs=None, cats=None, **kwargs):
 		if rng is None:
 			rng = misc.get_rng(rng)
 		if dataset_root is None:
 			dataset_root = Path('/home/fleeb/workspace/local_data/nnn/babel-briefings-v1')
 		super().__init__(**kwargs)
 		self.rng = rng
+		self.cats = cats
 		self.dataset_root = dataset_root
 		self._locs = locs
 		self.paths = None
@@ -35,20 +36,21 @@ class NewsHeadlines(ToolKit, fig.Configurable):
 		for path in itr:
 			if pbar is not None:
 				itr.set_description(f'Loading {path.name}')
-			self.articles.update({art['ID']: art for art in self._load_article_path(path)})
+			self.articles.update({art['ID']: art for art in self._load_article_path(path, cats=self.cats)})
 		self.article_IDs = list(self.articles.keys())
 		return self
 
 
 	@staticmethod
-	def _load_article_path(path):
+	def _load_article_path(path, cats=None):
 		articles = load_json(path)
 		return [{
 			'ID': article['ID'],
 			'title': article.get('en-title', article['title']),
 			'description': article.get('en-description', article['description']),
 			'content': article.get('en-content', article['content']),
-			'language': article['language']} for article in articles]
+			'language': article['language']} for article in articles
+			if cats is None or any(i['category'] in cats for i in article['instances'])]
 
 
 	@tool('seed')

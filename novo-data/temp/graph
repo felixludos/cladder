@@ -1,21 +1,23 @@
 // Causal Model
 digraph {
-	"Pre-Existing Health Condition" [label="Pre-Existing Health Condition" color=lightblue shape=diamond style=filled]
-	"High-Intensity Training" [label="High-Intensity Training" color=lightpink shape=ellipse style=filled]
-	"Age Group" [label="Age Group" color=lightblue shape=diamond style=filled]
-	"Use of Performance-Enhancing Drugs" [label="Use of Performance-Enhancing Drugs" color=lightpink shape=ellipse style=filled]
-	"Physical Stress Level" [label="Physical Stress Level" color=lightyellow shape=box style=filled]
-	"Health Monitoring Frequency" [label="Health Monitoring Frequency" color=lightyellow shape=box style=filled]
-	"Athlete Mortality Risk" [label="Athlete Mortality Risk" color=lightgreen shape=ellipse style=filled]
-	"Public Awareness of Athlete Health Issues" [label="Public Awareness of Athlete Health Issues" color=lightgray shape=box style=filled]
-	"Pre-Existing Health Condition" -> "High-Intensity Training"
-	"Age Group" -> "Use of Performance-Enhancing Drugs"
-	"High-Intensity Training" -> "Physical Stress Level"
-	"Use of Performance-Enhancing Drugs" -> "Physical Stress Level"
-	"Age Group" -> "Health Monitoring Frequency"
-	"Physical Stress Level" -> "Athlete Mortality Risk"
-	"Pre-Existing Health Condition" -> "Athlete Mortality Risk"
-	"Health Monitoring Frequency" -> "Athlete Mortality Risk"
-	"Physical Stress Level" -> "Public Awareness of Athlete Health Issues"
-	"Athlete Mortality Risk" -> "Public Awareness of Athlete Health Issues"
+	"Environmental Policies" [label="Environmental Policies" color=lightblue shape=diamond style=filled]
+	"Public Awareness of Climate Issues" [label="Public Awareness of Climate Issues" color=lightpink shape=ellipse style=filled]
+	"CFC Ban Implementation" [label="CFC Ban Implementation" color=lightpink shape=ellipse style=filled]
+	"Industrial Growth" [label="Industrial Growth" color=lightblue shape=diamond style=filled]
+	"Ozone Layer Recovery" [label="Ozone Layer Recovery" color=lightyellow shape=box style=filled]
+	"Greenhouse Gas Emissions" [label="Greenhouse Gas Emissions" color=lightyellow shape=box style=filled]
+	"Climate Stability" [label="Climate Stability" color=lightgreen shape=ellipse style=filled]
+	"Research Investment in Climate Science" [label="Research Investment in Climate Science" color=lightgray shape=box style=filled]
+	"Environmental Policies" -> "Public Awareness of Climate Issues"
+	"Public Awareness of Climate Issues" -> "CFC Ban Implementation"
+	"Environmental Policies" -> "CFC Ban Implementation"
+	"Environmental Policies" -> "Industrial Growth"
+	"CFC Ban Implementation" -> "Ozone Layer Recovery"
+	"Public Awareness of Climate Issues" -> "Greenhouse Gas Emissions"
+	"Industrial Growth" -> "Greenhouse Gas Emissions"
+	"CFC Ban Implementation" -> "Climate Stability"
+	"Ozone Layer Recovery" -> "Climate Stability"
+	"Greenhouse Gas Emissions" -> "Climate Stability"
+	"Public Awareness of Climate Issues" -> "Research Investment in Climate Science"
+	"Climate Stability" -> "Research Investment in Climate Science"
 }

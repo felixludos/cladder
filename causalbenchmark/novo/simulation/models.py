@@ -1,6 +1,8 @@
 from omnibelt import toposort
 import omnifig as fig
 
+import math
+from itertools import product
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -15,10 +17,17 @@ from pomegranate.bayesian_network import BayesianNetwork as _BayesianNetworkBase
 
 
 class Variable(fig.Configurable):
-	def __init__(self, *, rng=None, name=None, **kwargs):
+	'''
+	Generally created automatically by a Network, not directly.
+
+	Explicitly keeps track of variable specific properties, such as name or parameters,
+	and implicitly tracks network dependent features like parents.
+	'''
+	def __init__(self, *, name: str = None, rng = None, net: 'Network' = None, **kwargs):
 		super().__init__(**kwargs)
-		self._rng = rng
+		self._net = net
 		self._name = name
+		self._rng = rng
 
 
 	@staticmethod
@@ -28,7 +37,7 @@ class Variable(fig.Configurable):
 			logits = torch.randn(shape) if logits is None else torch.tensor(logits).float()
 			probs = logits.softmax(dim=-1)
 		else:
-			probs = torch.tensor(probs).float() if isinstance(probs, (list, tuple)) else probs.clone().float()
+			probs = torch.tensor(probs).float() if isinstance(probs, (list, tuple, float, int)) else probs.clone().float()
 			assert probs.min() >= 0
 			probs = probs / probs.sum(dim=-1, keepdim=True)
 		return probs
@@ -38,7 +47,7 @@ class Variable(fig.Configurable):
 	def name(self) -> str:
 		return self._name
 	@name.setter
-	def name(self, value):
+	def name(self, value: str):
 		self._name = value
 
 
@@ -52,8 +61,9 @@ class Variable(fig.Configurable):
 		return ()
 
 
-	def implied_edges(self):
-		return [(parent.name, self.name) for parent in self.parents]
+	@property
+	def param(self):
+		raise NotImplementedError
 
 
 	def __repr__(self):
@@ -68,10 +78,10 @@ class Variable(fig.Configurable):
 		return f'{name}(n={self.n}{suffix})'
 
 
-	def as_hard_intervention(self, value: int):
-		probs = torch.zeros(self.n)
-		probs[value] = 1
-		return Prior(probs=probs, name=self.name)
+	# def as_hard_intervention(self, value: int):
+	# 	probs = torch.zeros(self.n)
+	# 	probs[value] = 1
+	# 	return Prior(probs=probs, name=self.name)
 
 
 
@@ -81,13 +91,13 @@ class BernoulliVariable(Variable):
 		return self.probs[0][...,1]
 
 
-	def as_intervention(self, value: float):
-		assert 0 <= value <= 1, f'Value must be in [0, 1], got {value}'
-		return Bernoulli(prob=value, name=self.name)
-
-
-	def as_hard_intervention(self, value: int):
-		return self.as_intervention(value=value)
+	# def as_intervention(self, value: float):
+	# 	assert 0 <= value <= 1, f'Value must be in [0, 1], got {value}'
+	# 	return Bernoulli(prob=value, name=self.name)
+	#
+	#
+	# def as_hard_intervention(self, value: int):
+	# 	return self.as_intervention(value=value)
 
 
 	def __repr__(self):
@@ -103,11 +113,13 @@ class BernoulliVariable(Variable):
 
 
 	def set_params(self, params: torch.FloatTensor):
-		self.probs[0].data.view(-1).copy_(torch.stack([1 - params, params], dim=-1).view(-1))
+		val = torch.stack([1 - params, params], dim=-1).view(-1)
+		self._net._factor_mapping[self].probs.data.view(-1).copy_(val)
+		self.probs[0].data.view(-1).copy_(val)
 
 
 	def get_params(self) -> torch.FloatTensor:
-		return self.probs[0].data.view(-1)
+		return self.probs[0].data[...,1].view(-1)
 
 
 	def num_params(self):
@@ -117,7 +129,7 @@ class BernoulliVariable(Variable):
 
 @fig.component('cat')
 class Prior(Variable, _CategoricalBase):
-	def __init__(self, probs=None, *, logits=None, n=2, **kwargs):
+	def __init__(self, probs=None, logits=None, n=2, **kwargs):
 		probs = self.process_raw_params(probs, logits=logits, n=n)
 		super().__init__(probs=[probs.tolist()], **kwargs)
 
@@ -130,11 +142,11 @@ class Prior(Variable, _CategoricalBase):
 
 @fig.component('bern')
 class Bernoulli(Prior, BernoulliVariable):
-	def __init__(self, prob=None, *, logit=None, probs=None, logits=None, **kwargs):
-		if prob is not None:
-			probs = [1-prob, prob]
-		elif logit is not None:
-			logits = [-logit, logit]
+	def __init__(self, *, probs=None, logits=None, **kwargs):
+		if probs is not None:
+			probs = [1-probs, probs]
+		elif logits is not None:
+			logits = [-logits/2, logits/2]
 		super().__init__(probs=probs, logits=logits, n=2, **kwargs)
 
 
@@ -144,10 +156,29 @@ class Bernoulli(Prior, BernoulliVariable):
 
 
 
+# @fig.component('concat')
+# class Conditional(Variable, _ConditionalCategoricalBase):
+# 	def __init__(self, parents, probs=None, *, logits=None, n=2, **kwargs):
+# 		# IMPORTANT: don't rely on parents for sampling or inference, only for structure
+# 		probs = self.process_raw_params(probs, logits=logits, n=n, parentshapes=tuple(p.n for p in parents))
+# 		super().__init__(probs=[probs.tolist()], **kwargs)
+# 		self._parents = tuple(parents)
+#
+#
+# 	@property
+# 	def parents(self) -> tuple:
+# 		return self._parents
+#
+#
+# 	@property
+# 	def n(self) -> int:
+# 		return self.n_categories[0][-1]
+
+
+
 @fig.component('concat')
 class Conditional(Variable, _ConditionalCategoricalBase):
-	def __init__(self, parents, probs=None, *, logits=None, n=2, **kwargs):
-		# IMPORTANT: don't rely on parents for sampling or inference, only for structure
+	def __init__(self, *, parents: list[Variable], probs=None, logits=None, n=2, **kwargs):
 		probs = self.process_raw_params(probs, logits=logits, n=n, parentshapes=tuple(p.n for p in parents))
 		super().__init__(probs=[probs.tolist()], **kwargs)
 		self._parents = tuple(parents)
@@ -155,7 +186,7 @@ class Conditional(Variable, _ConditionalCategoricalBase):
 
 	@property
 	def parents(self) -> tuple:
-		return self._parents
+		return self._net.parents_of(self)
 
 
 	@property
@@ -163,34 +194,67 @@ class Conditional(Variable, _ConditionalCategoricalBase):
 		return self.n_categories[0][-1]
 
 
-
 @fig.component('conbern')
 class ConditionalBernoulli(Conditional, BernoulliVariable):
-	def __init__(self, parents, conds=None, *, logit_conds=None, probs=None, logits=None, **kwargs):
-		if conds is not None:
-			probs = torch.tensor(conds).float()
+	def __init__(self, *, parents: list[Variable], probs=None, logits=None, **kwargs):
+		if probs is not None:
+			probs = torch.tensor(probs).float()
 			probs = torch.stack([1-probs, probs], dim=-1)
-		elif logit_conds is not None:
-			logits = torch.tensor(logit_conds).float()
-			logits = torch.stack([-logits, logits], dim=-1)
-		super().__init__(parents, probs=probs, logits=logits, **kwargs)
+		elif logits is not None:
+			logits = torch.tensor(logits).float()
+			logits = torch.stack([-logits, logits], dim=-1) / 2
+		super().__init__(parents=parents, probs=probs, logits=logits, **kwargs)
+
+
+
+
+
+# @fig.component('net')
+# class Network(fig.Configurable, _BayesianNetworkBase):
+# 	def __init__(self, variables: list['Variable'] | dict[str, 'Variable'], *, rng=None, **kwargs):
+# 		if isinstance(variables, (list, tuple)):
+# 			variables = {v.name: v for v in variables}
+# 		for name, v in variables.items():
+# 			v.name = name
+# 		nodes = [v for v in variables.values()]
+# 		edges = [(variables[s], variables[e]) for v in variables.values() for s, e in v.implied_edges()]
+# 		super().__init__(distributions=nodes, edges=edges, **kwargs)
+# 		self._variables = variables
+# 		self._rng = rng
+# 		order = toposort({v.name: [p.name for p in v.parents] for v in self._variables.values()})
+# 		self.vars = [self._variables[name] for name in order]
 
 
 
 @fig.component('net')
 class Network(fig.Configurable, _BayesianNetworkBase):
-	def __init__(self, variables: list['Variable'] | dict[str, 'Variable'], *, rng=None, **kwargs):
-		if isinstance(variables, (list, tuple)):
-			variables = {v.name: v for v in variables}
-		for name, v in variables.items():
-			v.name = name
-		nodes = [v for v in variables.values()]
-		edges = [(variables[s], variables[e]) for v in variables.values() for s, e in v.implied_edges()]
+	_prior_type = Prior
+	_conditional_type = Conditional
+
+	def __init__(self, connectivity: dict[str, list[str]], probs=None, *, rng=None, **kwargs):
+		probs = probs or {}
+		order = toposort(connectivity)
+
+		variables = {}
+		nodes = []
+		edges = []
+
+		for name in order:
+			parent_names = connectivity[name]
+			if len(parent_names):
+				parents = [variables[p] for p in parent_names]
+				variables[name] = self._conditional_type(parents=parents, name=name, rng=rng,
+														 probs=probs.get(name, None), net=self)
+			else:
+				variables[name] = self._prior_type(name=name, rng=rng, probs=probs.get(name, None), net=self)
+			nodes.append(variables[name])
+			edges.extend((variables[p], variables[name]) for p in parent_names)
+
 		super().__init__(distributions=nodes, edges=edges, **kwargs)
+		self._connectivity = connectivity
 		self._variables = variables
 		self._rng = rng
-		order = toposort({v.name: [p.name for p in v.parents] for v in self._variables.values()})
-		self.vars = [self._variables[name] for name in order]
+		self.vars = nodes
 
 
 	# def __repr__(self):
@@ -208,7 +272,7 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 	def parents_of(self, var: Variable | str):
 		if isinstance(var, str):
 			var = self._variables[var]
-		return [self._variables[parent.name] for parent in var.parents]
+		return [self._variables[parent] for parent in self._connectivity[var.name]]
 
 
 	def marginals(self, **conds: int):
@@ -233,16 +297,75 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 
 
 	def intervene(self, **interventions: int):
-		newvars = [var.as_hard_intervention(interventions[var.name]) if var.name in interventions else var
-				   for var in self.vars]
-		return self.__class__(variables=newvars, rng=self._rng)
+		connectivity = self._connectivity.copy()
+		probs = {var.name: var.param for var in self.vars}
+		for vname, val in interventions.items():
+			connectivity[vname] = []
+			probs[vname] = val
+
+		return self.__class__(connectivity=connectivity, probs=probs, rng=self._rng)
 
 
-	def ate(self, treatment: str, *, conditions: dict[str, int] = None, treated_val = 1, not_treated_val = 0):
+	def old_ate(self, treatment: str, *, conditions: dict[str, int] = None, treated_val = 1, not_treated_val = 0):
+		'''sometimes produces inconsistent results, not sure why, for now use ate() instead'''
 		if conditions is None: conditions = {}
 		treated = self.intervene(**{treatment: treated_val}).marginals(**conditions)
 		not_treated = self.intervene(**{treatment: not_treated_val}).marginals(**conditions)
 		return {var.name: treated[var.name] - not_treated[var.name] for var in self.vars}
+
+
+	def ate_terms(self, treatment: str, outcome: str, *, conditions: dict[str, int] = None,
+				  treated_val = 1, not_treated_val = 0):
+		estimand = self.backdoor_estimand(treatment, outcome)
+		if estimand is None:
+			return []
+		assert estimand[0] == treatment, f'Expected treatment to be {treatment}, got {estimand[0]}'
+		assert estimand[1] == outcome, f'Expected outcome to be {outcome}, got {estimand[1]}'
+		conditions = conditions or {}
+		backdoors = [b for b in estimand[2] if b not in conditions]
+
+		terms = []
+		for b in backdoors:
+			terms.append((b, conditions.copy()))
+
+		integration = [dict(zip(backdoors, cvals)) for cvals in product(*[list(range(self[b].n)) for b in backdoors])] \
+			if backdoors else [{}]
+		for tval in [treated_val, not_treated_val]:
+			terms.extend((outcome, {treatment: tval, **conditions, **element}) for element in integration)
+
+		return terms
+
+
+	def ate(self, treatment: str, outcome: str, *, conditions: dict[str, int] = None,
+			treated_val = 1, not_treated_val = 0):
+		return self.ate_estimate(treatment, outcome, conditions=conditions,
+								 treated_val=treated_val, not_treated_val=not_treated_val).item()
+
+
+	def ate_estimate(self, treatment: str, outcome: str, conditions: dict[str, int] = None, terms = None,
+					 *, treated_val = 1, not_treated_val = 0):
+		if terms is None:
+			terms = self.ate_terms(treatment, outcome, conditions=conditions,
+							   treated_val=treated_val, not_treated_val=not_treated_val)
+		if not len(terms):
+			return torch.tensor(0.0)
+			# return None
+		conditions = conditions or {}
+		if any(term[0] != outcome for term in terms):
+			values = self.marginals(**conditions)
+			wts = {var: values[var] for var, _ in terms if var != outcome}
+			wts = {(cond, cval): val if cval == 1 else 1 - val for cond, val in wts.items() for cval in [0, 1]}
+
+		ate = []
+		for term in terms:
+			var, conds = term
+			if var == outcome:
+				sign = 1 if term[1][treatment] == treated_val else -1
+				gates = [wts[cond,cval] for cond, cval in conds.items()
+						 if cond != treatment and cond not in conditions]
+				ate.append(sign * self.marginals(**conds)[var]
+						   * (torch.prod(torch.stack(gates)) if len(gates) else 1))
+		return sum(ate)
 
 
 	def covariance(self, var1: str, var2: str, **conditions: int) -> float:
@@ -312,18 +435,22 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		model = self.to_dowhy(treatment, outcome)
 
 		estimand_info = model.identify_effect()
-		estimand = estimand_info.estimands[estimand_info.default_backdoor_id]['estimand']
-		return self._parse_backdoor_estimand(estimand, treatment, outcome)
+		if estimand_info is not None and estimand_info.estimands is not None:
+			estimand = estimand_info.estimands[estimand_info.default_backdoor_id]['estimand']
+			return self._parse_backdoor_estimand(estimand, treatment, outcome)
 
 
 
 @fig.component('bernet')
 class BernoulliNetwork(Network):
+	_prior_type = Bernoulli
+	_conditional_type = ConditionalBernoulli
+
 	vars: list[BernoulliVariable]
 
-	def __init__(self, variables: list[BernoulliVariable] | dict[str, BernoulliVariable], **kwargs):
-		super().__init__(variables, **kwargs)
-		assert all(isinstance(v, BernoulliVariable) for v in self.vars)
+	# def __init__(self, variables: list[BernoulliVariable] | dict[str, BernoulliVariable], **kwargs):
+	# 	super().__init__(variables, **kwargs)
+	# 	assert all(isinstance(v, BernoulliVariable) for v in self.vars)
 
 
 	def __repr__(self):
@@ -335,17 +462,20 @@ class BernoulliNetwork(Network):
 		return {name: mar[..., 1] for name, mar in mars.items()}
 
 
-	def intervene(self, **interventions: float):
-		newvars = [var.as_intervention(interventions[var.name]) if var.name in interventions else var
-				   for var in self.vars]
-		return self.__class__(variables=newvars, rng=self._rng)
+	# def intervene(self, **interventions: float):
+	# 	newvars = [var.as_intervention(interventions[var.name]) if var.name in interventions else var
+	# 			   for var in self.vars]
+	# 	return self.__class__(variables=newvars, rng=self._rng)
 
 
 	def set_params(self, params: torch.FloatTensor):
 		params = params.view(-1)
 		for var in self.vars:
-			var.set_params(params[:var.num_params()])
-			params = params[var.num_params():]
+			N = var.num_params()
+			assert len(params) >= N, f'Expected at least {N} parameters, got {len(params)}'
+			var.set_params(params[:N])
+			params = params[N:]
+		assert len(params) == 0
 
 
 	def get_params(self):

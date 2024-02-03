@@ -1,0 +1,21 @@
+// Causal Model
+digraph {
+	"Pre-Existing Health Condition" [label="Pre-Existing Health Condition" color=lightblue shape=diamond style=filled]
+	"High-Intensity Training" [label="High-Intensity Training" color=lightpink shape=ellipse style=filled]
+	"Age Group" [label="Age Group" color=lightblue shape=diamond style=filled]
+	"Use of Performance-Enhancing Drugs" [label="Use of Performance-Enhancing Drugs" color=lightpink shape=ellipse style=filled]
+	"Physical Stress Level" [label="Physical Stress Level" color=lightyellow shape=box style=filled]
+	"Health Monitoring Frequency" [label="Health Monitoring Frequency" color=lightyellow shape=box style=filled]
+	"Athlete Mortality Risk" [label="Athlete Mortality Risk" color=lightgreen shape=ellipse style=filled]
+	"Public Awareness of Athlete Health Issues" [label="Public Awareness of Athlete Health Issues" color=lightgray shape=box style=filled]
+	"Pre-Existing Health Condition" -> "High-Intensity Training"
+	"Age Group" -> "Use of Performance-Enhancing Drugs"
+	"High-Intensity Training" -> "Physical Stress Level"
+	"Use of Performance-Enhancing Drugs" -> "Physical Stress Level"
+	"Age Group" -> "Health Monitoring Frequency"
+	"Physical Stress Level" -> "Athlete Mortality Risk"
+	"Pre-Existing Health Condition" -> "Athlete Mortality Risk"
+	"Health Monitoring Frequency" -> "Athlete Mortality Risk"
+	"Physical Stress Level" -> "Public Awareness of Athlete Health Issues"
+	"Athlete Mortality Risk" -> "Public Awareness of Athlete Health Issues"
+}

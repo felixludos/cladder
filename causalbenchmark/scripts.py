@@ -4,8 +4,8 @@ import omnifig as fig
 
 import os
 import torch
-from transformers import pipeline
-from transformers import AutoModelForCausalLM, AutoTokenizer
+# from transformers import pipeline
+# from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # torch.set_default_device("cuda")
 

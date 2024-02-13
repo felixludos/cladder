@@ -1,4 +1,4 @@
-omnibelt>=0.7.6
+omnibelt>=0.8.2
 omnifig>=1.0.1
 omniply==0.1.1
 pomegranate>=1.0.0

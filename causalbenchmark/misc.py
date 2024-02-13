@@ -1,10 +1,8 @@
 from .imports import *
 
-from ..util import repo_root, assets_root
-
 
 def repo_root():
-	return Path(__file__).parent.parent.parent
+	return Path(__file__).parent.parent
 
 
 def data_root():

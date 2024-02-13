@@ -142,7 +142,7 @@ class Prior(Variable, _CategoricalBase):
 
 @fig.component('bern')
 class Bernoulli(Prior, BernoulliVariable):
-	def __init__(self, *, probs=None, logits=None, **kwargs):
+	def __init__(self, probs=None, *, logits=None, **kwargs):
 		if probs is not None:
 			probs = [1-probs, probs]
 		elif logits is not None:
@@ -178,7 +178,7 @@ class Bernoulli(Prior, BernoulliVariable):
 
 @fig.component('concat')
 class Conditional(Variable, _ConditionalCategoricalBase):
-	def __init__(self, *, parents: list[Variable], probs=None, logits=None, n=2, **kwargs):
+	def __init__(self, parents: list[Variable], probs=None, logits=None, n=2, **kwargs):
 		probs = self.process_raw_params(probs, logits=logits, n=n, parentshapes=tuple(p.n for p in parents))
 		super().__init__(probs=[probs.tolist()], **kwargs)
 		self._parents = tuple(parents)
@@ -196,7 +196,7 @@ class Conditional(Variable, _ConditionalCategoricalBase):
 
 @fig.component('conbern')
 class ConditionalBernoulli(Conditional, BernoulliVariable):
-	def __init__(self, *, parents: list[Variable], probs=None, logits=None, **kwargs):
+	def __init__(self, parents: list[Variable], probs=None, *, logits=None, **kwargs):
 		if probs is not None:
 			probs = torch.tensor(probs).float()
 			probs = torch.stack([1-probs, probs], dim=-1)
@@ -231,7 +231,7 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 	_prior_type = Prior
 	_conditional_type = Conditional
 
-	def __init__(self, connectivity: dict[str, list[str]], probs=None, *, rng=None, **kwargs):
+	def __init__(self, connectivity: dict[str, list[str]], probs: dict[str, list[float]] = None, *, rng=None, **kwargs):
 		probs = probs or {}
 		order = toposort(connectivity)
 
@@ -255,10 +255,6 @@ class Network(fig.Configurable, _BayesianNetworkBase):
 		self._variables = variables
 		self._rng = rng
 		self.vars = nodes
-
-
-	# def __repr__(self):
-	# 	return f'{self.__class__.__name__}({", ".join(v.name for v in self.vars)})'
 
 
 	def __getitem__(self, item):

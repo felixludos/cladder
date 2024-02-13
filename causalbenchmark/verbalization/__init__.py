@@ -1,4 +1,4 @@
-from . import unit_tests
+from . import unit_test
 
 from .decision import Decision
 from .top import Verbalizer

@@ -45,7 +45,7 @@ class ATE_Sign(Simple_Solver):
 
 	@tool('estimate')
 	def get_ate(self, treatment, outcome):
-		return self.net.ate(treatment, outcome).item()
+		return self.net.ate(treatment, outcome)
 
 
 	@tool('leftestimate')

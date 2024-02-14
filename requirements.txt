@@ -1,5 +1,5 @@
 omnibelt>=0.8.2
-omnifig>=1.0.1
+omnifig>=1.0.5
 omniply==0.2.1
 pomegranate>=1.0.0
 pytest

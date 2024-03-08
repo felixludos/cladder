@@ -1,0 +1,23 @@
+// Causal Model
+digraph {
+	"Environmental Policies" [label="Environmental Policies" color=lightblue shape=diamond style=filled]
+	"Public Awareness of Climate Issues" [label="Public Awareness of Climate Issues" color=lightpink shape=ellipse style=filled]
+	"CFC Ban Implementation" [label="CFC Ban Implementation" color=lightpink shape=ellipse style=filled]
+	"Industrial Growth" [label="Industrial Growth" color=lightblue shape=diamond style=filled]
+	"Ozone Layer Recovery" [label="Ozone Layer Recovery" color=lightyellow shape=box style=filled]
+	"Greenhouse Gas Emissions" [label="Greenhouse Gas Emissions" color=lightyellow shape=box style=filled]
+	"Climate Stability" [label="Climate Stability" color=lightgreen shape=ellipse style=filled]
+	"Research Investment in Climate Science" [label="Research Investment in Climate Science" color=lightgray shape=box style=filled]
+	"Environmental Policies" -> "Public Awareness of Climate Issues"
+	"Public Awareness of Climate Issues" -> "CFC Ban Implementation"
+	"Environmental Policies" -> "CFC Ban Implementation"
+	"Environmental Policies" -> "Industrial Growth"
+	"CFC Ban Implementation" -> "Ozone Layer Recovery"
+	"Public Awareness of Climate Issues" -> "Greenhouse Gas Emissions"
+	"Industrial Growth" -> "Greenhouse Gas Emissions"
+	"CFC Ban Implementation" -> "Climate Stability"
+	"Ozone Layer Recovery" -> "Climate Stability"
+	"Greenhouse Gas Emissions" -> "Climate Stability"
+	"Public Awareness of Climate Issues" -> "Research Investment in Climate Science"
+	"Climate Stability" -> "Research Investment in Climate Science"
+}

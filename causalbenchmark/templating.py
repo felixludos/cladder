@@ -1,35 +1,9 @@
 from .imports import *
 from omnibelt import pformat, pformat_vars, pathfinder
 
+from omniply.apps import Template as SimpleTemplate, FileTemplate as _FileTemplate
+
 from . import misc
-
-
-
-class SimpleTemplater:
-	def __init__(self, template: str, **kwargs):
-		super().__init__(**kwargs)
-		self.keys = list(pformat_vars(template))
-		self.template = template
-
-
-	def fill_in(self, reqs: dict[str, str] = None, **vals: str):
-		return pformat(self.template, reqs, **vals)
-
-
-
-class FixedTemplate(SingleGadgetBase, SimpleTemplater):
-	def __init__(self, template: str, gizmo: str = None, **kwargs):
-		super().__init__(gizmo=gizmo, template=template, **kwargs)
-
-
-	def gizmos(self) -> Iterator[str]:
-		yield self._gizmo
-
-
-	def grab_from(self, ctx: Optional[AbstractGig], gizmo: str = None) -> Any:
-		# assert gizmo == self.gizmo
-		reqs = {key: ctx.grab_from(ctx, key) for key in self.keys}
-		return self.fill_in(reqs)
 
 
 
@@ -38,20 +12,8 @@ load_template = pathfinder(default_dir=misc.prompt_root(), default_suffix='txt',
 
 
 
-class FileTemplate(SimpleTemplater):
+class FileTemplate(_FileTemplate):
 	_find_template_path = load_template
-
-	def __init__(self, template_name: str = None, *, template_path=None, **kwargs):
-		template_path = self._find_template_path(template_name, path=template_path)
-		template = template_path.read_text()
-		super().__init__(template=template, **kwargs)
-		self.template_path = template_path
-
-
-
-class LoadedTemplate(FileTemplate, FixedTemplate):
-	def __init__(self, template_name: str = None, gizmo: str = None, **kwargs):
-		super().__init__(template_name=template_name, gizmo=gizmo, **kwargs)
 
 
 

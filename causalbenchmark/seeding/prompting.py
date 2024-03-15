@@ -8,7 +8,7 @@ from omniply import tool, ToolKit, Context, Scope, Selection, MissingGadget
 
 import torch
 
-from ..templating import FixedTemplate, FileTemplate, LoadedTemplate
+from ..templating import SimpleTemplate, FileTemplate, FileTemplate
 from .. import misc
 # from .prompt_templates import (default_story_prompt_template, default_graph_prompt_template,
 # 							   default_stats_prompt_template, default_verb_prompt_template,
@@ -41,14 +41,14 @@ class Story(Context, fig.Configurable):
 
 	def populate_defaults(self, motivation_prompt_template=None, graph_prompt_template=None,
 						  stats_prompt_template=None, verb_prompt_template=None, questions_prompt_template=None):
-		motivation_template = LoadedTemplate('motivation', 'prompt_motivation') \
+		motivation_template = FileTemplate('motivation', 'prompt_motivation') \
 			if motivation_prompt_template is None \
-			else FixedTemplate(motivation_prompt_template, 'prompt_motivation')
+			else SimpleTemplate(motivation_prompt_template, 'prompt_motivation')
 		# story_template = LoadedTemplate('story', 'prompt_story') if story_prompt_tempalte is None \
 		# 	else FixedTemplate(story_prompt_tempalte, 'prompt_story')
-		graph_template = LoadedTemplate('graph', 'prompt_graph') if graph_prompt_template is None \
-			else FixedTemplate(graph_prompt_template, 'prompt_graph')
-		structure_template = LoadedTemplate('structure', 'prompt_structure')
+		graph_template = FileTemplate('graph', 'prompt_graph') if graph_prompt_template is None \
+			else SimpleTemplate(graph_prompt_template, 'prompt_graph')
+		structure_template = FileTemplate('structure', 'prompt_structure')
 		prob_template = StatisticsPrompting(stats_prompt_template)
 		verb_template = VerbalizationPrompting(verb_prompt_template, questions_prompt_template)
 		self.include(motivation_template, graph_template, prob_template, verb_template, structure_template,
@@ -154,8 +154,8 @@ class StatisticsPrompting(ToolKit, fig.Configurable):
 		if separator is None:
 			separator = ' and '
 		super().__init__(**kwargs)
-		self.include(LoadedTemplate('stats', 'prompt_stats') if prompt_template is None
-					 else FixedTemplate(prompt_template, 'prompt_stats'))
+		self.include(FileTemplate('stats', 'prompt_stats') if prompt_template is None
+					 else SimpleTemplate(prompt_template, 'prompt_stats'))
 		self.question_template = question_template
 		self.val_template = val_template
 		self.parent_template = parent_template
@@ -203,13 +203,13 @@ class VerbalizationPrompting(ToolKit, fig.Configurable):
 			rng = misc.get_rng(rng)
 		super().__init__(**kwargs)
 		self.rng = rng
-		self.include(LoadedTemplate('verbs', 'prompt_verbs')
+		self.include(FileTemplate('verbs', 'prompt_verbs')
 					 if verbalization_prompt_template is None
-					 else FixedTemplate(verbalization_prompt_template, 'prompt_verbs'),
+					 else SimpleTemplate(verbalization_prompt_template, 'prompt_verbs'),
 
-					 LoadedTemplate('questions', 'prompt_questions')
+					 FileTemplate('questions', 'prompt_questions')
 					 if question_prompt_template is None
-					 else FixedTemplate(question_prompt_template, 'prompt_questions'))
+					 else SimpleTemplate(question_prompt_template, 'prompt_questions'))
 
 
 	# _variable_description_template = 'Variable {name!r} (0={values[0]!r}, 1={values[1]!r}) means {description}'
